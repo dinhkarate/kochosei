@@ -1,0 +1,11 @@
+<Atlas>
+<Texture filename="kochospell.tex"/>
+    <Elements>
+        <Element name="kochospell_1.tex" u1="0.0009765625" u2="0.29199219" v1="0.70800781" v2="0.99902344"/>
+        <Element name="kochospell_2.tex" u1="0.29394531" u2="0.58496094" v1="0.70800781" v2="0.99902344"/>
+        <Element name="kochospell_3.tex" u1="0.58691406" u2="0.87792969" v1="0.70800781" v2="0.99902344"/>
+        <Element name="kochospell_4.tex" u1="0.0009765625" u2="0.29199219" v1="0.41503906" v2="0.70605469"/>
+    </Elements>
+</Atlas>
+
+
