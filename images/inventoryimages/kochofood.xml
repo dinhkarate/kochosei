@@ -1,0 +1,21 @@
+<Atlas>
+<Texture filename="kochofood.tex"/>
+
+    <Elements>
+        <Element name="kochofood_apple_cake.tex" u1="0.001953125" u2="0.24804688" v1="0.75195312" v2="0.99804688"/>
+        <Element name="kochofood_apple_candy.tex" u1="0.001953125" u2="0.24804688" v1="0.005859375" v2="0.24804688"/>
+        <Element name="kochofood_banhmi_2.tex" u1="0.25195312" u2="0.49804688" v1="0.75195312" v2="0.99804688"/>
+        <Element name="kochofood_beefsteak.tex" u1="0.50195312" u2="0.74804688" v1="0.75195312" v2="0.99804688"/>
+        <Element name="kochofood_berry_cake.tex" u1="0.75195312" u2="0.99804688" v1="0.75195312" v2="0.99804688"/>
+        <Element name="kochofood_bunreal.tex" u1="0.001953125" u2="0.24804688" v1="0.50195312" v2="0.74804688"/>
+        <Element name="kochofood_cafe.tex" u1="0.25195312" u2="0.49804688" v1="0.50195312" v2="0.74804688"/>
+        <Element name="kochofood_cheese_honey_cake.tex" u1="0.50195312" u2="0.74804688" v1="0.50195312" v2="0.74804688"/>
+        <Element name="kochofood_cheese_shrimp.tex" u1="0.75195312" u2="0.99804688" v1="0.50195312" v2="0.74804688"/>
+        <Element name="kochofood_fastfood.tex" u1="0.001953125" u2="0.24804688" v1="0.25195312" v2="0.49804688"/>
+        <Element name="kochofood_grape_juice.tex" u1="0.25195312" u2="0.49804688" v1="0.25195312" v2="0.49804688"/>
+        <Element name="kochofood_kiwi_juice.tex" u1="0.50195312" u2="0.74804688" v1="0.25195312" v2="0.49804688"/>
+        <Element name="kochofood_seafood_soup.tex" u1="0.75195312" u2="0.99804688" v1="0.25195312" v2="0.49804688"/>
+        <Element name="kochofood_xienthit.tex" u1="0.25195312" u2="0.52148438" v1="0.076171875" v2="0.24804688"/>
+    </Elements>
+</Atlas>
+
