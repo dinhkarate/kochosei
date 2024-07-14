@@ -89,173 +89,43 @@ local function convert_rocks(inst, replacement)
         end
     end
 end
+
 local function UseStaff(inst, target)
     local caster = inst.components.inventoryitem.owner
     if target and (target == caster or target.prefab == "kochosei_enemy" or target.prefab == "kochosei_enemyb") then
         doiskin(target)
         hieuung(target)
-	end
+    end
     if target == caster then
         doiskin_2(caster)
         hieuung(caster)
     end
 
+    local conversion_table = {
+        rocks = { nitre = "goldnugget", goldnugget = "flint", flint = "thulecite_pieces", thulecite_pieces = "moonrocknugget", moonrocknugget = "moonglass", moonglass = "rocks" },
+        gems = { redgem = "bluegem", bluegem = "purplegem", purplegem = "greengem", greengem = "orangegem", orangegem = "redgem" },
+        tree = { driftwood_tall = "evergreen", evergreen = "evergreen_sparse", evergreen_sparse = "deciduoustree", deciduoustree = "twiggytree", twiggytree = "marsh_tree", marsh_tree = "moon_tree", moon_tree = "kochosei_apple_tree", kochosei_apple_tree = "mushtree_moon", mushtree_moon = "rock_petrified_tree", rock_petrified_tree = "driftwood_tall" },
+        other_rocks = { rock1 = "rock2", rock2 = "rock_flintless", rock_flintless = "rock_moon", rock_moon = "stalagmite_full", stalagmite_full = "stalagmite_tall_full", stalagmite_tall_full = "wall_ruins", wall_ruins = "ruins_statue_mage_nogem", ruins_statue_mage_nogem = "ruins_statue_head_nogem", ruins_statue_head_nogem = "atrium_statue", atrium_statue = "rock1" },
+        bee = { beebox_hermit = "beehive", beehive = "wasphive", wasphive = "beebox", beebox = "beebox_hermit" },
+        aohosongsuoi = { lava_pond = "pond", pond = "pond_mos", pond_mos = "pond_cave", pond_cave = "lava_pond" },
+        cocat = { reeds = "grass", grass = "sapling", sapling = "sapling_moon", sapling_moon = "marsh_bush", marsh_bush = "reeds" },
+        berry = { berrybush_juicy = "berrybush", berrybush = "berrybush2", berrybush2 = "berrybush_juicy" },
+        hat = { kochosei_hat3 = "kochosei_hat1", kochosei_hat1 = "kochosei_hat2", kochosei_hat2 = "kochosei_hat3" },
+        logg = { driftwood_log = "log", log = "livinglog", livinglog = "driftwood_log" },
+        atvseeds = { seeds = "carrot_seeds", carrot_seeds = "corn_seeds", corn_seeds = "dragonfruit_seeds", dragonfruit_seeds = "durian_seeds", durian_seeds = "eggplant_seeds", eggplant_seeds = "pomegranate_seeds", pomegranate_seeds = "pumpkin_seeds", pumpkin_seeds = "watermelon_seeds", watermelon_seeds = "asparagus_seeds", asparagus_seeds = "tomato_seeds", tomato_seeds = "potato_seeds", potato_seeds = "onion_seeds", onion_seeds = "pepper_seeds", pepper_seeds = "garlic_seeds", garlic_seeds = "seeds" },
+        hoa = { succulent_picked = "petals", petals = "petals_evil", petals_evil = "foliage", foliage = "succulent_picked" },
+        hoammatdat = { petals_evil = "petals", petals = "petals_evil" }
+    }
 
-    local rocks = {
-        rocks = "nitre",
-        nitre = "goldnugget",
-        goldnugget = "flint",
-        flint = "thulecite_pieces",
-        thulecite_pieces = "moonrocknugget",
-        moonrocknugget = "moonglass",
-        moonglass = "rocks"
-    }
-    local gems = {
-        redgem = "bluegem",
-        bluegem = "purplegem",
-        purplegem = "greengem",
-        greengem = "orangegem",
-        orangegem = "redgem"
-    }
-    local tree = {
-        driftwood_tall = "evergreen",
-        evergreen = "evergreen_sparse",
-        evergreen_sparse = "deciduoustree",
-        deciduoustree = "twiggytree",
-        twiggytree = "marsh_tree",
-        marsh_tree = "moon_tree",
-        moon_tree = "kochosei_apple_tree",
-        kochosei_apple_tree = "mushtree_moon",
-        mushtree_moon = "rock_petrified_tree",
-        rock_petrified_tree = "driftwood_tall"
-    }
-    local other_rocks = {
-        rock1 = "rock2",
-        rock2 = "rock_flintless",
-        rock_flintless = "rock_moon",
-        rock_moon = "stalagmite_full",
-        stalagmite_full = "stalagmite_tall_full",
-        stalagmite_tall_full = "wall_ruins",
-        wall_ruins = "ruins_statue_mage_nogem",
-        ruins_statue_mage_nogem = "ruins_statue_head_nogem",
-        ruins_statue_head_nogem = "atrium_statue",
-        atrium_statue = "rock1"
-    }
-    local bee = {beebox_hermit = "beehive", beehive = "wasphive", wasphive = "beebox", beebox = "beebox_hermit"}
-    local aohosongsuoi = {lava_pond = "pond", pond = "pond_mos", pond_mos = "pond_cave", pond_cave = "lava_pond"}
-    local cocat = {
-        reeds = "grass",
-        grass = "sapling",
-        sapling = "sapling_moon",
-        sapling_moon = "marsh_bush",
-        marsh_bush = "reeds"
-    }
-    local berry = {berrybush_juicy = "berrybush", berrybush = "berrybush2", berrybush2 = "berrybush_juicy"}
-    local hat = {kochosei_hat3 = "kochosei_hat1", kochosei_hat1 = "kochosei_hat2", kochosei_hat2 = "kochosei_hat3"}
-    local logg = {driftwood_log = "log", log = "livinglog", livinglog = "driftwood_log"}
-    local atvseeds = {
-        seeds = "carrot_seeds",
-        carrot_seeds = "corn_seeds",
-        corn_seeds = "dragonfruit_seeds",
-        dragonfruit_seeds = "durian_seeds",
-        durian_seeds = "eggplant_seeds",
-        eggplant_seeds = "pomegranate_seeds",
-        pomegranate_seeds = "pumpkin_seeds",
-        pumpkin_seeds = "watermelon_seeds",
-        watermelon_seeds = "asparagus_seeds",
-        asparagus_seeds = "tomato_seeds",
-        tomato_seeds = "potato_seeds",
-        potato_seeds = "onion_seeds",
-        onion_seeds = "pepper_seeds",
-        pepper_seeds = "garlic_seeds",
-        garlic_seeds = "seeds"
-    }
-	local hoa  ={succulent_picked = "petals", petals ="petals_evil", petals_evil = "foliage", foliage ="succulent_picked"}
-		local hoammatdat  ={petals_evil ="petals", petals ="petals_evil"}
-    if rocks[target.prefab] then
-        convert_rocks(target, rocks[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
+    for category, mapping in pairs(conversion_table) do
+        if mapping[target.prefab] then
+            convert_rocks(target, mapping[target.prefab])
+            if check_lucky then
+                inst.components.finiteuses:Use(1)
+            end
+            hieuung(target)
+            break
         end
-        hieuung(target)
-    elseif gems[target.prefab] then
-        convert_rocks(target, gems[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif other_rocks[target.prefab] then
-        convert_rocks(target, other_rocks[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif tree[target.prefab] then
-        convert_rocks(target, tree[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif bee[target.prefab] then
-        convert_rocks(target, bee[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif aohosongsuoi[target.prefab] then
-        convert_rocks(target, aohosongsuoi[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif cocat[target.prefab] then
-        convert_rocks(target, cocat[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif berry[target.prefab] then
-        convert_rocks(target, berry[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif berry[target.prefab] then
-        convert_rocks(target, berry[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif atvseeds[target.prefab] then
-        convert_rocks(target, atvseeds[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif logg[target.prefab] then
-        convert_rocks(target, logg[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif hat[target.prefab] then
-        convert_rocks(target, hat[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
-    elseif hoa[target.prefab] then
-        convert_rocks(target, hoa[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)  
-		elseif hoammatdat[target.prefab] then
-        convert_rocks(target, hoammatdat[target.prefab])
-        if check_lucky then
-            inst.components.finiteuses:Use(1)
-        end
-        hieuung(target)
     end
 end
 
