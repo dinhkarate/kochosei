@@ -2,6 +2,125 @@ local assets = {
     Asset("ANIM", "anim/lucky_hammer.zip"),
     Asset("ANIM", "anim/swap_lucky_hammer.zip")
 }
+
+
+local builds = {
+    "kochosei_snowmiku_skin1",
+    "kochosei",
+    "kochosei_skin_shinku_full",
+    "kochosei_skin_shinku_notfull"
+}
+
+local buildsmiohm = {
+    "miohm", 
+    "kochosei_purplebattleaxe",
+}
+
+local conversion_table = {
+    rocks = {
+        "nitre", 
+        "goldnugget", 
+        "flint", 
+        "thulecite_pieces", 
+        "moonrocknugget", 
+        "moonglass", 
+        "rocks"
+    },
+    gems = {
+        "redgem", 
+        "bluegem", 
+        "purplegem", 
+        "greengem", 
+        "orangegem",
+    },
+    tree = {
+        "driftwood_tall",
+        "evergreen",
+        "evergreen_sparse",
+        "deciduoustree",
+        "twiggytree",
+        "marsh_tree",
+        "moon_tree",
+        "kochosei_apple_tree",
+        "mushtree_moon",
+        "rock_petrified_tree",
+    },
+    other_rocks = {
+        "rock1",
+        "rock2",
+        "rock_flintless",
+        "rock_moon",
+        "stalagmite_full",
+        "stalagmite_tall_full",
+        "wall_ruins",
+        "ruins_statue_mage_nogem",
+        "ruins_statue_head_nogem",
+        "atrium_statue",
+    },
+    bee = {
+        "beebox_hermit", 
+        "beehive", 
+        "wasphive", 
+        "beebox", 
+    },
+    aohosongsuoi = {
+        "lava_pond", 
+        "pond", 
+        "pond_mos", 
+        "pond_cave", 
+    },
+    cocat = {
+        "reeds", 
+        "grass", 
+        "sapling", 
+        "sapling_moon", 
+        "marsh_bush", 
+    },
+    berry = {
+        "berrybush_juicy", 
+        "berrybush", 
+        "berrybush2", 
+    },
+    hat = {
+        "kochosei_hat3", 
+        "kochosei_hat1", 
+        "kochosei_hat2", 
+    },
+    logg = {
+        "driftwood_log", 
+        "log", 
+        "livinglog", 
+    },
+    atvseeds = {
+        "seeds",
+        "carrot_seeds",
+        "corn_seeds",
+        "dragonfruit_seeds",
+        "durian_seeds",
+        "eggplant_seeds",
+        "pomegranate_seeds",
+        "pumpkin_seeds",
+        "watermelon_seeds",
+        "asparagus_seeds",
+        "tomato_seeds",
+        "potato_seeds",
+        "onion_seeds",
+        "pepper_seeds",
+        "garlic_seeds",
+    },
+    hoa = {
+        "succulent_picked", 
+        "petals", 
+        "petals_evil", 
+        "foliage", 
+    },
+    hoammatdat = {
+        "petals_evil", 
+        "petals", 
+    },
+}
+
+
 local check_lucky = false
 if type(TUNING.KOCHO_LUCKYHAMMER_DURABILITY) == "number" then
     check_lucky = true
@@ -25,14 +144,8 @@ local function hieuung(inst)
     fx.Transform:SetPosition(x, y, z)
 end
 
-local current_build = 1
 
-local builds = {
-    "kochosei_snowmiku_skin1",
-    "kochosei",
-    "kochosei_skin_shinku_full",
-    "kochosei_skin_shinku_notfull"
-}
+local current_build = 1
 
 local function doiskin(inst)
     current_build = (current_build % 4) + 1
@@ -48,15 +161,11 @@ end
 
 local current_buildmiohm = 1
 
-local buildsmiohm = {
-    "miohm",
-    "kochosei_purplebattleaxe"
-}
-
 local function doiskinmiohm(inst)
     current_buildmiohm = (current_buildmiohm % 2) + 1
     inst.AnimState:SetBuild(buildsmiohm[current_buildmiohm])
 end
+
 
 local function convert_rocks(inst, replacement)
     -- Kiểm tra đối tượng đang tồn tại và tên đối tượng thay thế đã được xác định
@@ -90,41 +199,44 @@ local function convert_rocks(inst, replacement)
     end
 end
 
+
+
+local function next_element_in_list(tbl, current)
+    for i = 1, #tbl do
+        if tbl[i] == current then
+            return tbl[i % #tbl + 1]  -- Return the next element, or the first if current is the last element
+        end
+    end
+end
+
 local function UseStaff(inst, target)
     local caster = inst.components.inventoryitem.owner
     if target and (target == caster or target.prefab == "kochosei_enemy" or target.prefab == "kochosei_enemyb") then
         doiskin(target)
+        --print(target.prefab.AnimState:GetBuild()) --hàm getbuild có tồn tại, có thể sử dụng để lưu current_build.
         hieuung(target)
     end
     if target == caster then
         doiskin_2(caster)
         hieuung(caster)
     end
-
-    local conversion_table = {
-        rocks = { nitre = "goldnugget", goldnugget = "flint", flint = "thulecite_pieces", thulecite_pieces = "moonrocknugget", moonrocknugget = "moonglass", moonglass = "rocks" },
-        gems = { redgem = "bluegem", bluegem = "purplegem", purplegem = "greengem", greengem = "orangegem", orangegem = "redgem" },
-        tree = { driftwood_tall = "evergreen", evergreen = "evergreen_sparse", evergreen_sparse = "deciduoustree", deciduoustree = "twiggytree", twiggytree = "marsh_tree", marsh_tree = "moon_tree", moon_tree = "kochosei_apple_tree", kochosei_apple_tree = "mushtree_moon", mushtree_moon = "rock_petrified_tree", rock_petrified_tree = "driftwood_tall" },
-        other_rocks = { rock1 = "rock2", rock2 = "rock_flintless", rock_flintless = "rock_moon", rock_moon = "stalagmite_full", stalagmite_full = "stalagmite_tall_full", stalagmite_tall_full = "wall_ruins", wall_ruins = "ruins_statue_mage_nogem", ruins_statue_mage_nogem = "ruins_statue_head_nogem", ruins_statue_head_nogem = "atrium_statue", atrium_statue = "rock1" },
-        bee = { beebox_hermit = "beehive", beehive = "wasphive", wasphive = "beebox", beebox = "beebox_hermit" },
-        aohosongsuoi = { lava_pond = "pond", pond = "pond_mos", pond_mos = "pond_cave", pond_cave = "lava_pond" },
-        cocat = { reeds = "grass", grass = "sapling", sapling = "sapling_moon", sapling_moon = "marsh_bush", marsh_bush = "reeds" },
-        berry = { berrybush_juicy = "berrybush", berrybush = "berrybush2", berrybush2 = "berrybush_juicy" },
-        hat = { kochosei_hat3 = "kochosei_hat1", kochosei_hat1 = "kochosei_hat2", kochosei_hat2 = "kochosei_hat3" },
-        logg = { driftwood_log = "log", log = "livinglog", livinglog = "driftwood_log" },
-        atvseeds = { seeds = "carrot_seeds", carrot_seeds = "corn_seeds", corn_seeds = "dragonfruit_seeds", dragonfruit_seeds = "durian_seeds", durian_seeds = "eggplant_seeds", eggplant_seeds = "pomegranate_seeds", pomegranate_seeds = "pumpkin_seeds", pumpkin_seeds = "watermelon_seeds", watermelon_seeds = "asparagus_seeds", asparagus_seeds = "tomato_seeds", tomato_seeds = "potato_seeds", potato_seeds = "onion_seeds", onion_seeds = "pepper_seeds", pepper_seeds = "garlic_seeds", garlic_seeds = "seeds" },
-        hoa = { succulent_picked = "petals", petals = "petals_evil", petals_evil = "foliage", foliage = "succulent_picked" },
-        hoammatdat = { petals_evil = "petals", petals = "petals_evil" }
-    }
+--   if target and target.prefab == "miohm" then
+--       doiskinmiohm(target)
+--       hieuung(target)
+--    end
+--  Tính fix nhưng thôi, rắc rối vô hẳn soraapi + reskin_tool để nghiên cứu, lười
 
     for category, mapping in pairs(conversion_table) do
-        if mapping[target.prefab] then
-            convert_rocks(target, mapping[target.prefab])
-            if check_lucky then
-                inst.components.finiteuses:Use(1)
+        for i, v in ipairs(mapping) do
+            if v == target.prefab then
+                local next_prefab = next_element_in_list(mapping, target.prefab)
+                convert_rocks(target, next_prefab)
+                if check_lucky then
+                    inst.components.finiteuses:Use(1)
+                end
+                hieuung(target)
+                return
             end
-            hieuung(target)
-            break
         end
     end
 end
