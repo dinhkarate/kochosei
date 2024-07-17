@@ -103,67 +103,59 @@ local function AddThingtoWorldGeneration(prefab, roomincrease)
 		end
 	end
 end
+local spawn_rates = {
+    ["Default"] = {
+        BGDeciduous = 0.4,
+        DeepDeciduous = 0.4,
+        DeciduousMole = 0.4,
+        MolesvilleDeciduous = 0.4,
+        DeciduousClearing = 0.4,
+        MagicalDeciduous = 0.4,
+        BGForest = 0.2,
+        BGDeepForest = 0.2,
+        DeepForest = 0.2,
+        Forest = 0.2,
+        ForestMole = 0.2,
+        BGGrass = 0.2,
+        BGGrassBurnt = 0.2,
+    },
+    ["More"] = {
+        BGDeciduous = 0.8,
+        DeepDeciduous = 0.8,
+        DeciduousMole = 0.8,
+        MolesvilleDeciduous = 0.8,
+        DeciduousClearing = 0.8,
+        MagicalDeciduous = 0.8,
+        BGForest = 0.4,
+        BGDeepForest = 0.4,
+        DeepForest = 0.4,
+        Forest = 0.4,
+        ForestMole = 0.4,
+        BGGrass = 0.4,
+        BGGrassBurnt = 0.4,
+    },
+    ["Less"] = {
+        BGDeciduous = 0.2,
+        DeepDeciduous = 0.2,
+        DeciduousMole = 0.2,
+        MolesvilleDeciduous = 0.2,
+        DeciduousClearing = 0.2,
+        MagicalDeciduous = 0.2,
+        BGForest = 0.1,
+        BGDeepForest = 0.1,
+        DeepForest = 0.1,
+        Forest = 0.1,
+        ForestMole = 0.1,
+        BGGrass = 0.1,
+        BGGrassBurnt = 0.1,
+    }
+}
 
-if GetModConfigData("Kochosei's apple spawn rates") == "Default" then
-	AddThingtoWorldGeneration(
-		"kochosei_apple_tree",
-		{
-			BGDeciduous = 0.4,
-			DeepDeciduous = 0.4,
-			DeciduousMole = 0.4,
-			MolesvilleDeciduous = 0.4,
-			DeciduousClearing = 0.4,
-			MagicalDeciduous = 0.4,
-			BGForest = 0.2,
-			BGDeepForest = 0.2,
-			DeepForest = 0.2,
-			Forest = 0.2,
-			ForestMole = 0.2,
-			BGGrass = 0.2,
-			BGGrassBurnt = 0.2,
-		}
-	)
+local config = GetModConfigData("Kochosei's apple spawn rates")
+if spawn_rates[config] then
+    AddThingtoWorldGeneration("kochosei_apple_tree", spawn_rates[config])
 end
-if GetModConfigData("Kochosei's apple spawn rates") == "More" then
-	AddThingtoWorldGeneration(
-		"kochosei_apple_tree",
-		{
-			BGDeciduous = 0.8,
-			DeepDeciduous = 0.8,
-			DeciduousMole = 0.8,
-			MolesvilleDeciduous = 0.8,
-			DeciduousClearing = 0.8,
-			MagicalDeciduous = 0.8,
-			BGForest = 0.4,
-			BGDeepForest = 0.4,
-			DeepForest = 0.4,
-			Forest = 0.4,
-			ForestMole = 0.4,
-			BGGrass = 0.4,
-			BGGrassBurnt = 0.4,
-		}
-	)
-end
-if GetModConfigData("Kochosei's apple spawn rates") == "Less" then
-	AddThingtoWorldGeneration(
-		"kochosei_apple_tree",
-		{
-			BGDeciduous = 0.2,
-			DeepDeciduous = 0.2,
-			DeciduousMole = 0.2,
-			MolesvilleDeciduous = 0.2,
-			DeciduousClearing = 0.2,
-			MagicalDeciduous = 0.2,
-			BGForest = 0.1,
-			BGDeepForest = 0.1,
-			DeepForest = 0.1,
-			Forest = 0.1,
-			ForestMole = 0.1,
-			BGGrass = 0.1,
-			BGGrassBurnt = 0.1,
-		}
-	)
-end
+
 
 GLOBAL.terrain.filter.kochosei_apple_tree = {
 	GLOBAL.GROUND.ROAD,

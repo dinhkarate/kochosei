@@ -49,7 +49,7 @@ function Sttptmau:Ondeath(inst)
     end
 end
 
-function Sttptmau:Satthuong(target, phantrammau, mautoida, xuyengiap, hoatdongkhihp)
+function Sttptmau:SatthuongWP(target, phantrammau, mautoida, xuyengiap, hoatdongkhihp)
     if target and phantrammau and target.components.health and target.components.health.currenthealth > hoatdongkhihp then
         local damage
         local weapon = self.inst.components.combat:GetWeapon()
@@ -67,6 +67,20 @@ function Sttptmau:Satthuong(target, phantrammau, mautoida, xuyengiap, hoatdongkh
                     weapon:applyupgrades()
                 end
             end
+        end
+    end
+end
+
+function Sttptmau:Satthuong(target, phantrammau, mautoida, xuyengiap, hoatdongkhihp)
+    if target and phantrammau and target.components.health and target.components.health.currenthealth > hoatdongkhihp then
+        local damage
+        if mautoida then
+            damage = target.components.health.maxhealth * (phantrammau / 100)
+        else
+            damage = target.components.health.currenthealth * (phantrammau / 100)
+        end
+        if damage then
+            target.components.health:DoDelta(xuyengiap and -damage or -damage, xuyengiap, nil, xuyengiap, nil, xuyengiap)
         end
     end
 end

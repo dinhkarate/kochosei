@@ -1,0 +1,9 @@
+<Atlas>
+    <Texture filename="elysia_scmn_pell.tex" />
+    <Elements>
+        <Element name="elysia_1.tex" u1="0.0009765625" v1="0.7080078125" u2="0.2919921875" v2="0.9990234375" />
+        <Element name="elysia_2.tex" u1="0.2978515625" v1="0.7080078125" u2="0.5888671875" v2="0.9990234375" />
+        <Element name="elysia_3.tex" u1="0.5947265625" v1="0.7080078125" u2="0.8857421875" v2="0.9990234375" />
+        <Element name="elysia_4.tex" u1="0.0009765625" v1="0.4111328125" u2="0.2919921875" v2="0.7021484375" />
+    </Elements>
+</Atlas>
