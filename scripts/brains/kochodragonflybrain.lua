@@ -23,10 +23,6 @@ local function GetLeader(inst)
 	return inst.components.follower.leader
 end
 
-local function GetLeaderPos(inst)
-	return inst.components.follower.leader:GetPosition()
-end
-
 function kochodragonflybrain:OnStart()
 	local root = PriorityNode({
 		ChaseAndAttack(self.inst),
