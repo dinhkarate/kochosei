@@ -1,0 +1,37 @@
+<Atlas>
+    <Texture filename="kochosei_inv.tex" />
+    <Elements>
+        <Element name="kochosei_ancient_books.tex" u1="0.0009765625" v1="0.751953125" u2="0.1240234375" v2="0.998046875" />
+        <Element name="kochosei_apple.tex" u1="0.1259765625" v1="0.751953125" u2="0.2490234375" v2="0.998046875" />
+        <Element name="kochosei_apple_cooked.tex" u1="0.2509765625" v1="0.751953125" u2="0.3740234375" v2="0.998046875" />
+        <Element name="kochosei_building_redlantern.tex" u1="0.3759765625" v1="0.751953125" u2="0.4990234375" v2="0.998046875" />
+        <Element name="kochosei_christmast_torch1.tex" u1="0.5009765625" v1="0.751953125" u2="0.6240234375" v2="0.998046875" />
+        <Element name="kochosei_demonlord.tex" u1="0.6259765625" v1="0.751953125" u2="0.7490234375" v2="0.998046875" />
+        <Element name="kochosei_hat1.tex" u1="0.7509765625" v1="0.751953125" u2="0.8740234375" v2="0.998046875" />
+        <Element name="kochosei_hat2.tex" u1="0.8759765625" v1="0.751953125" u2="0.9990234375" v2="0.998046875" />
+        <Element name="kochosei_hat3.tex" u1="0.0009765625" v1="0.501953125" u2="0.1240234375" v2="0.748046875" />
+        <Element name="kochosei_hatfl.tex" u1="0.1259765625" v1="0.501953125" u2="0.2490234375" v2="0.748046875" />
+		<Element name="kochosei_hatfl_skin.tex" u1="0.1259765625" v1="0.501953125" u2="0.2490234375" v2="0.748046875" />
+        <Element name="kochosei_house_icon.tex" u1="0.2509765625" v1="0.501953125" u2="0.3740234375" v2="0.748046875" />
+        <Element name="kochosei_lantern.tex" u1="0.3759765625" v1="0.501953125" u2="0.4990234375" v2="0.748046875" />
+        <Element name="kochosei_purplemagic.tex" u1="0.5009765625" v1="0.501953125" u2="0.6240234375" v2="0.748046875" />
+        <Element name="kochosei_streetlight1_left.tex" u1="0.6259765625" v1="0.501953125" u2="0.7490234375" v2="0.748046875" />
+        <Element name="kochosei_streetlight1_musicbox.tex" u1="0.7509765625" v1="0.501953125" u2="0.8740234375" v2="0.748046875" />
+        <Element name="kochosei_streetlight1_right.tex" u1="0.8759765625" v1="0.501953125" u2="0.9990234375" v2="0.748046875" />
+        <Element name="kochosei_torigate.tex" u1="0.0009765625" v1="0.251953125" u2="0.1240234375" v2="0.498046875" />
+        <Element name="kochosei_umbrella.tex" u1="0.1259765625" v1="0.251953125" u2="0.2490234375" v2="0.498046875" />
+        <Element name="kochosei_wishlamp.tex" u1="0.2509765625" v1="0.251953125" u2="0.3740234375" v2="0.498046875" />
+        <Element name="kochotambourin.tex" u1="0.3759765625" v1="0.251953125" u2="0.4990234375" v2="0.498046875" />
+        <Element name="kocho_lotus.tex" u1="0.5009765625" v1="0.251953125" u2="0.6240234375" v2="0.498046875" />
+        <Element name="kocho_lotus_flower.tex" u1="0.6259765625" v1="0.251953125" u2="0.7490234375" v2="0.498046875" />
+        <Element name="kocho_lotus_flower_cooked.tex" u1="0.7509765625" v1="0.251953125" u2="0.8740234375" v2="0.498046875" />
+        <Element name="kocho_miku_back.tex" u1="0.8759765625" v1="0.251953125" u2="0.9990234375" v2="0.498046875" />
+        <Element name="kocho_miku_cos.tex" u1="0.0009765625" v1="0.001953125" u2="0.1240234375" v2="0.248046875" />
+        <Element name="kocho_purplesword.tex" u1="0.1259765625" v1="0.001953125" u2="0.2490234375" v2="0.248046875" />
+        <Element name="lucky_hammer.tex" u1="0.2509765625" v1="0.001953125" u2="0.3740234375" v2="0.248046875" />
+        <Element name="miku_usagi_backpack.tex" u1="0.3759765625" v1="0.001953125" u2="0.4990234375" v2="0.248046875" />
+        <Element name="miohm.tex" u1="0.5009765625" v1="0.001953125" u2="0.6240234375" v2="0.248046875" />
+        <Element name="ms_kochosei_hat2.tex" u1="0.6259765625" v1="0.001953125" u2="0.7490234375" v2="0.248046875" />
+        <Element name="ms_kochosei_hat3.tex" u1="0.7509765625" v1="0.001953125" u2="0.8740234375" v2="0.248046875" />
+    </Elements>
+</Atlas>

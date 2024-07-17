@@ -1,0 +1,21 @@
+<Atlas>
+<Texture filename="cb_kochofood.tex"/>
+    <Elements>
+        <Element name="cookbook_kochofood_apple_cake.tex" u1="0.19580078" u2="0.34912109" v1="0.69238281" v2="0.99902344"/>
+        <Element name="cookbook_kochofood_apple_candy.tex" u1="0.46337891" u2="0.61669922" v1="0.30761719" v2="0.60839844"/>
+        <Element name="cookbook_kochofood_banhmi_2.tex" u1="0.61767578" u2="0.76806641" v1="0.30761719" v2="0.60839844"/>
+        <Element name="cookbook_kochofood_beefsteak.tex" u1="0.35009766" u2="0.50341797" v1="0.69238281" v2="0.99902344"/>
+        <Element name="cookbook_kochofood_berry_cake.tex" u1="0.50439453" u2="0.65771484" v1="0.69238281" v2="0.99902344"/>
+        <Element name="cookbook_kochofood_bunreal.tex" u1="0.76904297" u2="0.91943359" v1="0.30761719" v2="0.60839844"/>
+        <Element name="cookbook_kochofood_cafe.tex" u1="0.00048828125" u2="0.19482422" v1="0.61035156" v2="0.99902344"/>
+        <Element name="cookbook_kochofood_cheese_honey_cake.tex" u1="0.65869141" u2="0.81201172" v1="0.69238281" v2="0.99902344"/>
+        <Element name="cookbook_kochofood_cheese_shrimp.tex" u1="0.81298828" u2="0.96630859" v1="0.69238281" v2="0.99902344"/>
+        <Element name="cookbook_kochofood_fastfood.tex" u1="0.00048828125" u2="0.15380859" v1="0.30175781" v2="0.60839844"/>
+        <Element name="cookbook_kochofood_grape_juice.tex" u1="0.15478516" u2="0.30810547" v1="0.30175781" v2="0.60839844"/>
+        <Element name="cookbook_kochofood_kiwi_juice.tex" u1="0.30908203" u2="0.46240234" v1="0.30175781" v2="0.60839844"/>
+        <Element name="cookbook_kochofood_seafood_soup.tex" u1="0.00048828125" u2="0.12646484" v1="0.047851562" v2="0.29980469"/>
+        <Element name="cookbook_kochofood_xienthit.tex" u1="0.12744141" u2="0.28271484" v1="0.10058594" v2="0.29980469"/>
+    </Elements>
+</Atlas>
+
+
