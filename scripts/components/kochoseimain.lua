@@ -10,8 +10,8 @@ function onkilled(inst, data)
         local lootdropper = victim.components.lootdropper
 
         if victim:HasTag("butterfly") then
-            inst.components.sanity:DoDelta(-200, false)
-            inst.components.health:DoDelta(-150, false, "Punishment from God!")
+            inst.components.sanity:DoDelta(-100, false)
+            inst.components.health:DoDelta(-100, false, "Punishment from God!")
             inst.components.talker:Say("What are you doingggggg!!!")
             TheWorld:PushEvent("ms_sendlightningstrike", inst:GetPosition())
             TheNet:Announce("A punishment from God have been release to " .. inst:GetDisplayName().. " because of the worst guilty a Kochosei can make")

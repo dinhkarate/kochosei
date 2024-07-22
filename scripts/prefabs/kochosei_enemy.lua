@@ -121,38 +121,26 @@ local function m_checkLeaderExisting(inst)
         inst.sg:GoToState("cry")
     end
 end
-local function Kochosei_enemy(dude)
-    return dude:HasTag("kochosei_enemy") and not dude.components.health:IsDead()
-end
 
 local function OnAttacked(inst, data)
     if data.attacker ~= nil then
         if data.attacker.components.petleash ~= nil and data.attacker.components.petleash:IsPet(inst) then
             m_killPet(inst)
         elseif data.attacker.components.combat ~= nil then
-            inst.components.combat:SetTarget(data.attacker)
-            inst.components.combat:ShareTarget(data.attacker, 40, Kochosei_enemy, 3)
+            inst.components.combat:SuggestTarget(data.attacker)
         end
     end
 end
-local RETARGET_TAGS = {"_health"}
-local RETARGET_NO_TAGS = {"INLIMBO", "notarget", "invisible" }
 
 local function retargetfn(inst)
     local leader = inst.components.follower:GetLeader()
-
-    return FindEntity(inst, TUNING.SHADOWWAXWELL_TARGET_DIST,
-        function(guy)
-        	if leader ~= nil then
-            return guy ~= inst and guy.components.combat and guy.components.health
+    return leader ~= nil
+        and FindEntity(leader, TUNING.SHADOWWAXWELL_TARGET_DIST, function(guy)
+            return guy ~= inst
                 and (guy.components.combat:TargetIs(leader) or guy.components.combat:TargetIs(inst))
-                and  inst.components.combat:CanTarget(guy), { "_combat" }, { "playerghost", "INLIMBO" }
-        	else
-            	return 	(guy:HasTag("hostile")	and guy.components.health and not guy.components.health:IsDead() and inst.components.combat:CanTarget(guy) and not (inst.components.follower and inst.components.follower.leader ~= nil and guy:HasTag("abigail")))
-            			and not (inst.components.follower and inst.components.follower:IsLeaderSame(guy))
-	        end
-        end, 
-		RETARGET_TAGS, RETARGET_NO_TAGS)
+                and inst.components.combat:CanTarget(guy)
+        end, { "_combat" }, { "playerghost", "INLIMBO" })
+        or nil
 end
 
 local function keeptargetfn(inst, target)
@@ -260,7 +248,6 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
             return inst
         end
         inst:AddComponent("inspectable")
-		inst.needtostop = 0
 
         inst:AddComponent("locomotor")
         inst.components.locomotor.runspeed = 12
@@ -283,13 +270,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
         end
 
         inst:AddComponent("combat")
-		        
-		inst:AddComponent("kochoseienemy")
-		
         inst:AddComponent("debuffable")
-		
-		inst:AddComponent("knownlocations")
-
         inst.components.combat.hiteffectsymbol = "torso"
         inst.components.combat:SetRange(2)
         inst.components.combat:SetAttackPeriod(3)
@@ -318,10 +299,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
         inst:ListenForEvent("equip", OnEquipCustom)
         inst:ListenForEvent("unequip", OnUnequipCustom)
-        inst:AddComponent("workmultiplier")
-		inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-		inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-		inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+
         --inst:DoPeriodicTask(1, m_checkLeaderExisting)
 
         inst.LinkToPlayer = linktoplayer
@@ -333,9 +311,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
     end
 
     STRINGS.NAMES.KOCHOSEI_ENEMY = "Kochosei Clone"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMY = "Có muốn ăn gì hem?"
-    STRINGS.NAMES.KOCHOSEI_ENEMYB = "Kochosei Clone"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMYB = "Đang tìm gì đó bạn?"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMY = "ヾ(•ω•`)o"
 
     return Prefab(prefab, fn, assets, prefabs)
 end

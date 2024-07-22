@@ -17,8 +17,7 @@ local function TurnOn(inst)
 		fx:SetMaterial("wood")
 		inst:Remove()
 	else
-		inst.AnimState:PlayAnimation("idle", true)
-
+		inst.AnimState:PlayAnimation("sleep_loop", true)
 		if music ~= nil then
 			if music == 1 then
 				inst.SoundEmitter:PlaySound(inst.songToPlay, "kochosei_streetlight1_musicbox/play")
@@ -43,7 +42,7 @@ local function TurnOff(inst)
 		fx:SetMaterial("wood")
 		inst:Remove()
 	else
-		inst.AnimState:PlayAnimation("sleep_loop", true)
+		inst.AnimState:PlayAnimation("idle", true)
 		inst.SoundEmitter:KillSound("kochosei_streetlight1_musicbox/play")
 		--   inst.SoundEmitter:PlaySound("kochosei_streetlight1_musicbox/end")
 		inst:RemoveComponent("sanityaura")
@@ -124,7 +123,6 @@ end
 
 local function onignite(inst)
 	inst.components.sleepingbag:DoWakeUp()
-	inst.components.machine:TurnOff()
 end
 
 local function wakeuptest(inst, phase)
@@ -171,7 +169,6 @@ local function onsleeptick(inst, sleeper)
 
 	if not isstarving and sleeper.components.health ~= nil then
 		sleeper.components.health:DoDelta(inst.health_tick * 2, true, inst.prefab, true)
-		sleeper.components.health:DeltaPenalty(-0.01)
 	end
 
 	if sleeper.components.temperature ~= nil then
@@ -219,15 +216,7 @@ local function onload(inst, data)
 		inst.components.burnable.onburnt(inst)
 	end
 end
-local function onburnt(inst)
-    inst.SoundEmitter:KillSound("kochosei_streetlight1_musicbox/play")
-	inst.AnimState:PlayAnimation("burnt")
-    inst:AddTag("burnt")
-	inst:RemoveComponent("machine")
-	inst:RemoveComponent("sleepingbag")
-	inst:RemoveComponent("sanityaura")
 
-end
 local function common_fn(bank, build, icon, tag, onbuiltfn)
 	local inst = CreateEntity()
 
@@ -292,11 +281,8 @@ local function common_fn(bank, build, icon, tag, onbuiltfn)
 
 	MakeSnowCovered(inst)
 	inst:ListenForEvent("onbuilt", onbuiltfn)
-    inst:ListenForEvent("onburnt", onburnt)
-	MakeLargeBurnable(inst, nil, nil, true)
-	inst.components.burnable:SetOnIgniteFn(onignite)
-	inst.components.burnable:SetOnBurntFn(onburnt)
 
+	MakeLargeBurnable(inst, nil, nil, true)
 	MakeMediumPropagator(inst)
 
 	inst.OnSave = onsave

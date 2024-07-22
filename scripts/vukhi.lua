@@ -482,7 +482,17 @@ AddCharacterRecipe(
 	{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
 
 	TECH.NONE,
-	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "lucky_hammer.tex", builder_tag = {"kochosei", "mcw"} },
+	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "lucky_hammer.tex", builder_tag = "kochosei" },
+
+	{ "CHARACTER" }
+)
+
+AddCharacterRecipe(
+	"lucky_hammer",
+	{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
+
+	TECH.NONE,
+	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "lucky_hammer.tex", builder_tag = "mcw" },
 
 	{ "CHARACTER" }
 )

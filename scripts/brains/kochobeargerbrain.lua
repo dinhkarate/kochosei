@@ -24,6 +24,67 @@ local function GetLeader(inst)
 	return inst.components.follower.leader
 end
 
+local function GetLeaderPos(inst)
+	return inst.components.follower.leader:GetPosition()
+end
+
+local BEEHIVE_TAGS = { "beehive" }
+
+local function AttackHiveAction(inst)
+	local hive = FindEntity(inst, SEE_STRUCTURE_DIST, function(guy)
+		return inst.components.combat:CanTarget(guy) and guy:IsOnValidGround()
+	end, BEEHIVE_TAGS)
+	return hive ~= nil and BufferedAction(inst, hive, ACTIONS.ATTACK) or nil
+end
+
+local function ShouldEatFoodFn(inst)
+	if not inst.seenbase then
+		--check if we're near player base
+		local x, y, z = inst.Transform:GetWorldPosition()
+		if #TheSim:FindEntities(x, y, z, SEE_STRUCTURE_DIST, BASE_TAGS) >= 2 then
+			inst.seenbase = true
+		end
+	end
+	return inst.seenbase
+end
+
+local function GetHome(inst)
+	return TheWorld.state.season == "summer" and inst.homelocation or nil
+end
+
+local function GetTargetDistance(inst)
+	local season = TheWorld.state.season
+	return (season == "summer" and TUNING.BEARGER_SHORT_TRAVEL)
+		or (season == "autumn" and TUNING.BEARGER_LONG_TRAVEL)
+		or 0
+end
+
+local function GetWanderDirection(inst)
+	--print("returning wander direction ", inst.wanderdirection)
+	return inst.wanderdirection
+end
+
+local function SetWanderDirection(inst, angle)
+	--print("Got wander direction", angle)
+	inst.wanderdirection = angle
+end
+
+local OUTSIDE_CATAPULT_RANGE = TUNING.WINONA_CATAPULT_MAX_RANGE
+	+ TUNING.WINONA_CATAPULT_KEEP_TARGET_BUFFER
+	+ TUNING.MAX_WALKABLE_PLATFORM_RADIUS
+	+ 1
+local function OceanDistanceTest(inst, target)
+	if
+		inst.cangroundpound
+		and not target:HasTag("beehive")
+		and CanProbablyReachTargetFromShore(inst, target, TUNING.BEARGER_ATTACK_RANGE - 0.25)
+	then
+		return TUNING.BEARGER_ATTACK_RANGE - 0.25
+	else
+		return OUTSIDE_CATAPULT_RANGE
+	end
+end
+
 local function InRamDistance(inst, target)
 	local target_is_close = inst:IsNear(target, 10)
 	if target_is_close then
@@ -41,8 +102,7 @@ local function IsDeciduousTreeMonster(guy)
 	return guy.monster and guy.prefab == "deciduoustree"
 end
 
-local CHOP_MUST_TAGS = { "CHOP_workable"}
-local DIG_MUST_TAGS = { "DIG_workable"}
+local CHOP_MUST_TAGS = { "CHOP_workable" }
 local function FindDeciduousTreeMonster(inst)
 	return FindEntity(inst, SEE_FOOD_DIST / 3, IsDeciduousTreeMonster, CHOP_MUST_TAGS)
 end
@@ -56,19 +116,6 @@ local function FindTreeToChopAction(inst)
 			target = FindDeciduousTreeMonster(inst) or target
 		end
 		return BufferedAction(inst, target, ACTIONS.CHOP)
-	end
-end
-
-local function FindTreeToDigAction(inst)
-	local target = FindEntity(inst, SEE_FOOD_DIST, nil, DIG_MUST_TAGS)
-	if target ~= nil then
-		if inst.tree_target ~= nil then
-			target = inst.tree_target
-			inst.tree_target = nil
-		else
-			target = FindDeciduousTreeMonster(inst) or target
-		end
-		return BufferedAction(inst, target, ACTIONS.DIG)
 	end
 end
 
@@ -95,7 +142,6 @@ function KochoBeargerBrain:OnStart()
 
 		Follow(self.inst, GetLeader, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
 		DoAction(self.inst, FindTreeToChopAction),
-		DoAction(self.inst, FindTreeToDigAction),
 		WhileNode(function()
 			return GetLeader(self.inst) ~= nil
 		end, "Has Leader", Wander(self.inst), FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn)),

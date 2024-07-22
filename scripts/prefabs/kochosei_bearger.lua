@@ -186,9 +186,9 @@ local function fn()
 	inst:AddComponent("groundpounder")
 	inst.components.groundpounder.destroyer = true
 	inst.components.groundpounder.damageRings = 2
-	inst.components.groundpounder.destructionRings = 9
+	inst.components.groundpounder.destructionRings = 999
 	inst.components.groundpounder.platformPushingRings = 0
-	inst.components.groundpounder.numRings = 1
+	inst.components.groundpounder.numRings = 3
 	inst.components.groundpounder.noTags = {
 		"FX",
 		"NOCLICK",

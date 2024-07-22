@@ -51,8 +51,10 @@ local function ShouldDanceParty(inst)
 end
 
 local function PickUpAction(inst)
-
-	if inst.components.container:IsFull() or inst.needtostop == 0 then
+	if not inst.components.container then
+		return nil
+	end
+	if inst.components.container:IsFull() then
 		return nil
 	end
 
@@ -95,10 +97,10 @@ function kochosei_enemy_brain_b:OnStart()
 			end,
 			"Leader In Range",
 			PriorityNode({
-			DoAction(self.inst, PickUpAction, "pick up", true),
+			--	DoAction(self.inst, PickUpAction, "pick up", true),
 			}, 0.25)
 		),
-       -- WhileNode( function() return closetoleader(self.inst) end, "Stayclose", BrainCommon.NodeAssistLeaderPickUps(self, pickupparams)),
+
 		Follow(self.inst, GetLeader, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
 
 		WhileNode(function()

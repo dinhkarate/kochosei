@@ -19,11 +19,10 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle")
 
 	inst.entity:SetPristine()
-	inst:AddTag("hoasen")
 	if not TheWorld.ismastersim then
 		return inst
 	end
-	inst:AddTag("hoasen")
+
 	-----------------
 	inst:AddComponent("stackable")
 	inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
@@ -77,10 +76,6 @@ local function fncooked()
 
 	inst:AddTag("cattoy")
 	inst:AddTag("billfood")
-	
-	inst:AddTag("smalloceancreature") -- Này để bỏ vào thùng, chứ t cũng không muốn add đâu
-	
-	inst:AddTag("hoasen") -- Này để bỏ vào thùng, chứ t cũng không muốn add đâu
 
 	inst.entity:SetPristine()
 	if not TheWorld.ismastersim then

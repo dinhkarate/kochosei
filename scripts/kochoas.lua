@@ -7,6 +7,7 @@ Assets = {
     Asset("ATLAS", "images/inventoryimages/kochosei_inv.xml"),
     Asset("ATLAS", "images/inventoryimages/kochosei_purplebattleaxe_icon.xml"),
     Asset("IMAGE", "images/inventoryimages/kochosei_purplebattleaxe_icon.tex"),
+
     --------------------------------------------------------------------------------
 
     --------------------------------------------------------------------------------
@@ -66,7 +67,7 @@ RemapSoundEvent("dontstarve/characters/kochosei/death_voice", "kochosei_voice/so
 RemapSoundEvent("dontstarve/characters/kochosei/carol", "kochosei_voice/sound/carol")
 RemapSoundEvent("dontstarve/characters/kochosei/pose", "kochosei_voice/sound/pose")
 RemapSoundEvent("kochosei_streetlight1_musicbox/play", "kochosei_streetlight1_musicbox/sound/play")
-RemapSoundEvent("kochosei_streetlight1_musicbox/end", "kochosei_streetlight1_musicbox/sound/play")
+RemapSoundEvent("kochosei_streetlight1_musicbox/end", "kochosei_streetlight1_musicbox/sound/end")
 
 AddMinimapAtlas("images/map_icons/kochosei.xml")
 AddMinimapAtlas("minimap/miku_usagi_backpack.xml")

@@ -33,8 +33,7 @@ if TUNING.KOCHOSEI_CHECKMOD == 1 then
 			base_prefab = "kochosei",
 			build_name_override = "kochosei_snowmiku_skin1",
 			type = "base",
-
-			rarity = "ModMade", --Changing rarity to ‘ModLocked’
+			rarity = "ModMade",
 			rarity_modifier = "Woven",
 			skip_item_gen = true,
 			skip_giftable_gen = true,
@@ -51,50 +50,6 @@ if TUNING.KOCHOSEI_CHECKMOD == 1 then
 		})
 	)
 
-	table.insert(
-		prefabs,
-		CreatePrefabSkin("kochosei_skin_shinku_notfull", {
-			base_prefab = "kochosei",
-			build_name_override = "kochosei_skin_shinku_notfull",
-			type = "base",
-			rarity = "ModMade",
-			rarity_modifier = "Woven",
-			skip_item_gen = true,
-			skip_giftable_gen = true,
-			skin_tags = { "BASE", "kochosei", "ICE" },
-			skins = {
-				normal_skin = "kochosei_skin_shinku_notfull",
-				ghost_skin = "ghost_kochosei_build",
-			},
-
-			assets = {
-				Asset("ANIM", "anim/kochosei_skin_shinku_notfull.zip"),
-				Asset("ANIM", "anim/ghost_kochosei_build.zip"),
-			},
-		})
-	)
-	table.insert(
-		prefabs,
-		CreatePrefabSkin("kochosei_skin_shinku_full", {
-			base_prefab = "kochosei",
-			build_name_override = "kochosei_skin_shinku_full",
-			type = "base",
-			rarity = "ModMade",
-			rarity_modifier = "Woven",
-			skip_item_gen = true,
-			skip_giftable_gen = true,
-			skin_tags = { "BASE", "kochosei", "ICE" },
-			skins = {
-				normal_skin = "kochosei_skin_shinku_full",
-				ghost_skin = "ghost_kochosei_build",
-			},
-
-			assets = {
-				Asset("ANIM", "anim/kochosei_skin_shinku_full.zip"),
-				Asset("ANIM", "anim/ghost_kochosei_build.zip"),
-			},
-		})
-	)
 	table.insert(
 		prefabs,
 		CreatePrefabSkin("ms_kochosei_hat2", {

@@ -12,22 +12,15 @@ local function onequip(inst, owner)
     -- owner.DynamicShadow:SetSize(2.2, 1.4)
 
     inst.components.fueled:StartConsuming()
-		inst.magicfx = SpawnPrefab("cane_candy_fx")
-	if inst.magicfx then
-		inst.magicfx.entity:AddFollower()
-		inst.magicfx.entity:SetParent(owner.entity)
-		inst.magicfx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, -350, 0)
-	end
 end
 
 local function onunequip(inst, owner)
     owner.AnimState:Hide("ARM_carry")
     owner.AnimState:Show("ARM_normal")
+
+    -- owner.DynamicShadow:SetSize(1.3, 0.6)
+
     inst.components.fueled:StopConsuming()
-	if inst.magicfx ~= nil then
-		inst.magicfx:Remove()
-		inst.magicfx = nil
-	end
 end
 
 local function onequiptomodel(inst, owner, from_ground)

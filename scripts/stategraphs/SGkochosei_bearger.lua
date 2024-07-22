@@ -106,7 +106,6 @@ local actionhandlers = {
 	--ActionHandler(ACTIONS.HAMMER, "attack"),
 	ActionHandler(ACTIONS.GOHOME, "taunt"),
 	ActionHandler(ACTIONS.CHOP, "pound"),
-	ActionHandler(ACTIONS.DIG, "pound"),
 	ActionHandler(ACTIONS.STEAL, "steal"),
 	ActionHandler(ACTIONS.HAMMER, "steal"),
 	ActionHandler(ACTIONS.EAT, "eat_loop"),
@@ -152,27 +151,6 @@ local states = {
 	State({
 		name = "chop",
 		tags = { "chopping" },
-
-		onenter = function(inst)
-			inst.Physics:Stop()
-			inst.AnimState:PlayAnimation("atk")
-		end,
-
-		timeline = {
-			TimeEvent(13 * FRAMES, function(inst)
-				inst:PerformBufferedAction()
-			end),
-		},
-
-		events = {
-			EventHandler("animover", function(inst)
-				inst.sg:GoToState("idle")
-			end),
-		},
-	}),
-	State({
-		name = "dig",
-        tags = {"digging", "working"},
 
 		onenter = function(inst)
 			inst.Physics:Stop()
