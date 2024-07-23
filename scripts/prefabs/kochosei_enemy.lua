@@ -10,13 +10,6 @@ local prefabs = {
     "shadow_despawn",
     "statue_transition_2",
 }
-
-local function haru(inst)
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local spell = SpawnPrefab("crab_king_icefx")
-    spell.Transform:SetPosition(x, y, z)
-end
-
 local items = { -- a local table to store the item names
     kocho_miku_cos = true,
     kocho_miku_back = true,
@@ -26,13 +19,11 @@ local items = { -- a local table to store the item names
 
 local function NhanItemCuaDinhCute(inst, item)
     local dinh = item.prefab
-    return items[dinh]                                                                                                             -- check if the item name is in the table
-        or item.components.equippable                                                                                              -- check if the item is equippable
-        and (
-            item.components.equippable.equipslot == EQUIPSLOTS.HEAD                                                                -- check if the equipslot is HEAD
-            or item.components.equippable.equipslot == EQUIPSLOTS.HANDS                                                            -- check if the equipslot is HANDS
-            or item.components.equippable.equipslot == EQUIPSLOTS.BODY) and
-        not (item.components.projectile or item.prefab == "fanhundie")                                                             -- check if the item is not a projectile
+    return items
+        [dinh] or item.components.equippable and 
+        (item.components.equippable.equipslot == EQUIPSLOTS.HEAD     -- check if the equipslot is HEAD
+            or item.components.equippable.equipslot == EQUIPSLOTS.HANDS -- check if the equipslot is HANDS
+            or item.components.equippable.equipslot == EQUIPSLOTS.BODY) and not item.components.projectile         -- check if the item is not a projectile
 end
 
 local function m_killPet(inst)
@@ -41,17 +32,12 @@ local function m_killPet(inst)
     end
 end
 
-local function doiskin(inst)
-    inst.AnimState:SetBuild("kochosei_snowmiku_skin1")
-    haru(inst)
-end
-
 local function SlaveDeoNhanDoRaidenFuckYou(inst, giver, item)
     inst.sg:GoToState("facepalm")
     inst.components.talker:Say("I dont take this, my master! You give me wrong thing! Please try again!", 5, false)
 end
 
-local function OnGetItemFromPlayer(inst, giver, item)
+local function HandleEquippable(inst, item)
     local equippable = item.components.equippable
     if equippable and (equippable.equipslot == EQUIPSLOTS.HEAD
             or equippable.equipslot == EQUIPSLOTS.HANDS
@@ -63,38 +49,35 @@ local function OnGetItemFromPlayer(inst, giver, item)
         end
         inst.components.inventory:Equip(item)
     end
+end
+-- Full of chatgpt skill :)
+local function HandleKochoMikuCos(inst)
+    doiskin(inst)
+end
+
+local function HandlePetDespawnSpawn(giver, inst, x, y, z, newPetPrefab)
+    giver.components.petleash:DespawnPet(inst)
+    giver.components.petleash:SpawnPetAt(x, y, z, newPetPrefab)
+end
+
+local function OnGetItemFromPlayer(inst, giver, item)
+    HandleEquippable(inst, item)
 
     if item.prefab == "kocho_miku_cos" then
-        doiskin(inst)
+        HandleKochoMikuCos(inst)
     elseif giver.prefab == "kochosei" then
         local x, y, z = inst.Transform:GetWorldPosition()
 
         if item.prefab == "kocho_miku_back" then
-            giver.components.petleash:DespawnPet(inst)
-            giver.components.petleash:SpawnPetAt(x, y, z, "kochosei_enemyb")
+            HandlePetDespawnSpawn(giver, inst, x, y, z, "kochosei_enemyb")
         elseif item.prefab == "dragon_scales" then
-            giver.components.petleash:DespawnPet(inst)
-            local df = giver.components.petleash:SpawnPetAt(x, y, z, "kochodragonfly")
-            local rot = inst.Transform:GetRotation()
-            if df then
-                df.Transform:SetPosition(x, y, z)
-                df.components.follower:SetLeader(giver)
-                df.Transform:SetRotation(rot)
-                df.sg:GoToState("land")
-            end
+            HandlePetDespawnSpawn(giver, inst, x, y, z, "kochodragonfly")
         elseif item.prefab == "bearger_fur" then
-            giver.components.petleash:DespawnPet(inst)
-            local bear = giver.components.petleash:SpawnPetAt(x, y, z, "kocho_bearger")
-            local rot = inst.Transform:GetRotation()
-            if bear then
-                bear.Transform:SetPosition(x, y, z)
-                bear.components.follower:SetLeader(giver)
-                bear.Transform:SetRotation(rot)
-                --  bear.sg:GoToState("taunt")
-            end
+            HandlePetDespawnSpawn(giver, inst, x, y, z, "kocho_bearger")
         end
     end
 end
+
 
 local function linktoplayer(inst, player)
     inst.components.lootdropper:SetLoot(LOOT)
@@ -121,26 +104,38 @@ local function m_checkLeaderExisting(inst)
         inst.sg:GoToState("cry")
     end
 end
+local function Kochosei_enemy(dude)
+    return dude:HasTag("kochosei_enemy") and not dude.components.health:IsDead()
+end
 
 local function OnAttacked(inst, data)
     if data.attacker ~= nil then
         if data.attacker.components.petleash ~= nil and data.attacker.components.petleash:IsPet(inst) then
             m_killPet(inst)
         elseif data.attacker.components.combat ~= nil then
-            inst.components.combat:SuggestTarget(data.attacker)
+            inst.components.combat:SetTarget(data.attacker)
+            inst.components.combat:ShareTarget(data.attacker, 40, Kochosei_enemy, 3)
         end
     end
 end
+local RETARGET_TAGS = { "_health" }
+local RETARGET_NO_TAGS = { "INLIMBO", "notarget", "invisible" }
 
 local function retargetfn(inst)
     local leader = inst.components.follower:GetLeader()
-    return leader ~= nil
-        and FindEntity(leader, TUNING.SHADOWWAXWELL_TARGET_DIST, function(guy)
-            return guy ~= inst
-                and (guy.components.combat:TargetIs(leader) or guy.components.combat:TargetIs(inst))
-                and inst.components.combat:CanTarget(guy)
-        end, { "_combat" }, { "playerghost", "INLIMBO" })
-        or nil
+
+    return FindEntity(inst, TUNING.SHADOWWAXWELL_TARGET_DIST,
+        function(guy)
+            if leader ~= nil then
+                return guy ~= inst and guy.components.combat and guy.components.health
+                    and (guy.components.combat:TargetIs(leader) or guy.components.combat:TargetIs(inst))
+                    and inst.components.combat:CanTarget(guy), { "_combat" }, { "playerghost", "INLIMBO" }
+            else
+                return (guy:HasTag("hostile") and guy.components.health and not guy.components.health:IsDead() and inst.components.combat:CanTarget(guy) and not (inst.components.follower and inst.components.follower.leader ~= nil and guy:HasTag("abigail")))
+                    and not (inst.components.follower and inst.components.follower:IsLeaderSame(guy))
+            end
+        end,
+        RETARGET_TAGS, RETARGET_NO_TAGS)
 end
 
 local function keeptargetfn(inst, target)
@@ -159,21 +154,6 @@ local function spearfn(inst)
     inst.components.combat:SetKeepTargetFunction(keeptargetfn)
 
     return inst
-end
-
-local function OnEnterWater(inst)
-    inst.hop_distance = inst.components.locomotor.hop_distance
-    inst.components.locomotor.hop_distance = 4
-
-    inst.AnimState:SetBuild("spider_water_water")
-end
-
-local function OnExitWater(inst)
-    if inst.hop_distance then
-        inst.components.locomotor.hop_distance = inst.hop_distance
-    end
-
-    inst.AnimState:SetBuild("spider_water")
 end
 
 local function ondeath(inst)
@@ -220,21 +200,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
         inst.Transform:SetFourFaced(inst)
 
-        if tool ~= nil then
-            inst.AnimState:OverrideSymbol("swap_object", tool, tool)
-            inst.AnimState:Hide("ARM_normal")
-        else
-            inst.AnimState:Hide("ARM_carry")
-        end
-
-        if hat ~= nil then
-            inst.AnimState:OverrideSymbol("swap_hat", hat, "swap_hat")
-            inst.AnimState:Hide("HAIR_NOHAT")
-            inst.AnimState:Hide("HAIR")
-        else
-            inst.AnimState:Hide("HAT")
-            inst.AnimState:Hide("HAIR_HAT")
-        end
+        inst.AnimState:Hide("ARM_carry")
 
         inst:AddTag("scarytoprey")
         inst:AddTag("kochosei_enemy")
@@ -248,6 +214,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
             return inst
         end
         inst:AddComponent("inspectable")
+        inst.needtostop = 0
 
         inst:AddComponent("locomotor")
         inst.components.locomotor.runspeed = 12
@@ -270,7 +237,13 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
         end
 
         inst:AddComponent("combat")
+
+        inst:AddComponent("kochoseienemy")
+
         inst:AddComponent("debuffable")
+
+        inst:AddComponent("knownlocations")
+
         inst.components.combat.hiteffectsymbol = "torso"
         inst.components.combat:SetRange(2)
         inst.components.combat:SetAttackPeriod(3)
@@ -282,6 +255,8 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
         inst.components.trader.onaccept = OnGetItemFromPlayer
         inst.components.trader.onrefuse = SlaveDeoNhanDoRaidenFuckYou
         inst.components.trader.deleteitemonaccept = false
+        inst.components.trader.acceptnontradable = true
+
 
         inst:AddComponent("follower")
         inst.components.follower:KeepLeaderOnAttacked()
@@ -299,7 +274,10 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
         inst:ListenForEvent("equip", OnEquipCustom)
         inst:ListenForEvent("unequip", OnUnequipCustom)
-
+        inst:AddComponent("workmultiplier")
+        inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+        inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+        inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
         --inst:DoPeriodicTask(1, m_checkLeaderExisting)
 
         inst.LinkToPlayer = linktoplayer
@@ -311,7 +289,9 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
     end
 
     STRINGS.NAMES.KOCHOSEI_ENEMY = "Kochosei Clone"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMY = "ヾ(•ω•`)o"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMY = "Có muốn ăn gì hem?"
+    STRINGS.NAMES.KOCHOSEI_ENEMYB = "Kochosei Clone"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMYB = "Đang tìm gì đó bạn?"
 
     return Prefab(prefab, fn, assets, prefabs)
 end

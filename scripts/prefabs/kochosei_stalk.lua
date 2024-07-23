@@ -223,12 +223,9 @@ local function KeepTargetFn(inst, target)
 		and not (
 			inst._recentattackers[target] == nil
 			--                    target:HasTag("player") and
-			and (
-				target:HasTag("hostile")
-				or target:HasTag("epic")
-				or target:HasTag("berrythief")
-				or target:HasTag("mossling")
-			)
+			and (target:HasTag("hostile") or target:HasTag("epic") or target:HasTag("berrythief") or target:HasTag(
+				"mossling"
+			))
 			and IsNearShadowLure(target)
 		)
 end
@@ -301,12 +298,9 @@ end
 local function BattleCry(combat, target)
 	local strtbl = target ~= nil
 			--        target:HasTag("player") and
-			and (
-				target:HasTag("hostile")
-				or target:HasTag("epic")
-				or target:HasTag("berrythief")
-				or target:HasTag("mossling")
-			)
+			and (target:HasTag("hostile") or target:HasTag("epic") or target:HasTag("berrythief") or target:HasTag(
+				"mossling"
+			))
 			and "STALKER_PLAYER_BATTLECRY"
 		or "STALKER_BATTLECRY"
 	return strtbl, math.random(#STRINGS[strtbl])
@@ -315,12 +309,9 @@ end
 local function AtriumBattleCry(combat, target)
 	local strtbl = target ~= nil
 			--        target:HasTag("player") and
-			and (
-				target:HasTag("hostile")
-				or target:HasTag("epic")
-				or target:HasTag("berrythief")
-				or target:HasTag("mossling")
-			)
+			and (target:HasTag("hostile") or target:HasTag("epic") or target:HasTag("berrythief") or target:HasTag(
+				"mossling"
+			))
 			and "STALKER_ATRIUM_PLAYER_BATTLECRY"
 		or "STALKER_ATRIUM_BATTLECRY"
 	return strtbl, math.random(#STRINGS[strtbl])
@@ -970,10 +961,117 @@ local function OnAttacked(inst, data)
 end
 
 local function OnHitOther(inst, other)
-	if other and other:HasTag("Kochoseipet") then 
+	if other and other:HasTag("Kochoseipet") then
 		inst.components.combat:GiveUp()
 	end
 end
+
+local MAX_TRAIL_VARIATIONS = 7
+local MAX_RECENT_TRAILS = 4
+local TRAIL_MIN_SCALE = 1
+local TRAIL_MAX_SCALE = 1.6
+
+local function PickTrail(inst)
+	local rand = table.remove(inst.availabletrails, math.random(#inst.availabletrails))
+	table.insert(inst.usedtrails, rand)
+	if #inst.usedtrails > MAX_RECENT_TRAILS then
+		table.insert(inst.availabletrails, table.remove(inst.usedtrails, 1))
+	end
+	return rand
+end
+
+local function RefreshTrail(inst, fx)
+	if fx:IsValid() then
+		fx:Refresh()
+	else
+		inst._trailtask:Cancel()
+		inst._trailtask = nil
+	end
+end
+
+local function DoTrail(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	if inst.sg:HasStateTag("moving") then
+		local theta = -inst.Transform:GetRotation() * DEGREES
+		x = x + math.cos(theta)
+		z = z + math.sin(theta)
+	end
+	local fx = SpawnPrefab("damp_trail")
+	fx.Transform:SetPosition(x, 0, z)
+	fx:SetVariation(PickTrail(inst), GetRandomMinMax(TRAIL_MIN_SCALE, TRAIL_MAX_SCALE), TUNING.STALKER_BLOOM_DECAY)
+	if inst._trailtask ~= nil then
+		inst._trailtask:Cancel()
+	end
+	inst._trailtask = inst:DoPeriodicTask(TUNING.STALKER_BLOOM_DECAY * 0.5, RefreshTrail, nil, fx)
+end
+local BLOOM_CHOICES = {
+	["stalker_bulb"] = 0.5,
+	["stalker_bulb_double"] = 0.5,
+	["stalker_berry"] = 1,
+	["stalker_fern"] = 8,
+}
+
+local STALKERBLOOM_TAGS = { "stalkerbloom" }
+local function DoPlantBloom(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local map = TheWorld.Map
+	local offset = FindValidPositionByFan(math.random() * 2 * PI, math.random() * 3, 8, function(offset)
+		local x1 = x + offset.x
+		local z1 = z + offset.z
+		return map:IsPassableAtPoint(x1, 0, z1)
+			and map:IsDeployPointClear(Vector3(x1, 0, z1), nil, 1)
+			and #TheSim:FindEntities(x1, 0, z1, 2.5, STALKERBLOOM_TAGS) < 4
+	end)
+
+	if offset ~= nil then
+		SpawnPrefab(weighted_random_choice(BLOOM_CHOICES)).Transform:SetPosition(x + offset.x, 0, z + offset.z)
+	end
+end
+
+local function OnStartBlooming(inst)
+	DoTrail(inst)
+	inst._bloomtask = inst:DoPeriodicTask(3 * FRAMES, DoPlantBloom, 2 * FRAMES)
+end
+
+local function _StartBlooming(inst)
+	if inst._bloomtask == nil then
+		inst._bloomtask = inst:DoTaskInTime(0, OnStartBlooming)
+	end
+end
+
+local function ForestOnEntityWake(inst)
+	if inst._blooming then
+		_StartBlooming(inst)
+	end
+end
+
+local function ForestOnEntitySleep(inst)
+	if inst._bloomtask ~= nil then
+		inst._bloomtask:Cancel()
+		inst._bloomtask = nil
+	end
+	if inst._trailtask ~= nil then
+		inst._trailtask:Cancel()
+		inst._trailtask = nil
+	end
+end
+
+local function StartBlooming(inst)
+	if not inst._blooming then
+		inst._blooming = true
+		if not inst:IsAsleep() then
+			_StartBlooming(inst)
+		end
+	end
+end
+
+local function StopBlooming(inst)
+	if inst._blooming then
+		inst._blooming = false
+		ForestOnEntitySleep(inst)
+	end
+end
+
 --------------------------------------------------------------------------
 
 local function common_fn(bank, build, shadowsize, canfight, atriumstalker)
@@ -1004,14 +1102,12 @@ local function common_fn(bank, build, shadowsize, canfight, atriumstalker)
 	inst.Light:SetColour(200 / 255, 100 / 255, 200 / 255)
 
 	inst:AddTag("epic")
-	inst:AddTag("monster")
 
 	inst:AddTag("scarytoprey")
 
 	inst:AddTag("kochoseipet")
 
 	inst:AddTag("fossil")
-
 
 	if canfight then
 		inst:AddComponent("talker")
@@ -1047,7 +1143,7 @@ local function common_fn(bank, build, shadowsize, canfight, atriumstalker)
 	inst.components.locomotor.walkspeed = TUNING.STALKER_SPEED
 
 	inst:AddComponent("health")
-	inst.components.health:SetMaxHealth(TUNING.STALKER_ALTRIUM_SLAVE_HEALTH)
+	inst.components.health:SetMaxHealth(TUNING.STALKER_ALTRIUM_SLAVE_HEALTH + (TUNING.STALKER_ATRIUM_HEALTH / 2))
 	inst.components.health.nofadeout = true
 
 	inst:AddComponent("sanityaura")
@@ -1124,7 +1220,7 @@ local function atrium_fn()
 	inst:DoPeriodicTask(0.5, onPeriodicTask)
 	inst:DoPeriodicTask(1, m_checkLeaderExisting)
 	inst:ListenForEvent("attacked", OnAttacked)
-    inst.components.combat.onhitotherfn = OnHitOther
+	inst.components.combat.onhitotherfn = OnHitOther
 
 	--inst:ListenForEvent("stopfollowing", function(inst) inst.components.health:Kill()  end)
 
@@ -1145,6 +1241,19 @@ local function atrium_fn()
 
 	inst:ListenForEvent("miniondeath", OnMinionDeath)
 	inst:ListenForEvent("death", AtriumOnDeath)
+
+	inst.usedtrails = {}
+	inst.availabletrails = {}
+	for i = 1, MAX_TRAIL_VARIATIONS do
+		table.insert(inst.availabletrails, i)
+	end
+	inst._blooming = false
+	inst.DoTrail = DoTrail
+	inst.StartBlooming = StartBlooming
+	inst.StopBlooming = StopBlooming
+	--  inst.OnEntityWake = ForestOnEntityWake
+	--  inst.OnEntitySleep = ForestOnEntitySleep
+	StartBlooming(inst)
 
 	return inst
 end

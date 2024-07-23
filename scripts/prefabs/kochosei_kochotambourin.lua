@@ -3,11 +3,6 @@ local assets = {
     Asset("ANIM", "anim/swap_kochotambourin.zip"),
     Asset("ANIM", "anim/lavaarena_heal_flowers_fx.zip"),
 }
-local prefabs_healblooms = {
-    "lavaarena_bloom_kocho",
-    "lavaarena_bloomhealbuff_kocho",
-    "lavaarena_bloomsleepdebuff_kocho",
-}
 
 local function TurnOn(inst, owner)
     for i = 0, 12 do
@@ -80,8 +75,8 @@ local function HealFunc2(inst, target, pos)
             v.rezsource = hstrongtay
         end
         if playercount >= 1 then
-            caster.components.health:DoDelta(-100, true, "lydochet")
-            inst.components.finiteuses:SetUses(0)
+            caster.components.health:DoDelta(-50, true, "lydochet")
+            inst.components.finiteuses:Use(20)
         end
         local playersheal = TheSim:FindEntities(pos.x, pos.y, pos.z, Rn, { "player" })
         xu:DoPeriodicTask(0.5, function()
@@ -94,20 +89,6 @@ local function HealFunc2(inst, target, pos)
 end
 
 --Bloomson credit to Abigail  https://steamcommunity.com/sharedfiles/filedetails/?id=2535962194&searchtext=fantasy
-
-local function onattack(inst, attacker, target)
-    if not target:IsValid() then
-        return
-    end
-
-    if target.components.combat ~= nil then
-        target.components.combat:SuggestTarget(attacker)
-    end
-
-    if target.components.sleeper ~= nil and target.components.sleeper:IsAsleep() then
-        target.components.sleeper:WakeUp()
-    end
-end
 
 local function OnEquip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_object", "swap_kochotambourin", "swap_kochotambourin")
@@ -136,7 +117,7 @@ local function light_fn()
     inst.entity:AddNetwork()
     inst.Light:Enable(true)
     inst.Light:SetFalloff(0.5)
-    inst.Light:SetIntensity(0.8)
+    inst.Light:SetIntensity(0.6)
     inst.Light:SetColour(200 / 255, 100 / 255, 200 / 255)
     inst.persists = false
     inst:AddTag("FX")
@@ -190,7 +171,6 @@ local function fn()
     inst.components.finiteuses:SetOnFinished(inst.Remove)
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetOnAttack(onattack)
     inst.components.weapon:SetDamage(20)
 
     inst:AddComponent("inspectable")

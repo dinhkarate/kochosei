@@ -280,7 +280,8 @@ local function fn()
     inst.components.combat.onhitotherfn = OnHitOther
 	inst.TransformFire = TransformFire
 	inst.TransformNormal = TransformNormal
-	inst.can_ground_pound = false
+    inst.enraged = true
+    inst.can_ground_pound = true
 	inst.hit_recovery = TUNING.DRAGONFLY_HIT_RECOVERY
 
 	MakeHugeFreezableCharacter(inst)

@@ -3,10 +3,6 @@ local assets = {
 	Asset("ANIM", "anim/swap_kochosei_lantern.zip"),
 }
 
-local prefabs = {
-	"kochoseilanternlight",
-}
-
 local function onremovelight(light)
 	light._lantern._light = nil
 end
@@ -21,7 +17,6 @@ local function fuelupdate(inst)
 end
 
 local function turnon(inst)
-	local owner = inst.components.inventoryitem.owner
 	if not inst.components.fueled:IsEmpty() then
 		if not inst.components.machine.ison then
 			if inst.components.fueled then

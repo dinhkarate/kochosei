@@ -1,6 +1,4 @@
---localized variables
-local require = GLOBAL.require
-local STRINGS = GLOBAL.STRINGS
+
 local TUNING = GLOBAL.TUNING
 
 TUNING.KOCHOSEI_TURNOFFMUSIC = GetModConfigData("turnoffmusic")
