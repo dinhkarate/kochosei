@@ -124,5 +124,5 @@ local function fncooked()
 end
 STRINGS.NAMES.KOCHO_LOTUS_FLOWER_COOKED = "Bông Sen Nướng"
 STRINGS.NAMES.KOCHO_LOTUS_FLOWER = "Bông Sen"
-return Prefab("common/inventory/kocho_lotus_flower", fn, assets),
-	Prefab("common/inventory/kocho_lotus_flower_cooked", fncooked, assets)
+return Prefab("kocho_lotus_flower", fn, assets),
+	Prefab("kocho_lotus_flower_cooked", fncooked, assets)

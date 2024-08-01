@@ -4,9 +4,7 @@ local assets = {
 }
 
 local SCALE = 1.25
---local music = TUNING.KOCHOSEI_TURNOFFMUSIC
 
-local prefabs = { "collapse_small" }
 local PLANT_TAGS = { "tendable_farmplant" }
 local function TendToPlantsAOE(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()

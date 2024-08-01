@@ -1,9 +1,3 @@
-local assets = {
-	Asset("ANIM", "anim/kochosei.zip"),
-	Asset("ANIM", "anim/kochosei_snowmiku_skin1.zip"),
-	Asset("SOUND", "sound/maxwell.fsb"),
-}
-
 local brain = require("brains/kochosei_enemy_brain_b")
 local prefabs = {
 	"shadow_despawn",

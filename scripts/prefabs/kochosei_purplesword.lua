@@ -76,4 +76,4 @@ STRINGS.NAMES.KOCHO_PURPLESWORD = "Kocho Purple Sword"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHO_PURPLESWORD = "I want this!! :D"
 STRINGS.RECIPE_DESC.KOCHO_PURPLESWORD = "ヾ(•ω•`)o"
 
-return Prefab("common/inventory/kocho_purplesword", fn, assets, prefabs)
+return Prefab("kocho_purplesword", fn, assets, prefabs)

@@ -195,4 +195,4 @@ STRINGS.NAMES.KOCHOTAMBOURIN = "Kochotambourin"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOTAMBOURIN = "I want this!! :D"
 STRINGS.RECIPE_DESC.KOCHOTAMBOURIN = "Healing teammate"
 
-return Prefab("common/inventory/kochotambourin", fn, assets, prefabs), Prefab("kochotambourin_light", light_fn)
+return Prefab("kochotambourin", fn, assets, prefabs), Prefab("kochotambourin_light", light_fn)

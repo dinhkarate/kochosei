@@ -99,6 +99,7 @@ local listiteminv = {
 	"lucky_hammer",
 	"kochosei_ancient_books",
 	"kochosei_christmast_torch1",
+
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
@@ -154,7 +155,8 @@ PrefabFiles = {
 	"kochosei_moonstorm_ground_lightning_fx",
 	"kochosei_buff",
 	"kochosei_f_cmn_x",
-	"kochosei_cay_hoa_sang"
+	"kochosei_cay_hoa_sang",
+	"kochosei_gift"
 }
 
 AddModCharacter("kochosei", "FEMALE")
@@ -293,6 +295,8 @@ local function OnHitOther_BuffDamage(inst, data)
 	end
 end
 
+
+
 AddPlayerPostInit(function(inst)
 	if not TheWorld.ismastersim then
 		return inst
@@ -303,6 +307,8 @@ AddPlayerPostInit(function(inst)
 	end
 	inst:ListenForEvent("timerdone", bufffood)
 	inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
+	--inst:ListenForEvent("fishingcollect", onfish)
+
 end)
 
 --- Hồi sinh từ bướm ---

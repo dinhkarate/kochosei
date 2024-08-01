@@ -238,4 +238,4 @@ STRINGS.NAMES.KOCHOSEI_LANTERN = "Kochosei Lantern"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_LANTERN = "Fancy"
 STRINGS.RECIPE_DESC.KOCHOSEI_LANTERN = "Wandering Wandering like a some witch"
 
-return Prefab("common/inventory/kochosei_lantern", fn, assets), Prefab("kochoseilanternlight", lanternlightfn)
+return Prefab("kochosei_lantern", fn, assets), Prefab("kochoseilanternlight", lanternlightfn)

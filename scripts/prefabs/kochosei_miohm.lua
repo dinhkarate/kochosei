@@ -391,4 +391,4 @@ STRINGS.NAMES.MIOHM = "MioHM"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.MIOHM = "Woaaah, i want it!! XD"
 STRINGS.RECIPE_DESC.MIOHM = "Electric hammer"
 
-return Prefab("common/inventory/miohm", fn, assets, prefabs), Prefab("miohammer_light", light_fn)
+return Prefab("miohm", fn, assets, prefabs), Prefab("miohammer_light", light_fn)

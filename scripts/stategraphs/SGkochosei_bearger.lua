@@ -1,7 +1,6 @@
 require("stategraphs/commonstates")
 local easing = require("easing")
 
-local SHAKE_DIST = 40
 
 --------------------------------------------------------------------------
 
@@ -362,8 +361,6 @@ local function KillSwipeFX(inst)
 	end
 end
 
---------------------------------------------------------------------------
-local listagetet = {}
 
 local actionhandlers = {
     ActionHandler(ACTIONS.GOHOME, "taunt"),

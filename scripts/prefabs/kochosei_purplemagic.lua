@@ -171,4 +171,4 @@ STRINGS.NAMES.KOCHOSEI_PURPLEMAGIC = "Kochosei Purplemagic"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_PURPLEMAGIC = "Holyyy!! :D"
 STRINGS.RECIPE_DESC.KOCHOSEI_PURPLEMAGIC = "Spawn Kochosei clone"
 
-return Prefab("common/inventory/kochosei_purplemagic", fn, assets, prefabs)
+return Prefab("kochosei_purplemagic", fn, assets, prefabs)

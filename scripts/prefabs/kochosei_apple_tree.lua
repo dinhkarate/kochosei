@@ -1,14 +1,10 @@
 require("worldsettingsutil")
 
 local seg_time = TUNING.SEG_TIME
-
 local day_segs = TUNING.DAY_SEGS_DEFAULT
-local dusk_segs = TUNING.DUSK_SEGS_DEFAULT
-local night_segs = TUNING.NIGHT_SEGS_DEFAULT
 local total_day_time = TUNING.TOTAL_DAY_TIME
 local day_time = seg_time * day_segs
-local dusk_time = seg_time * dusk_segs
-local night_time = seg_time * night_segs
+
 TUNING.KOCHOSEI_APPLE_TREE_CHOPS_TALL = 20
 TUNING.KOCHOSEI_APPLE_TREE_REGROWTH = {
     OFFSPRING_TIME = total_day_time * 100,
