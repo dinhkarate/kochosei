@@ -16,9 +16,6 @@ local KEEP_WORKING_DIST = 14
 
 local KEEP_DANCING_DIST = 3
 
-local DIG_TAGS = { "stump", "grave", "farm_debris", "snowpile" }
-local CHOP_TAGS = { "evergreens", "deciduoustree" }
-
 local function GetLeader(inst)
 	return inst.components.follower.leader
 end
@@ -51,10 +48,8 @@ local function ShouldDanceParty(inst)
 end
 
 local function PickUpAction(inst)
-	if not inst.components.container then
-		return nil
-	end
-	if inst.components.container:IsFull() then
+
+	if inst.components.container:IsFull() or inst.needtostop == 0 then
 		return nil
 	end
 
@@ -97,10 +92,10 @@ function kochosei_enemy_brain_b:OnStart()
 			end,
 			"Leader In Range",
 			PriorityNode({
-			--	DoAction(self.inst, PickUpAction, "pick up", true),
+			DoAction(self.inst, PickUpAction, "pick up", true),
 			}, 0.25)
 		),
-
+       -- WhileNode( function() return closetoleader(self.inst) end, "Stayclose", BrainCommon.NodeAssistLeaderPickUps(self, pickupparams)),
 		Follow(self.inst, GetLeader, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
 
 		WhileNode(function()

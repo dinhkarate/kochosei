@@ -9,7 +9,6 @@ local assets = {
 }
 
 local prefabs = { "meat" }
-local loot = { "deerclops_eyeball" }
 
 local TARGET_DIST = 16
 

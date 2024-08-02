@@ -1,7 +1,6 @@
 require("prefabutil")
 
 local function make_plantable(data)
-	local bank = data.name
 	local assets = {
 		Asset("ANIM", "anim/kochosei_apple_fruit.zip"),
 		Asset("ANIM", "anim/kochosei_apple_tree.zip"),

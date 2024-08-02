@@ -3,24 +3,21 @@ local Assets = {
     Asset("ANIM", "anim/kocho_miku_back.zip"),
     Asset("ANIM", "anim/kochosei_fuji_tree.zip"),
     Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
-    Asset("ATLAS", "minimap/kochosei_apple_tree.xml"),
+    Asset("ATLAS", "minimap/kochosei_apple_tree.xml")
 }
 
 local prefabs = {
-    "globalmapicon",
+    "globalmapicon"
 }
 local RANGE_CUA_CAY_THAN_KY = 15
 
-local small_ram_products =
-{
+local small_ram_products = {
     "twigs",
     "cutgrass",
-	"petals",
+    "petals",
     "oceantree_leaf_fx_fall",
-    "oceantree_leaf_fx_fall",
+    "oceantree_leaf_fx_fall"
 }
-local MIN = TUNING.SHADE_CANOPY_RANGE
-local MAX = MIN + TUNING.WATERTREE_PILLAR_CANOPY_BUFFER
 
 local DROP_ITEMS_DIST_MIN = 8
 local DROP_ITEMS_DIST_VARIANCE = 12
@@ -30,17 +27,14 @@ local NUM_DROP_SMALL_ITEMS_MAX = 14
 local function OnDropped(inst)
     inst.components.disappears:PrepareDisappear()
 end
-local function fn()
+
+local function backcos()
     local inst = CreateEntity()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
     inst.entity:AddSoundEmitter()
     MakeInventoryPhysics(inst)
-
-    inst.AnimState:SetBank("kocho_miku_cos")
-    inst.AnimState:SetBuild("kocho_miku_cos")
-    inst.AnimState:PlayAnimation("idle")
 
     if not TheWorld.ismastersim then
         return inst
@@ -69,94 +63,102 @@ local function fn()
 
     return inst
 end
-
-local function fnback()
-    local inst = CreateEntity()
-    inst.entity:AddTransform()
-    inst.entity:AddAnimState()
-    inst.entity:AddNetwork()
-    inst.entity:AddSoundEmitter()
-    inst.entity:AddLight()
-    inst.Light:Enable(true) -- originally was false.
-    inst.Light:SetRadius(1.1)
-    inst.Light:SetFalloff(0.5)
-    inst.Light:SetIntensity(0.8)
-    inst.Light:SetColour(255 / 255, 255 / 255, 0 / 255)
-    inst.AnimState:SetBank("kocho_miku_back")
-    inst.AnimState:SetBuild("kocho_miku_back")
+local function fn()
+    local inst = backcos()
+    inst.AnimState:SetBank("kocho_miku_cos")
+    inst.AnimState:SetBuild("kocho_miku_cos")
     inst.AnimState:PlayAnimation("idle")
-
-    if not TheWorld.ismastersim then
-        return inst
-    end
-    inst.entity:SetPristine()
-
-    inst:AddComponent("disappears")
-    inst.components.disappears.sound = "dontstarve/common/dust_blowaway"
-    inst.components.disappears.anim = "disappear"
-
-    inst:AddTag("preparedfood")
-
-    inst:AddComponent("inspectable")
-
-    inst:AddComponent("inventoryitem")
-
-    inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
-
-    inst:AddComponent("bait")
-
-    inst:AddComponent("tradable")
-    inst:ListenForEvent("ondropped", OnDropped)
-    inst.components.disappears:PrepareDisappear()
-
     return inst
 end
 
-local KHONG_TAG = { "player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic" }
-local CAN_TAG = { "shadowcreature", "monster", "structure", "frog" }
+local function fnback()
+    local inst = backcos()
+    inst.AnimState:SetBank("kocho_miku_back")
+    inst.AnimState:SetBuild("kocho_miku_back")
+    inst.AnimState:PlayAnimation("idle")
+    return inst
+end
+
+local KHONG_TAG = {
+    "player",
+    "FX",
+    "playerghost",
+    "NOCLICK",
+    "DECOR",
+    "INLIMBO",
+    "epic"
+}
+local CAN_TAG = {
+    "shadowcreature",
+    "monster",
+    "frog"
+}
+local function checkfl(inst)
+    local follower = inst.components.follower
+    if follower ~= nil then
+        local leader = follower:GetLeader()
+        if leader and leader:HasTag("player") then
+            return true
+        end
+    end
+    if follower == nil then
+        return false
+    end
+end
 
 local function thithet(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, RANGE_CUA_CAY_THAN_KY, nil, KHONG_TAG, CAN_TAG)
 
     for i, v in ipairs(ents) do
-        if v.components.health then
-            local follower = v.components.follower
-            if not follower or not follower.leader then
+        if v.components.health and v.components.combat then
+            if not checkfl(v) then
                 v.components.health:Kill()
-            elseif follower.leader:HasTag("player") then
-                -- Đối tượng có leader và leader là người chơi, không gọi :Kill()
-            else
-                v.components.health:Kill()
-            end
-        end
-        if v.components.burnable and v.components.burnable:IsBurning() and v:HasTag("structure") then
-            v.components.burnable:Extinguish()
-        end
-    end
-    local players = FindPlayersInRange(x, y, z, RANGE_CUA_CAY_THAN_KY, true)
-
-    for _, player in pairs(players) do
-        player.components.temperature:SetTemperature(TUNING.BOOK_TEMPERATURE_AMOUNT)
-        --	player.components.moisture:SetMoistureLevel(0)
-        local items = player.components.inventory:ReferenceAllItems()
-        for _, item in ipairs(items) do
-            if item.components.inventoryitemmoisture ~= nil then
-                item.components.inventoryitemmoisture:SetMoisture(0)
             end
         end
     end
 end
 
---fix 23/01/2024
+local function lam_kho_item(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local players = FindPlayersInRange(x, y, z, RANGE_CUA_CAY_THAN_KY, true)
+
+    for _, player in pairs(players) do
+        if not player:HasTag("moistureimmunity") then
+            player:AddDebuff("Buff_Cay_Than_Ky", "buff_moistureimmunity")
+        end
+        if player.components.temperature then
+            player.components.temperature:SetTemperature(TUNING.BOOK_TEMPERATURE_AMOUNT)
+        end
+        local items = player.components.inventory:ReferenceAllItems()
+        for _, item in ipairs(items) do
+            if item.components.inventoryitem ~= nil then
+                item.components.inventoryitem:DryMoisture()
+            end
+        end
+    end
+end
+
+-- fix 23/01/2024
 local function OnInit(inst)
     inst.icon = SpawnPrefab("globalmapicon")
     inst.icon:TrackEntity(inst)
 end
 
-local FIREFLY_MUST = { "firefly" }
-local FIREFLY_CANT = { "FX", "NOBLOCK", "NOCLICK", "DECOR", "flying", "boat", "walkingplank", "_inventoryitem", "structure" }
+local FIREFLY_MUST = {
+    "firefly"
+}
+local FIREFLY_CANT = {
+    "FX",
+    "NOBLOCK",
+    "NOCLICK",
+    "DECOR",
+    "flying",
+    "boat",
+    "walkingplank",
+    "_inventoryitem",
+    "structure"
+}
 local function OnPhaseChanged(inst, phase)
     if phase == "day" then
         local x, y, z = inst.Transform:GetWorldPosition()
@@ -169,10 +171,18 @@ local function OnPhaseChanged(inst, phase)
                 while offset == nil and count < 10 do
                     local angle = 2 * PI * math.random()
                     local radius = math.random() * 8
-                    offset = { x = math.cos(angle) * radius, y = 0, z = math.sin(angle) * radius }
+                    offset = {
+                        x = math.cos(angle) * radius,
+                        y = 0,
+                        z = math.sin(angle) * radius
+                    }
                     count = count + 1
 
-                    pos = { x = x + offset.x, y = 0, z = z + offset.z }
+                    pos = {
+                        x = x + offset.x,
+                        y = 0,
+                        z = z + offset.z
+                    }
 
                     if TheSim:CountEntities(pos.x, pos.y, pos.z, 5, nil, FIREFLY_CANT) > 0 then
                         offset = nil
@@ -189,14 +199,10 @@ local function OnPhaseChanged(inst, phase)
 end
 
 local function CustomOnHauntkochosei(inst, haunter)
-    if haunter.components.inventory and not haunter.components.inventory:IsFull() then
-        haunter.components.inventory:GiveItem(SpawnPrefab("pocketwatch_revive_reviver"))
-    else
-        haunter:PushEvent("respawnfromghost", { source = inst, })
-    end
-
+    haunter:PushEvent("respawnfromghost", {
+        source = inst
+    })
 end
-
 
 local function DropLightningItems(inst, items)
     local x, _, z = inst.Transform:GetWorldPosition()
@@ -213,7 +219,7 @@ local function DropLightningItems(inst, items)
             if i == num_items then
                 inst._lightning_drop_task:Cancel()
                 inst._lightning_drop_task = nil
-            end 
+            end
         end)
     end
 end
@@ -230,10 +236,12 @@ local function OnLightningStrike(inst)
         table.insert(items_to_drop, small_ram_products[math.random(1, #small_ram_products)])
     end
 
-    inst._lightning_drop_task = inst:DoTaskInTime(20*FRAMES, DropLightningItems, items_to_drop)
+    inst._lightning_drop_task = inst:DoTaskInTime(20 * FRAMES, DropLightningItems, items_to_drop)
 end
 
-
+local function on_find_fire(inst, firePos)
+    inst.components.wateryprotection:SpreadProtectionAtPoint(firePos:Get())
+end
 local function cay_kocho()
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -241,9 +249,9 @@ local function cay_kocho()
     inst.entity:AddNetwork()
     inst.entity:AddSoundEmitter()
     inst.entity:AddLight()
-    --20/01/2024
-    --Do entity không được add minimapentity và mình đã phải vật lộn ở lỗi tại dòng thứ 152 mà không hiểu nguyên do
-    --Ngốn thêm 30p nữa
+    -- 20/01/2024
+    -- Do entity không được add minimapentity và mình đã phải vật lộn ở lỗi tại dòng thứ 152 mà không hiểu nguyên do
+    -- Ngốn thêm 30p nữa
     inst.entity:AddMiniMapEntity()
 
     inst.Light:Enable(true) -- originally was false.
@@ -286,11 +294,27 @@ local function cay_kocho()
 
     inst:AddComponent("hauntable")
     inst.components.hauntable:SetOnHauntFn(CustomOnHauntkochosei)
+
     inst:AddComponent("lightningblocker")
     inst.components.lightningblocker:SetBlockRange(TUNING.SHADE_CANOPY_RANGE)
     inst.components.lightningblocker:SetOnLightningStrike(OnLightningStrike)
 
     inst:DoPeriodicTask(1, thithet)
+    inst:DoPeriodicTask(5, lam_kho_item)
+
+    inst:AddComponent("firedetector")
+    inst.components.firedetector:SetOnFindFireFn(on_find_fire)
+    inst.components.firedetector.range = RANGE_CUA_CAY_THAN_KY
+    inst.components.firedetector.detectPeriod = 3
+    inst.components.firedetector.fireOnly = true
+    inst.components.firedetector:Activate(true)
+
+    inst:AddComponent("wateryprotection")
+    inst.components.wateryprotection.extinguishheatpercent = TUNING.FIRESUPPRESSOR_EXTINGUISH_HEAT_PERCENT
+    inst.components.wateryprotection.temperaturereduction = TUNING.FIRESUPPRESSOR_TEMP_REDUCTION
+    inst.components.wateryprotection.witherprotectiontime = TUNING.FIRESUPPRESSOR_PROTECTION_TIME
+    inst.components.wateryprotection.addcoldness = TUNING.FIRESUPPRESSOR_ADD_COLDNESS
+    inst.components.wateryprotection:AddIgnoreTag("player")
     return inst
 end
 
@@ -298,7 +322,8 @@ local WATER_RADIUS = 3.8
 local NO_DEPLOY_RADIUS = WATER_RADIUS + 0.1
 
 local function GetFish(inst)
-    return math.random() < 0.6 and "wetpouch" or "pondfish"
+
+    return "kochosei_gift"
 end
 
 local function oc_cmndao()
@@ -313,7 +338,7 @@ local function oc_cmndao()
     inst.Transform:SetRotation(45)
 
     MakeObstaclePhysics(inst, 6)
-    --inst:SetPhysicsRadiusOverride(3)
+    -- inst:SetPhysicsRadiusOverride(3)
 
     inst.AnimState:SetBuild("oasis_tile")
     inst.AnimState:SetBank("oasis_tile")
@@ -347,9 +372,11 @@ local function oc_cmndao()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("fishable")
-    inst.components.fishable.maxfish = TUNING.OASISLAKE_MAX_FISH
+    inst.components.fishable.maxfish = 999
+    inst.components.fishable.fishleft = 999
     inst.components.fishable:SetRespawnTime(TUNING.OASISLAKE_FISH_RESPAWN_TIME)
-    inst.components.fishable:SetGetFishFn(GetFish)
+--inst.components.fishable:SetGetFishFn(GetFish)
+    inst.components.fishable:AddFish("kochosei_gift")
 
     inst:AddComponent("hauntable")
     inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
@@ -370,13 +397,9 @@ STRINGS.NAMES.KOCHO_MIKU_BACK = "Backpack For Clone"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHO_MIKU_BACK = "o((>ω< ))o"
 STRINGS.RECIPE_DESC.KOCHO_MIKU_BACK = "Are you too lazy and don't want to work?"
 
-STRINGS.NAMES.KOCHOSEI_FUJI_TREE = "Cây Thần Kỳ... Chắc Thế"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE = "Cây đang thi công, xin lỗi đã làm phiền, mong quý vị thông cảm, chưa biết khi nào xong nhưng chắc còn lâu ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
-STRINGS.NAMES.KOCHOSEI_OC_CMNDAO = "Cây Thần Kỳ... Chắc Thế"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Cây đang thi công, xin lỗi đã làm phiền, mong quý vị thông cảm, chưa biết khi nào xong nhưng chắc còn lâu ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
+STRINGS.NAMES.KOCHOSEI_FUJI_TREE = "Cây Đ Gì Thần Kỳ v~"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE = "Cây đã thi công xong, xin lỗi đã làm phiền, mong quý vị thông cảm ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
+STRINGS.NAMES.KOCHOSEI_OC_CMNDAO = "Cái Gì Đó...Giống Như Ốc Đảo"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Có ếch ở dưới hồ không nhỉ?"
 
-return Prefab("common/inventory/kocho_miku_cos", fn, Assets),
-Prefab("common/inventory/kocho_miku_back", fnback, Assets),
-Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs),
-Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs)
-
+return Prefab("kocho_miku_cos", fn, Assets), Prefab("kocho_miku_back", fnback, Assets), Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs)

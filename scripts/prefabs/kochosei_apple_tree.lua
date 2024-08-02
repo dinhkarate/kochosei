@@ -1,14 +1,10 @@
 require("worldsettingsutil")
 
 local seg_time = TUNING.SEG_TIME
-
 local day_segs = TUNING.DAY_SEGS_DEFAULT
-local dusk_segs = TUNING.DUSK_SEGS_DEFAULT
-local night_segs = TUNING.NIGHT_SEGS_DEFAULT
 local total_day_time = TUNING.TOTAL_DAY_TIME
 local day_time = seg_time * day_segs
-local dusk_time = seg_time * dusk_segs
-local night_time = seg_time * night_segs
+
 TUNING.KOCHOSEI_APPLE_TREE_CHOPS_TALL = 20
 TUNING.KOCHOSEI_APPLE_TREE_REGROWTH = {
     OFFSPRING_TIME = total_day_time * 100,
@@ -99,8 +95,6 @@ local kochosei_apple_tree_anims = -- kochosei_appletree
     [NORMAL] = makeanims(NORMAL),
 }
 
-local FX_TAGS = { "fx" }
-
 -- Nơi spawn con child, có thể thay thành butterfly
 
 -- local function OnIsDay(inst, isday)
@@ -117,8 +111,6 @@ local FX_TAGS = { "fx" }
 
 local function OnChopTree(inst, chopper, chops) -- Chặt cây
     local anim_set = kochosei_apple_tree_anims[inst.size]
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local angle = math.random() * 8 * PI
     inst.AnimState:PlayAnimation(anim_set.chop)
     inst.AnimState:PushAnimation(anim_set.sway1, true)
     if not (chopper ~= nil and chopper:HasTag("playerghost")) then
@@ -230,7 +222,6 @@ local function MakeStump(inst)
 end
 
 local function OnChopTreeDown(inst, chopper, child)
-    local pos = inst:GetPosition()
     inst.AnimState:PlayAnimation(kochosei_apple_tree_anims[inst.size].fallleft)
     inst.AnimState:PushAnimation(kochosei_apple_tree_anims[inst.size].stump)
     if not (chopper ~= nil and chopper:HasTag("playerghost")) then
@@ -244,7 +235,6 @@ local function OnChopTreeDown(inst, chopper, child)
 end
 
 local function OnChopTreeBurntDown(inst, chopper)
-    local pos = inst:GetPosition()
     inst.SoundEmitter:PlaySound("dontstarve/forest/treeCrumble")
     if not (chopper ~= nil and chopper:HasTag("playerghost")) then
         inst.SoundEmitter:PlaySound("dontstarve/wilson/use_axe_tree")

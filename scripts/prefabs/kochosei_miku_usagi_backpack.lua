@@ -46,7 +46,6 @@ local function onunequip(inst, owner)
         owner:RemoveTag("expertchef")
     end
 
-    local skin_build = inst:GetSkinBuild()
     owner.AnimState:ClearOverrideSymbol("swap_body")
     owner.AnimState:ClearOverrideSymbol("miku_usagi_backpack")
 

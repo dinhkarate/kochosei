@@ -1,9 +1,3 @@
-local assets = {
-	Asset("ANIM", "anim/kochosei.zip"),
-	Asset("ANIM", "anim/kochosei_snowmiku_skin1.zip"),
-	Asset("SOUND", "sound/maxwell.fsb"),
-}
-
 local brain = require("brains/kochosei_enemy_brain_b")
 local prefabs = {
 	"shadow_despawn",
@@ -109,36 +103,22 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 		--inst.Transform:SetScale(1.75, 1.75, 1.75)
 
 		inst.AnimState:SetBank("wilson")
-		--bank名称是Spriter文件的名称。
+
 		inst.AnimState:SetBuild("kochosei")
-		--build名称是Spriter中动画文件夹的名称。
+
 		inst.AnimState:PlayAnimation("idle")
 		inst.AnimState:SetScale(0.8, 0.8)
 
 		inst.Transform:SetFourFaced(inst)
 
-		if tool ~= nil then
-			inst.AnimState:OverrideSymbol("swap_object", tool, tool)
-			inst.AnimState:Hide("ARM_normal")
-		else
-			inst.AnimState:Hide("ARM_carry")
-		end
-
-		if hat ~= nil then
-			inst.AnimState:OverrideSymbol("swap_hat", hat, "swap_hat")
-			inst.AnimState:Hide("HAIR_NOHAT")
-			inst.AnimState:Hide("HAIR")
-		else
-			inst.AnimState:Hide("HAT")
-			inst.AnimState:Hide("HAIR_HAT")
-		end
-
 		inst:AddTag("scarytoprey")
 		inst:AddTag("NOBLOCK")
-		inst:AddTag("summonerally")
+
 		inst:AddTag("kochosei_enemy")
+		inst:AddTag("balo_vali")
 
 		inst:SetPrefabNameOverride("kochosei_enemy")
+        inst.AnimState:Hide("ARM_carry")
 
 		inst.entity:SetPristine()
 
@@ -148,7 +128,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 			end
 			return inst
 		end
-
+		inst.needtostop = 0
 		inst:AddComponent("inspectable")
 		inst:AddComponent("locomotor")
 		inst.components.locomotor.runspeed = 12
@@ -167,8 +147,6 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 		inst.components.combat.hiteffectsymbol = "torso"
 		inst.components.combat:SetRange(2)
 		inst.components.combat:SetAttackPeriod(3)
-
-		--inst:AddComponent("inventory")
 
 		inst:AddComponent("follower")
 		inst.components.follower:KeepLeaderOnAttacked()

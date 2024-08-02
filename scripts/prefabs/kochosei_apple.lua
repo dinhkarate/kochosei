@@ -18,7 +18,6 @@ local function Plant(inst, growtime)
     inst:Remove()
 end
 
-local LEIF_TAGS = { "leif" }
 
 local function OnDeploy(inst, pt, deployer)
     inst = inst.components.stackable:Get()
@@ -36,7 +35,6 @@ end
 
 local function commonfn(name, anim)
     local inst = CreateEntity()
-    local abc = name
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()

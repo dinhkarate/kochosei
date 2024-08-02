@@ -81,7 +81,6 @@ local function SpawnIceFx(inst, target)
 
 	local num = 3
 	for i = 1, num do
-		local newarc = 180 - AOEarc
 		local theta = inst.Transform:GetRotation() * DEGREES
 		local radius = TUNING.DEERCLOPS_ATTACK_RANGE - ((TUNING.DEERCLOPS_ATTACK_RANGE / num) * i)
 		local offset = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))

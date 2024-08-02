@@ -7,10 +7,13 @@ require("behaviours/doaction")
 local MIN_FOLLOW_DIST = 0
 local TARGET_FOLLOW_DIST = 20
 local MAX_FOLLOW_DIST = 20
-
 local kochodeerclopsBrain = Class(Brain, function(self, inst)
 	Brain._ctor(self, inst)
 end)
+
+local function GetLeaderPos(inst)
+	return inst.components.follower.leader:GetPosition()
+end
 
 local function GetFaceTargetFn(inst)
 	return inst.components.follower.leader
@@ -24,17 +27,13 @@ local function GetLeader(inst)
 	return inst.components.follower.leader
 end
 
-local function GetLeaderPos(inst)
-	return inst.components.follower.leader:GetPosition()
-end
-
 function kochodeerclopsBrain:OnStart()
 	local root = PriorityNode({
 		ChaseAndAttack(self.inst),
 
 		Follow(self.inst, GetLeader, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
 
-		Wander(self.inst),
+		Wander(self.inst, GetLeaderPos, MAX_FOLLOW_DIST),
 
 		WhileNode(function()
 			return GetLeader(self.inst) ~= nil

@@ -27,54 +27,47 @@ if TUNING.KOCHOSEI_CHECKMOD == 1 then
 		)
 	)
 
-	table.insert(
-		prefabs,
-		CreatePrefabSkin("kochosei_snowmiku_skin1", {
-			base_prefab = "kochosei",
-			build_name_override = "kochosei_snowmiku_skin1",
-			type = "base",
-			rarity = "ModMade",
-			rarity_modifier = "Woven",
-			skip_item_gen = true,
-			skip_giftable_gen = true,
-			skin_tags = { "BASE", "kochosei", "ICE" },
-			skins = {
-				normal_skin = "kochosei_snowmiku_skin1",
-				ghost_skin = "ghost_kochosei_build",
-			},
+	local skin_data = {
+		{
+			skin_name = "kochosei_snowmiku_skin1",
+			build_name = "kochosei_snowmiku_skin1",
+			anim_file = "anim/kochosei_snowmiku_skin1.zip",
+		},
+		{
+			skin_name = "kochosei_skin_shinku_notfull",
+			build_name = "kochosei_skin_shinku_notfull",
+			anim_file = "anim/kochosei_skin_shinku_notfull.zip",
+		},
+		{
+			skin_name = "kochosei_skin_shinku_full",
+			build_name = "kochosei_skin_shinku_full",
+			anim_file = "anim/kochosei_skin_shinku_full.zip",
+		},
+	}
 
-			assets = {
-				Asset("ANIM", "anim/kochosei_snowmiku_skin1.zip"),
-				Asset("ANIM", "anim/ghost_kochosei_build.zip"),
-			},
-		})
-	)
-
-	table.insert(
-		prefabs,
-		CreatePrefabSkin("ms_kochosei_hat2", {
-
-			base_prefab = "kochosei_hat1",
-			type = "item",
-			rarity = "ModMade",
-			build_name_override = "ms_kochosei_hat2",
-			assets = {
-				Asset("ANIM", "anim/kochosei_hat2.zip"),
-			},
-		})
-	)
-	table.insert(
-		prefabs,
-		CreatePrefabSkin("ms_kochosei_hat3", {
-			base_prefab = "kochosei_hat1",
-			type = "item",
-			rarity = "ModMade",
-			build_name_override = "kochosei_hat3",
-			assets = {
-				Asset("ANIM", "anim/kochosei_hat3.zip"),
-			},
-		})
-	)
+	for _, skin in ipairs(skin_data) do
+		table.insert(
+			prefabs,
+			CreatePrefabSkin(skin.skin_name, {
+				base_prefab = "kochosei",
+				build_name_override = skin.build_name,
+				type = "base",
+				rarity = "ModMade",
+				rarity_modifier = "Woven",
+				skip_item_gen = true,
+				skip_giftable_gen = true,
+				skin_tags = { "BASE", "kochosei", "ICE" },
+				skins = {
+					normal_skin = skin.skin_name,
+					ghost_skin = "ghost_kochosei_build",
+				},
+				assets = {
+					Asset("ANIM", skin.anim_file),
+					Asset("ANIM", "anim/ghost_kochosei_build.zip"),
+				},
+			})
+		)
+	end
 end
 
 return unpack(prefabs)

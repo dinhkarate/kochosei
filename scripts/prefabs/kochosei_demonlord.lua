@@ -158,4 +158,4 @@ STRINGS.NAMES.KOCHOSEI_DEMONLORD = "Kochosei Demonlord"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_DEMONLORD = "It makes me scary!"
 STRINGS.RECIPE_DESC.KOCHOSEI_DEMONLORD = "Spawn Ancient Fuel"
 
-return Prefab("common/inventory/kochosei_demonlord", fn, assets, prefabs)
+return Prefab("kochosei_demonlord", fn, assets, prefabs)
