@@ -647,6 +647,7 @@ STRINGS.NAMES.KOCHOFOOD_APPLE_CANDY = "Apple Candy"
 STRINGS.NAMES.KOCHOFOOD_BUNREAL = "Bún Real"
 STRINGS.NAMES.KOCHOFOOD_BANHMI_2 = "Bánh Mì"
 STRINGS.NAMES.KOCHOFOOD_CAFE = "Cà Phê Sữa Đá"
+STRINGS.NAMES.KOCHOSEI_GIFT= "Hộp Quà Của Kochosei"
 STRINGS.SKIN_NAMES.kochosei_hat2 = "Kochosei Hat 2"
 STRINGS.SKIN_NAMES.kochosei_hat3 = "Kochosei Hat 3"
 --------------------------------------

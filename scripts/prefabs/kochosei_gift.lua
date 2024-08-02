@@ -2,6 +2,7 @@ local loottable = {}
 local trincmnket = {}
 local oceanfishdef = require("prefabs/oceanfishdef")
 
+
 local ca_bien = {
     "wobster_sheller_land"
 }
@@ -89,7 +90,6 @@ local function fn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    -- inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
@@ -109,10 +109,10 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.build = "wetpouch" --This is used within SGwilson, sent from an event in fishingrod.lua
+    -- Tạo build với folder fish01 và build  wilson /build
 
     inst:AddComponent("inventoryitem")
-    -- inst.components.inventoryitem.atlasname="images/inventoryimages/sora2armor.xml"
-    inst.components.inventoryitem.imagename = "gift_large1"
 
     inst:AddComponent("inspectable")
     inst:AddComponent("tradable")
@@ -120,7 +120,9 @@ local function fn()
     inst:AddComponent("unwrappable")
 
     inst.components.unwrappable:SetOnUnwrappedFn(OnUnwrapped)
+
     updateimage(inst)
+
     MakeHauntableLaunch(inst)
 
     return inst

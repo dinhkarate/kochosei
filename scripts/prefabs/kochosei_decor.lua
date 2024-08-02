@@ -322,20 +322,8 @@ local WATER_RADIUS = 3.8
 local NO_DEPLOY_RADIUS = WATER_RADIUS + 0.1
 
 local function GetFish(inst)
-    local item_fishing = {}
-    for k = 1, NUM_TRINKETS do
-        -- table.insert(item_fishing, "trinket_"..tostring(k))
-        table.insert(item_fishing, "cane")
 
-    end
-    for _, v in pairs(require("prefabs/oceanfishdef").fish) do
-        table.insert(item_fishing, v.prefab .. "_inv")
-    end
-    local wetpouch = SpawnPrefab("gift")
-    if wetpouch then
-        wetpouch.components.unwrappable:WrapItems(item_fishing)
-    end
-    return "wetpouch"
+    return "kochosei_gift"
 end
 
 local function oc_cmndao()
@@ -387,8 +375,8 @@ local function oc_cmndao()
     inst.components.fishable.maxfish = 999
     inst.components.fishable.fishleft = 999
     inst.components.fishable:SetRespawnTime(TUNING.OASISLAKE_FISH_RESPAWN_TIME)
-    inst.components.fishable:SetGetFishFn(GetFish)
- --   inst.components.fishable:AddFish("wetpouch")
+--inst.components.fishable:SetGetFishFn(GetFish)
+    inst.components.fishable:AddFish("kochosei_gift")
 
     inst:AddComponent("hauntable")
     inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
@@ -410,8 +398,8 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHO_MIKU_BACK = "o((>ω< ))o"
 STRINGS.RECIPE_DESC.KOCHO_MIKU_BACK = "Are you too lazy and don't want to work?"
 
 STRINGS.NAMES.KOCHOSEI_FUJI_TREE = "Cây Đ Gì Thần Kỳ v~"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE = "Cây đang thi công, xin lỗi đã làm phiền, mong quý vị thông cảm, chưa biết khi nào xong nhưng sắp xong rồi ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE = "Cây đã thi công xong, xin lỗi đã làm phiền, mong quý vị thông cảm ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
 STRINGS.NAMES.KOCHOSEI_OC_CMNDAO = "Cái Gì Đó...Giống Như Ốc Đảo"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Có cá ở dưới hồ không nhỉ?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Có ếch ở dưới hồ không nhỉ?"
 
 return Prefab("kocho_miku_cos", fn, Assets), Prefab("kocho_miku_back", fnback, Assets), Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs)
