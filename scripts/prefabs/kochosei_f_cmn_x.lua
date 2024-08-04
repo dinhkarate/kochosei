@@ -1,9 +1,3 @@
-local freezeprefabs =
-{
-    "mushroomsprout_glow",
-    "crab_king_icefx",
-	"crabking_feeze"
-}
 
 local function onfreeze(inst, target)
     if not target:IsValid() then
@@ -183,5 +177,5 @@ local function fcmnx()
    
 end
 
-return   Prefab("kochosei_crabking_feeze", freezefn, nil, freezeprefabs)
+return   Prefab("kochosei_crabking_feeze", freezefn)
 --,  Prefab("kochosei_idle_crabking_feeze", fcmnx, nil, freezeprefabs)

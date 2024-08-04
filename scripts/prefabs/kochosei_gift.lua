@@ -7,9 +7,13 @@ local ca_bien = {
     "wobster_sheller_land"
 }
 local ca_ao = {
+    "pondeel",
     "eel",
     "fish",
-    "frog"
+    "frog",
+    "mosquito",
+    "killerbee",
+    "butterfly"
 }
 
 for k = 1, NUM_TRINKETS do

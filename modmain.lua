@@ -274,18 +274,6 @@ end)
 
 --- Cái này là buff đọc từ sách cổ đại ---
 
-local function bufffood(inst, data)
-	if data.name == "kochobufffood" then
-		inst.AnimState:SetScale(1, 1)
-		inst.components.health:SetMaxHealth(TUNING.KOCHOSEI_HEALTH)
-		inst.components.hunger:SetMax(TUNING.KOCHOSEI_HUNGER)
-		inst.components.sanity:SetMax(TUNING.KOCHOSEI_SANITY)
-		inst.components.health.externalabsorbmodifiers:RemoveModifier(inst, "kocho_def_buff_food")
-		if inst.components.planarentity then
-			inst:RemoveComponent("planarentity")
-		end
-	end
-end
 
 local function OnHitOther_BuffDamage(inst, data)
 	local target = data.target
@@ -302,10 +290,7 @@ AddPlayerPostInit(function(inst)
 		return inst
 	end
 	inst.tangst = false
-	if not inst.components.timer then
-		inst:AddComponent("timer")
-	end
-	inst:ListenForEvent("timerdone", bufffood)
+
 	inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
 	--inst:ListenForEvent("fishingcollect", onfish)
 
@@ -329,7 +314,7 @@ AddPrefabPostInit("butterfly", function(inst)
 end)
 
 local function spawntom(inst, data)
-	if data.name == "Spawn_Tom" and inst.components.container then
+	if  inst.components.container then
 		local findtem = inst.components.container:HasItemWithTag("hoasen", 1)
 
 		if findtem and not inst.components.container:IsFull() then
@@ -337,7 +322,6 @@ local function spawntom(inst, data)
 			local wobster_sheller = SpawnPrefab("wobster_sheller_land")
 			inst.components.container:GiveItem(wobster_sheller)
 		end
-		inst.components.timer:StartTimer("Spawn_Tom", 10)
 	end
 end
 
@@ -348,26 +332,8 @@ AddPrefabPostInit("fish_box", function(inst)
 	if not TheWorld.ismastersim then
 		return inst
 	end
-	if not inst.components.timer then
-		inst:AddComponent("timer")
-	end
+	inst:DoPeriodicTask(10, spawntom) -- cmn dùng timmer quá phèn đi
 
-	--[[
-	local old_close = inst.components.container.onclosefn
-	inst.components.container.onclosefn = function(inst, data)
-		if old_close then
-			old_close(inst, data)
-		end
-		local findtem = inst.components.container:HasItemWithTag("hoasen", 1)
-		if findtem and not inst.components.timer:TimerExists("Spawn_Tom")
-		then
-			inst.components.timer:StartTimer("Spawn_Tom", 60)
-		end
-	end
-	--]]
-	inst.components.timer:StartTimer("Spawn_Tom", 10) -- chạy 1 lần duy nhất trong đời )
-
-	inst:ListenForEvent("timerdone", spawntom)
 end)
 
 -- Boss Drop nơ siêu cấp--
