@@ -102,7 +102,9 @@ local listiteminv = {
     "kochosei_hatfl",
     "lucky_hammer",
     "kochosei_ancient_books",
-    "kochosei_christmast_torch1"
+    "kochosei_christmast_torch1",
+    "kochosei_armor_1",
+    "kochosei_armor_2"
 
 }
 
@@ -129,6 +131,7 @@ PrefabFiles = {
     "kochosei_bearger",
     "kochosei_kochotambourin",
     "kochosei_hat",
+    "kochosei_armor",
     "kochosei_lantern",
     "kochosei_streetlight",
     "kochosei_streetlight1_musicbox",
@@ -262,6 +265,8 @@ AddPrefabPostInitAny(function(inst)
 	end
 end)
 --]]
+
+
 AddComponentPostInit("skinner", function(self)
     function self:Kochosei_GetSkinName()
         return self.skin_name
@@ -323,7 +328,7 @@ end
 --          inst.components.container:GiveItem(SpawnPrefab("wobster_sheller_land"))
 --	        for _, item in ipairs(inst.components.container:ReferenceAllItems()) do
 
-	--[[
+--[[
 	local old_close = inst.components.container.onclosefn
 	inst.components.container.onclosefn = function(inst, data)
 		if old_close then
@@ -336,7 +341,7 @@ end
 		end
 	end
 	--]]
-	
+
 AddPrefabPostInit("fish_box", function(inst)
     if not TheWorld.ismastersim then
         return inst

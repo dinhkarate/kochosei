@@ -6,6 +6,8 @@ local assets = {
 	Asset("ANIM", "anim/ms_kochosei_hat2.zip"),
 	Asset("ANIM", "anim/ms_kochosei_hat3.zip"),
 	Asset("ANIM", "anim/kochosei_hatfl_skin.zip"),
+	Asset("ANIM", "anim/kochosei_ribbon.zip"),
+	
 	--   Asset("ANIM", "anim/kochosei_hatfl_skin_drop.zip")
 }
 --[[
@@ -34,12 +36,14 @@ local hatMappings = {
 	kochosei_hat2 = "kochosei_hat2",
 	kochosei_hat3 = "kochosei_hat3",
 	kochosei_hatfl = "kochosei_hatfl",
+	kochosei_ribbon = "kochosei_ribbon",
 }
 
 local function OnEquip(inst, owner)
 	local hatName = hatMappings[inst.prefab]
 	if hatName and not (inst.prefab == "kochosei_hat1" or inst.prefab == "kochosei_hat3") then -- T không còn muốn thấy những thứ này nữa
 		owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or hatName, "swap_hat")
+		print(hatName)
 	end
 
 	if hatName == "kochosei_hatfl" and owner and owner.components.sanity then
@@ -155,6 +159,12 @@ local function kochosei_hatfl()
 	inst.AnimState:SetBuild("kochosei_hatfl")
 	return inst
 end
+local function kochosei_ribbon()
+	local inst = commonfn()
+	inst.AnimState:SetBank("kochosei_ribbon")
+	inst.AnimState:SetBuild("kochosei_ribbon")
+	return inst
+end
 --[[
 Kochoseiapi.MakeItemSkin("kochosei_hatfl", "kochosei_hatfl_skin", {
     name="kochosei_hatfl_skin",
@@ -183,4 +193,5 @@ STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but some
 return Prefab("kochosei_hat1", kochosei_hat1, assets),
 	Prefab("kochosei_hat2", kochosei_hat2, assets),
 	Prefab("kochosei_hat3", kochosei_hat3, assets),
-	Prefab("kochosei_hatfl", kochosei_hatfl, assets)
+	Prefab("kochosei_hatfl", kochosei_hatfl, assets),
+	Prefab("kochosei_ribbon", kochosei_ribbon, assets)
