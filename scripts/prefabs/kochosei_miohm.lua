@@ -217,7 +217,7 @@ end
 -------------level-------------------
 
 local function applyupgrades(inst)
-    local maxUpgrades = TUNING.KOCHOSEI_MAX_LEVEL + TUNING.KOCHOSEI_CHECKWIFI
+    local maxUpgrades = TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2)
     local upgrades = math.min(inst.levelmiohm, maxUpgrades)
     local damage = upgrades + TUNING.MIOHM_DAMAGE
 
@@ -258,12 +258,11 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
 	if item.prefab == "goldnugget" then
+		inst.levelmiohm = inst.levelmiohm + TUNING.KOCHOSEI_PER_KILL + (TUNING.KOCHOSEI_CHECKWIFI /50)
+		applyupgrades(inst)
 		if type(TUNING.MIOHM_DURABILITY) == "number" then
-			local doben = inst.components.finiteuses:GetUses() + (TUNING.MIOHM_REPAIR * 2)
+			local doben = inst.components.finiteuses:GetUses() + (50)
 			inst.components.finiteuses:SetUses(math.min(doben, TUNING.MIOHM_DURABILITY))
-		else
-			inst.levelmiohm = inst.levelmiohm + TUNING.KOCHOSEI_PER_KILL
-			applyupgrades(inst)
 		end
 	end
 end

@@ -1,13 +1,12 @@
 local assets = {
-    Asset("ANIM", "anim/kochosei_apple_fruit.zip"),
+    Asset("ANIM", "anim/kochosei_apple_fruit.zip")
 }
 
 local prefabs = {
     "kochosei_apple",
     "kochosei_apple_cooked",
     "spoiled_food",
-    "kochosei_apple_tree_sapling",
-    "kochosei_apple_plantables",
+    "kochosei_apple_tree_sapling"
 }
 
 local function Plant(inst, growtime)
@@ -18,12 +17,10 @@ local function Plant(inst, growtime)
     inst:Remove()
 end
 
-
 local function OnDeploy(inst, pt, deployer)
     inst = inst.components.stackable:Get()
     inst.Transform:SetPosition(pt:Get())
-    local timeToGrow =
-        GetRandomWithVariance(TUNING.KOCHOSEI_APPLE_TREE_GROWTIME.base, TUNING.KOCHOSEI_APPLE_TREE_GROWTIME.random)
+    local timeToGrow = GetRandomWithVariance(TUNING.KOCHOSEI_APPLE_TREE_GROWTIME.base, TUNING.KOCHOSEI_APPLE_TREE_GROWTIME.random)
     Plant(inst, timeToGrow)
 end
 
@@ -99,7 +96,7 @@ local function kochosei_apple()
 
     inst:AddComponent("deployable")
     inst.components.deployable:SetDeployMode(DEPLOYMODE.PLANT)
-    --inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.LARGE) -- RANGE TREE AND TREE = 1 SQUARE
+    -- inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.LARGE) -- RANGE TREE AND TREE = 1 SQUARE
     inst.components.deployable.ondeploy = OnDeploy
 
     inst.components.edible.foodtype = FOODTYPE.VEGGIE
@@ -136,6 +133,4 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_APPLE = "An apple a day, keep docto
 STRINGS.NAMES.KOCHOSEI_APPLE_COOKED = "Kochosei's Cooked Apple"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_APPLE_COOKED = "Looks nice!"
 
-return Prefab("kochosei_apple", kochosei_apple, assets, prefabs),
-    Prefab("kochosei_apple_cooked", kochosei_apple_cooked, assets, prefabs),
-    MakePlacer("kochosei_apple_placer", "kochosei_apple_fruit", "kochosei_apple_fruit", "idle_planted")
+return Prefab("kochosei_apple", kochosei_apple, assets, prefabs), Prefab("kochosei_apple_cooked", kochosei_apple_cooked, assets, prefabs), MakePlacer("kochosei_apple_placer", "kochosei_apple_fruit", "kochosei_apple_fruit", "idle_planted")

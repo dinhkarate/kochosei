@@ -410,7 +410,7 @@ AddCharacterRecipe(
 
 AddCharacterRecipe(
 	"cay_hoa_sang",
-	{ Ingredient("lunarplant_husk", 2), Ingredient("plantmeat", 2), Ingredient("petals", 2) },
+	{ Ingredient("plantmeat", 2), Ingredient("petals", 2) },
 	TECH.SCIENCE_TWO,
 	{
 		atlas = "images/inventoryimages/kochosei_inv.xml",
@@ -503,6 +503,20 @@ AddCharacterRecipe(
 
 	TECH.NONE,
 	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_hatfl.tex", builder_tag = "kochosei" },
+
+	{ "CHARACTER" }
+)
+
+AddCharacterRecipe(
+	"kochosei_armor_1",
+	{
+		Ingredient("flowerhat", 1),
+		Ingredient("moonglass", 25),
+		Ingredient("hivehat", 1),
+	},
+
+	TECH.NONE,
+	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_armor_1.tex", builder_tag = "kochosei" },
 
 	{ "CHARACTER" }
 )
