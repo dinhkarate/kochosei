@@ -299,13 +299,7 @@ local kocho_miohm_damage_spell = {
 	options = optionslave_basic_damage,
 	default = 50,
 }
-local kocho_miohm_repair = {
-	name = "kocho_miohm_repair",
-	label = "28) Miohm Repair",
-	hover = "Kochosei Miohm Repair with gold",
-	options = optionsbasic_weapon,
-	default = 20,
-}
+
 local kocho_sword_damage = {
 	name = "kocho_sword_damage",
 	label = "29) Kochosei Sword Damage 󰀘",
@@ -523,7 +517,6 @@ configuration_options = {
 		default = 1,
 	},
 	kocho_miohm_damage_spell,
-	kocho_miohm_repair,
 	kocho_sword_damage,
 	kocho_sword_dub,
 	kocho_luckyhammer_durability,

@@ -104,7 +104,8 @@ local listiteminv = {
     "kochosei_ancient_books",
     "kochosei_christmast_torch1",
     "kochosei_armor_1",
-    "kochosei_armor_2"
+    "kochosei_armor_2",
+    "kochosei_ribbon"
 
 }
 
@@ -278,7 +279,7 @@ end)
 local function OnHitOther_BuffDamage(inst, data)
     local target = data.target
     if target ~= nil and target:IsValid() and target.components.combat and target.components.health and inst.tangst then
-        target.sohit = (target.sohit or 1) + 0.01
+        target.sohit = (target.sohit or 1) + 0.02
         target.components.combat.externaldamagetakenmultipliers:SetModifier(target, target.sohit, "sidanay")
     end
 end

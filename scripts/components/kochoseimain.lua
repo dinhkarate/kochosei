@@ -72,7 +72,7 @@ function onkilled(inst, data)
         if IsValidVictim(victim) then
             local weapon = inst.components.combat:GetWeapon()
             if weapon and weapon:HasTag("miohm") then
-                weapon.levelmiohm = weapon.levelmiohm + TUNING.KOCHOSEI_PER_KILL
+                weapon.levelmiohm = weapon.levelmiohm + TUNING.KOCHOSEI_PER_KILL + (TUNING.KOCHOSEI_CHECKWIFI /30)
                 weapon:applyupgrades()
             end
         end
