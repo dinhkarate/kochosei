@@ -110,6 +110,7 @@ local listiteminv = {
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
+-- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
 for _, prefab in ipairs(kochofood) do
     local atlas = "images/inventoryimages/kochofood.xml"
     local tex = prefab .. ".tex"
@@ -167,6 +168,7 @@ PrefabFiles = {
     "kochosei_gift"
 }
 
+-- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
 
 local keytonamngua = GetModConfigData("keykocho")
