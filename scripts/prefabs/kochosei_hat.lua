@@ -160,6 +160,42 @@ local function kochosei_ribbon()
     inst.AnimState:SetBuild("kochosei_ribbon")
     return inst
 end
+
+
+
+if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
+    Kochoseiapi.MakeItemSkin("kochosei_ribbon", "kochosei_hat1", {
+        name = "Gomen, Amanai \n🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣",
+        atlas = "images/inventoryimages/kochosei_inv.xml",
+        image = "kochosei_hat1",
+        build = "kochosei_hat1",
+        bank = "kochosei_hat1",
+        basebuild = "kochosei_ribbon",
+        basebank = "kochosei_ribbon"
+    })
+
+    Kochoseiapi.MakeItemSkin("kochosei_ribbon", "kochosei_hat2", {
+        name = "Gomen, Amanai \n🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣",
+        atlas = "images/inventoryimages/kochosei_inv.xml",
+        image = "kochosei_hat2",
+        build = "kochosei_hat2",
+        bank = "kochosei_hat2",
+        basebuild = "kochosei_ribbon",
+        basebank = "kochosei_ribbon"
+    })
+
+    Kochoseiapi.MakeItemSkin("kochosei_ribbon", "kochosei_hat3", {
+        name = "Gomen, Amanai \n🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣",
+        atlas = "images/inventoryimages/kochosei_inv.xml",
+        image = "kochosei_hat3",
+        build = "kochosei_hat3",
+        bank = "kochosei_hat3",
+        basebuild = "kochosei_ribbon",
+        basebank = "kochosei_ribbon"
+    })
+end
+
+-- Không có anim. không dùng
 --[[
 Kochoseiapi.MakeItemSkin("kochosei_hatfl", "kochosei_hatfl_skin", {
     name="kochosei_hatfl_skin",
@@ -192,9 +228,10 @@ STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but some
 
     
 return 
-Prefab("kochosei_hat1", kochosei_hat1, assets), 
-Prefab("kochosei_hat2", kochosei_hat2, assets), 
-Prefab("kochosei_hat3", kochosei_hat3, assets), 
+-- Cho cút 3 Prefab là được, không nhất thiết phải viết lại hàm, phiền.
+-- Prefab("kochosei_hat1", kochosei_hat1, assets), 
+-- Prefab("kochosei_hat2", kochosei_hat2, assets), 
+-- Prefab("kochosei_hat3", kochosei_hat3, assets), 
 Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
 Prefab("kochosei_ribbon", kochosei_ribbon, assets)
 

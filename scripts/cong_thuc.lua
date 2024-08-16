@@ -75,12 +75,13 @@ AddCharacterRecipe(
 )
 
 AddCharacterRecipe(
-	"kochosei_hat1",
+	"kochosei_ribbon",
 	{ Ingredient("silk", 3), Ingredient("rope", 1), Ingredient("pigskin", 1) },
 	TECH.NONE,
-	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_hat1.tex", builder_tag = "kochosei" },
+	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_ribbon.tex", builder_tag = "kochosei" },
 	{ "CHARACTER" }
 )
+
 ------------------------------------ Cái này sẽ chạy khi không có modded api-----------------------------
 -- Thế ko có modded api thì coi như tịt ngòi ? Verify đã thay đổi, không còn dùng 3 item craft riêng biệt nữa mà dùng sora api
 if GLOBAL.TUNING.KOCHOSEI_CHECKMOD ~= 1 then
@@ -101,10 +102,10 @@ if GLOBAL.TUNING.KOCHOSEI_CHECKMOD ~= 1 then
 	)
 
 	AddCharacterRecipe(
-		"kochosei_ribbon",
+		"kochosei_hat1",
 		{ Ingredient("silk", 3), Ingredient("rope", 1), Ingredient("pigskin", 1) },
 		TECH.NONE,
-		{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "ribbon.tex", builder_tag = "kochosei" },
+		{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_ribbon.tex", builder_tag = "kochosei" },
 		{ "CHARACTER" }
 	)
 end
