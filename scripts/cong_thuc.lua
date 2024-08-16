@@ -82,6 +82,7 @@ AddCharacterRecipe(
 	{ "CHARACTER" }
 )
 ------------------------------------ Cái này sẽ chạy khi không có modded api-----------------------------
+-- Thế ko có modded api thì coi như tịt ngòi ? Verify đã thay đổi, không còn dùng 3 item craft riêng biệt nữa mà dùng sora api
 if GLOBAL.TUNING.KOCHOSEI_CHECKMOD ~= 1 then
 	AddCharacterRecipe(
 		"kochosei_hat2",
@@ -96,6 +97,14 @@ if GLOBAL.TUNING.KOCHOSEI_CHECKMOD ~= 1 then
 		{ Ingredient("silk", 3), Ingredient("rope", 1), Ingredient("pigskin", 1) },
 		TECH.NONE,
 		{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_hat3.tex", builder_tag = "kochosei" },
+		{ "CHARACTER" }
+	)
+
+	AddCharacterRecipe(
+		"kochosei_ribbon",
+		{ Ingredient("silk", 3), Ingredient("rope", 1), Ingredient("pigskin", 1) },
+		TECH.NONE,
+		{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "ribbon.tex", builder_tag = "kochosei" },
 		{ "CHARACTER" }
 	)
 end
@@ -383,6 +392,19 @@ AddRecipe2(
 	{ builder_tag = "kochosei", product = "ticoon_builder" },
 	{ "KOCHOSEI_TAB" }
 )
+
+-- Bán mình cho MCW, đừng cản t 
+-- Gomen, Amanai. Ore wa ima, omae no tame ni okottenai. Daremo nikunjainai. Ima wa tada tada kono sekai ga kokochi ii.
+-- 🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣
+if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA ~= 1 then
+	AddRecipe2(
+		"lucky_hammer",
+		{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
+		TECH.NONE,
+		{ builder_tag = "mcw", product = "ticoon_builder" },
+		{ "KOCHOSEI_TAB" }
+	)
+end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 AddCharacterRecipe(

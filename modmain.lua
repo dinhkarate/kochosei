@@ -26,6 +26,7 @@ local listmodneedcheck = {
 }
 TUNING.KOCHOSEI_CHECKWIFI_CONFIG = GetModConfigData("kochosei_va_waifu") -- Này là wifi
 TUNING.KOCHOSEI_CHECKMOD = nil
+TUNING.KOCHOSEI_CHECKMOD_KYOUKA = nil
 TUNING.KOCHOSEI_CHECKWIFI = 0 -- Wifi mà, không phải waifu, nó là 0 vì nó nên như thế )
 -- ?
 
@@ -34,6 +35,11 @@ for _, v in ipairs(modsToLoad) do
     local Mod = KnownModIndex:GetModInfo(v)
     if Mod.name:find("%[API%] Modded Skins") then
         TUNING.KOCHOSEI_CHECKMOD = 1
+        print("Mod found:", v, Mod.name)
+        break
+    end
+    if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
+        TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
         print("Mod found:", v, Mod.name)
         break
     end

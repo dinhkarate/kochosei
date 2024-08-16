@@ -182,7 +182,20 @@ STRINGS.NAMES.KOCHOSEI_HAT3 = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT3 = "Its butterfly right? :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HAT3 = "Armor hat"
 
+STRINGS.NAMES.KOCHOSEI_RIBBON = "Kochosei Hat"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
+STRINGS.RECIPE_DESC.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん。"
+
 STRINGS.NAMES.KOCHOSEI_HATFL = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
-return Prefab("kochosei_hat1", kochosei_hat1, assets), Prefab("kochosei_hat2", kochosei_hat2, assets), Prefab("kochosei_hat3", kochosei_hat3, assets), Prefab("kochosei_hatfl", kochosei_hatfl, assets), Prefab("kochosei_ribbon", kochosei_ribbon, assets)
+
+    
+return 
+Prefab("kochosei_hat1", kochosei_hat1, assets), 
+Prefab("kochosei_hat2", kochosei_hat2, assets), 
+Prefab("kochosei_hat3", kochosei_hat3, assets), 
+Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
+Prefab("kochosei_ribbon", kochosei_ribbon, assets)
+
+-- Con cò này, làm tới đây r thì Lua Beautify cái cho ngta dễ dòm
