@@ -84,6 +84,7 @@ local conversion_table = {
 		"kochosei_hat3",
 		"kochosei_hat1",
 		"kochosei_hat2",
+		"kochosei_ribbon"
 	},
 	logg = {
 		"driftwood_log",
@@ -116,6 +117,11 @@ local conversion_table = {
 	hoammatdat = {
 		"petals_evil",
 		"petals",
+	},
+
+	kochoarmor = {
+		"kochosei_armor_1",
+		"kochosei_armor_2",
 	},
 }
 

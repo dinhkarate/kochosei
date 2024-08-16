@@ -95,9 +95,9 @@ local listiteminv = {
     "kocho_miku_back",
     "kochosei_umbrella",
     "kochosei_demonlord",
-    "kochosei_hat1",
-    "kochosei_hat2",
-    "kochosei_hat3",
+   "kochosei_hat1",
+   "kochosei_hat2",
+   "kochosei_hat3",
     "ms_kochosei_hat2",
     "ms_kochosei_hat3",
     "kochotambourin",
@@ -218,14 +218,6 @@ TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái 
 modimport("scripts/value_dhkg_a") -- TUNING
 
 modimport("scripts/widgets/balovali") -- balovali
-
-kochosei_hat1_init_fn = function(inst, build_name)
-    basic_init_fn(inst, build_name, "kochosei_hat1")
-end
-
-kochosei_hat1_clear_fn = function(inst)
-    basic_clear_fn(inst, "kochosei_hat1")
-end
 
 --[[
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
@@ -631,8 +623,6 @@ STRINGS.NAMES.KOCHOFOOD_BUNREAL = "Bún Real"
 STRINGS.NAMES.KOCHOFOOD_BANHMI_2 = "Bánh Mì"
 STRINGS.NAMES.KOCHOFOOD_CAFE = "Cà Phê Sữa Đá"
 STRINGS.NAMES.KOCHOSEI_GIFT = "Hộp Quà Của Kochosei"
-STRINGS.SKIN_NAMES.kochosei_hat2 = "Kochosei Hat 2"
-STRINGS.SKIN_NAMES.kochosei_hat3 = "Kochosei Hat 3"
 --------------------------------------
 STRINGS.NAMES.LYDOCHET = "Cast Revive Kochotambourin"
 STRINGS.NAMES.LYDOHOISINH = "Kochotambourin"

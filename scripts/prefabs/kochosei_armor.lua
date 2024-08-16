@@ -76,7 +76,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
 end
 
 STRINGS.NAMES.KOCHOSEI_ARMOR_1 = "Giáp của ai đó"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ARMOR_1 = "10$ cho bộ giáp này, bạn nghĩ nó đắt hay rẻ?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ARMOR_1 = "10$ cho bộ giáp này, bạn nghĩ nó đắt hay rẻ?" --Rẻ
 STRINGS.RECIPE_DESC.KOCHOSEI_ARMOR_1 = "Ai đó đã bỏ cả tháng lương của mình để thuê họa sĩ ngoài vẽ, chỉ vì con cò nào đó lười biếng"
 
 return Prefab("kochosei_armor_1", kochosei_armor_1, assets)
