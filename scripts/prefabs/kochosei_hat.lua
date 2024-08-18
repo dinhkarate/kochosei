@@ -129,7 +129,6 @@ local function commonfn()
 
     return inst
 end
-
 local function commonfn_ribbon()
     local inst = CreateEntity()
 
@@ -179,7 +178,6 @@ local function commonfn_ribbon()
     inst.components.waterproofer:SetEffectiveness(0.3)
 
     MakeHauntableLaunch(inst)
-
     return inst
 end
 
@@ -214,6 +212,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         basebank = "kochosei_ribbon"
     })
 end
+
 
 local function kochosei_hatfl()
     local inst = commonfn()
@@ -254,8 +253,8 @@ STRINGS.RECIPE_DESC.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん�
 STRINGS.NAMES.KOCHOSEI_HATFL = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
-
 return Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
     Prefab("kochosei_ribbon", commonfn_ribbon, assets)
+
 
 -- Con cò này, làm tới đây r thì Lua Beautify cái cho ngta dễ dòm
