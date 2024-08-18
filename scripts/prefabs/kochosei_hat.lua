@@ -33,7 +33,7 @@ end
 
 local hatMappings = {
     kochosei_hatfl = "kochosei_hatfl",
-    kochosei_ribbon = "kochosei_ribbon"
+    kochosei_hat2 = "kochosei_hat2"
 }
 
 local function OnEquip(inst, owner)
@@ -129,6 +129,7 @@ local function commonfn()
 
     return inst
 end
+
 local function commonfn_ribbon()
     local inst = CreateEntity()
 
@@ -137,8 +138,8 @@ local function commonfn_ribbon()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
-    inst.AnimState:SetBank("kochosei_ribbon")
-    inst.AnimState:SetBuild("kochosei_ribbon")
+    inst.AnimState:SetBank("kochosei_hat2")
+    inst.AnimState:SetBuild("kochosei_hat2")
     inst.AnimState:PlayAnimation("anim")
     inst:AddTag("waterproofer")
     inst:AddTag("kochosei_hat")
@@ -178,41 +179,42 @@ local function commonfn_ribbon()
     inst.components.waterproofer:SetEffectiveness(0.3)
 
     MakeHauntableLaunch(inst)
+
     return inst
 end
 
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
-    Kochoseiapi.MakeItemSkin("kochosei_ribbon", "kochosei_hat1", {
+    Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_hat1", {
         name = "ごめんなさい、アマナイさん。",
         atlas = "images/inventoryimages/kochosei_inv.xml",
         image = "kochosei_hat1",
         imagename = "kochosei_hat1.tex",
         build = "kochosei_hat1",
         bank = "kochosei_hat1",
-        basebuild = "kochosei_ribbon",
-        basebank = "kochosei_ribbon"
+        basebuild = "kochosei_hat2",
+        basebank = "kochosei_hat2"
     })
-    Kochoseiapi.MakeItemSkin("kochosei_ribbon", "kochosei_hat2", {
-        name = "Kyoshiki, Murasaki",
-        atlas = "images/inventoryimages/kochosei_inv.xml",
-        image = "kochosei_hat2",
-        imagename = "kochosei_hat2.tex",
-        build = "kochosei_hat2",
-        bank = "kochosei_hat2",
-        basebuild = "kochosei_ribbon",
-        basebank = "kochosei_ribbon"
-    })
-    Kochoseiapi.MakeItemSkin("kochosei_ribbon", "kochosei_hat3", {
+
+    Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_hat3", {
         name = "空想 技:紫",
         atlas = "images/inventoryimages/kochosei_inv.xml",
         image = "kochosei_hat3",
         build = "kochosei_hat3",
         bank = "kochosei_hat3",
-        basebuild = "kochosei_ribbon",
-        basebank = "kochosei_ribbon"
+        basebuild = "kochosei_hat2",
+        basebank = "kochosei_hat2"
+    })
+    Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_ribbon", {
+        name = "Kyoshiki, Murasaki",
+        atlas = "images/inventoryimages/kochosei_inv.xml",
+        image = "kochosei_ribbon",
+        imagename = "kochosei_ribbon.tex",
+        build = "kochosei_ribbon",
+        bank = "kochosei_ribbon",
+        basebuild = "kochosei_hat2",
+        basebank = "kochosei_hat2"
     })
 end
-
 
 local function kochosei_hatfl()
     local inst = commonfn()
@@ -253,8 +255,8 @@ STRINGS.RECIPE_DESC.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん�
 STRINGS.NAMES.KOCHOSEI_HATFL = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
-return Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
-    Prefab("kochosei_ribbon", commonfn_ribbon, assets)
 
+return Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
+    Prefab("kochosei_hat2", commonfn_ribbon, assets)
 
 -- Con cò này, làm tới đây r thì Lua Beautify cái cho ngta dễ dòm

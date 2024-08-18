@@ -20,7 +20,7 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "twigs",
     "cutgrass",
     "cutgrass",
-    "kochosei_ribbon",
+    "kochosei_hat2",
     "kochosei_lantern",
     "kochosei_apple",
 }
@@ -29,8 +29,8 @@ TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
     image = "kochosei_lantern.tex"
 }
 
-TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
-    image = "kochosei_ribbon.tex"
+TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_hat2 = {
+    image = "kochosei_hat2.tex"
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_apple = {
