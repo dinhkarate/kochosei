@@ -414,8 +414,8 @@ end
 local waitMin, waitMax
 
 local function OnEquipCustom(inst, data)
-    local checksin = inst.components.skinner:Kochosei_GetSkinName()
-    if checksin and checksin == "kochosei_skin_shinku_full" then
+    local checkskin = inst.AnimState:GetBuild()
+    if checkskin and checkskin == "kochosei_skin_shinku_full" then
         inst.AnimState:ClearOverrideSymbol("swap_hat")
         inst.AnimState:ClearOverrideSymbol("swap_body")
     end
