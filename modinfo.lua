@@ -7,7 +7,7 @@ Thank you for using this mod, you can use the config button below and let me kno
 	
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
-version = "4.1.0"
+version = "4.1.0.3"
 forumthread = ""
 
 folder_name = folder_name or "workshop-"
@@ -16,7 +16,7 @@ if folder_name:match("2978066706") then
 elseif folder_name:match("2733891656") then
 	name = "Kochosei in Onmyoji"
 else
-	name = "Test Local"
+	name = "Test Local -- Dinh"
 	-- ?
 end
 

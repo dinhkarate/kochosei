@@ -26,6 +26,7 @@ local listmodneedcheck = {
 }
 TUNING.KOCHOSEI_CHECKWIFI_CONFIG = GetModConfigData("kochosei_va_waifu") -- Này là wifi
 TUNING.KOCHOSEI_CHECKMOD = nil
+TUNING.KOCHOSEI_CHECKMOD_KYOUKA = nil
 TUNING.KOCHOSEI_CHECKWIFI = 0 -- Wifi mà, không phải waifu, nó là 0 vì nó nên như thế )
 -- ?
 
@@ -34,6 +35,11 @@ for _, v in ipairs(modsToLoad) do
     local Mod = KnownModIndex:GetModInfo(v)
     if Mod.name:find("%[API%] Modded Skins") then
         TUNING.KOCHOSEI_CHECKMOD = 1
+        print("Mod found:", v, Mod.name)
+        break
+    end
+    if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
+        TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
         print("Mod found:", v, Mod.name)
         break
     end
@@ -89,9 +95,9 @@ local listiteminv = {
     "kocho_miku_back",
     "kochosei_umbrella",
     "kochosei_demonlord",
-    "kochosei_hat1",
-    "kochosei_hat2",
-    "kochosei_hat3",
+   "kochosei_hat1",
+   "kochosei_hat2",
+   "kochosei_hat3",
     "ms_kochosei_hat2",
     "ms_kochosei_hat3",
     "kochotambourin",
@@ -110,6 +116,7 @@ local listiteminv = {
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
+-- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
 for _, prefab in ipairs(kochofood) do
     local atlas = "images/inventoryimages/kochofood.xml"
     local tex = prefab .. ".tex"
@@ -167,6 +174,7 @@ PrefabFiles = {
     "kochosei_gift"
 }
 
+-- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
 
 local keytonamngua = GetModConfigData("keykocho")
@@ -210,14 +218,6 @@ TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái 
 modimport("scripts/value_dhkg_a") -- TUNING
 
 modimport("scripts/widgets/balovali") -- balovali
-
-kochosei_hat1_init_fn = function(inst, build_name)
-    basic_init_fn(inst, build_name, "kochosei_hat1")
-end
-
-kochosei_hat1_clear_fn = function(inst)
-    basic_clear_fn(inst, "kochosei_hat1")
-end
 
 --[[
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
@@ -623,8 +623,6 @@ STRINGS.NAMES.KOCHOFOOD_BUNREAL = "Bún Real"
 STRINGS.NAMES.KOCHOFOOD_BANHMI_2 = "Bánh Mì"
 STRINGS.NAMES.KOCHOFOOD_CAFE = "Cà Phê Sữa Đá"
 STRINGS.NAMES.KOCHOSEI_GIFT = "Hộp Quà Của Kochosei"
-STRINGS.SKIN_NAMES.kochosei_hat2 = "Kochosei Hat 2"
-STRINGS.SKIN_NAMES.kochosei_hat3 = "Kochosei Hat 3"
 --------------------------------------
 STRINGS.NAMES.LYDOCHET = "Cast Revive Kochotambourin"
 STRINGS.NAMES.LYDOHOISINH = "Kochotambourin"

@@ -20,18 +20,19 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "twigs",
     "cutgrass",
     "cutgrass",
-    "kochosei_hat2",
+    "kochosei_ribbon",
     "kochosei_lantern",
-    "kochosei_apple"
+    "kochosei_apple",
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
     image = "kochosei_lantern.tex"
 }
 
-TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_hat2 = {
-    image = "kochosei_hat2.tex"
+TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
+    image = "kochosei_ribbon.tex"
 }
+
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_apple = {
     image = "kochosei_apple.tex"
 }
@@ -413,8 +414,8 @@ end
 local waitMin, waitMax
 
 local function OnEquipCustom(inst, data)
-    local checksin = inst.components.skinner:Kochosei_GetSkinName()
-    if checksin and checksin == "kochosei_skin_shinku_full" then
+    local checkskin = inst.AnimState:GetBuild()
+    if checkskin and checkskin == "kochosei_skin_shinku_full" then
         inst.AnimState:ClearOverrideSymbol("swap_hat")
         inst.AnimState:ClearOverrideSymbol("swap_body")
     end
