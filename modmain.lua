@@ -173,7 +173,9 @@ PrefabFiles = {
     "kochosei_buff",
     "kochosei_f_cmn_x",
     "kochosei_cay_hoa_sang",
-    "kochosei_gift"
+    "kochosei_gift",
+    --
+    "kochosei_harvest_book"
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
