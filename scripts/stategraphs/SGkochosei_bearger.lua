@@ -377,6 +377,8 @@ local actionhandlers = {
     ActionHandler(ACTIONS.DIG, function(inst)
         return inst:GetBufferedAction().target:HasTag("CHOP_workable") and "attack_action" or "butt"
     end),
+    ActionHandler(ACTIONS.MINE, "attack_action"),
+
 }
 
 

@@ -245,12 +245,15 @@ STRINGS.RECIPE_DESC.KOCHOSEI_HAT2 = "Armor hat"
 STRINGS.NAMES.KOCHOSEI_HAT3 = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT3 = "Its butterfly right? :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HAT3 = "Armor hat"
-
---]]
-
 STRINGS.NAMES.KOCHOSEI_RIBBON = "Kochosei Ribbon"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
 STRINGS.RECIPE_DESC.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん。"
+
+--]]
+STRINGS.NAMES.KOCHOSEI_HAT2 = "Kochosei Ribbon"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
+STRINGS.RECIPE_DESC.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。"
+
 
 STRINGS.NAMES.KOCHOSEI_HATFL = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
