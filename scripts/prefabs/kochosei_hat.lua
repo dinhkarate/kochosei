@@ -33,7 +33,7 @@ end
 
 local hatMappings = {
     kochosei_hatfl = "kochosei_hatfl",
-    kochosei_ribbon = "kochosei_ribbon"
+    kochosei_hat2 = "kochosei_hat2"
 }
 
 local function OnEquip(inst, owner)
@@ -130,6 +130,7 @@ local function commonfn()
 
     return inst
 end
+
 local function commonfn_hat2()
     local inst = CreateEntity()
 
@@ -179,6 +180,7 @@ local function commonfn_hat2()
     inst.components.waterproofer:SetEffectiveness(0.3)
 
     MakeHauntableLaunch(inst)
+
     return inst
 end
 
@@ -192,6 +194,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         bank = "kochosei_hat1",
         basebuild = "kochosei_hat2",
         basebank = "kochosei_hat2"
+
     })
     Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_ribbon", {
         name = "Kyoshiki, Murasaki",
@@ -203,6 +206,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         basebuild = "kochosei_hat2",
         basebank = "kochosei_hat2"
     })
+
     Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_hat3", {
         name = "空想 技:紫",
         atlas = "images/inventoryimages/kochosei_inv.xml",
@@ -211,9 +215,9 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         bank = "kochosei_hat3",
         basebuild = "kochosei_hat2",
         basebank = "kochosei_hat2"
+
     })
 end
-
 
 local function kochosei_hatfl()
     local inst = commonfn()
@@ -245,14 +249,20 @@ STRINGS.NAMES.KOCHOSEI_HAT3 = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT3 = "Its butterfly right? :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HAT3 = "Armor hat"
 
---]]
 
 STRINGS.NAMES.KOCHOSEI_HAT2 = "Kochosei Ribbon"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
 STRINGS.RECIPE_DESC.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。"
 
+--]]
+STRINGS.NAMES.KOCHOSEI_HAT2 = "Kochosei Ribbon"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
+STRINGS.RECIPE_DESC.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。"
+
+
 STRINGS.NAMES.KOCHOSEI_HATFL = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
+
 return Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
     Prefab("kochosei_hat2", commonfn_hat2, assets)

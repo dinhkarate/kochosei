@@ -1,6 +1,7 @@
 local assets = {
     Asset("ANIM", "anim/lucky_hammer.zip"),
     Asset("ANIM", "anim/swap_lucky_hammer.zip"),
+    Asset("ANIM", "anim/reskin_tool_fx.zip")
 }
 
 local builds = {
@@ -302,6 +303,7 @@ local function spellCB(tool, target, pos, caster)
     tool:DoTaskInTime(0, function()
 
         local prefab_to_skin = target.prefab
+
         if target:IsValid() and tool:IsValid() and tool.parent and tool.parent:IsValid() then
             local curr_skin = target.skinname
             local userid = tool.parent.userid or ""
@@ -327,6 +329,7 @@ local function spellCB(tool, target, pos, caster)
                 tool._cached_reskinname[prefab_to_skin] = new_reskinname
                 cached_skin = new_reskinname
             end
+
             TheSim:ReskinEntity(target.GUID, target.skinname, cached_skin, nil, userid)
 
         end
@@ -386,7 +389,6 @@ local function fn()
 
     inst._cached_reskinname = {}
     return inst
-
 end
 STRINGS.NAMES.LUCKY_HAMMER = "Lucky Hammer"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.LUCKY_HAMMER = "I know what you want with this!! UwU"

@@ -29,7 +29,8 @@ TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
     image = "kochosei_lantern.tex"
 }
 
-TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
+
+TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_hat2 = {
     image = "kochosei_hat2.tex"
 }
 

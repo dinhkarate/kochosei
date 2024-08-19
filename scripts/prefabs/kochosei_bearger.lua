@@ -204,15 +204,6 @@ local function OnDestroyOther(inst, other)
 end
 
 local function OnCollide(inst, other)
-    if other ~= nil and
-        other:IsValid() and
-        other.components.workable ~= nil and
-        other.components.workable:CanBeWorked() and
-        other.components.workable.action ~= ACTIONS.NET and
-        Vector3(inst.Physics:GetVelocity()):LengthSq() >= 1 and
-        not inst.recentlycharged[other] then
-        inst:DoTaskInTime(2 * FRAMES, OnDestroyOther, other)
-    end
 end
 local function fn()
 	local inst = CreateEntity()
@@ -240,6 +231,7 @@ local function fn()
 	inst:AddTag("largecreature")
 	inst:AddTag("kochoseipet")
 	inst.entity:SetPristine()
+	inst:AddComponent("talker")
 
 	if not TheWorld.ismastersim then
 		return inst
@@ -257,8 +249,6 @@ local function fn()
 
 	inst:AddComponent("health")
 	inst.components.health:SetMaxHealth(TUNING.BEARGER_SLAVE_HEALTH + TUNING.KOCHOSEI_CHECKWIFI)
-	inst.components.health.destroytime = 5
-
 	------------------
 
 	inst:AddComponent("combat")
