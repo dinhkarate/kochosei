@@ -56,6 +56,8 @@ if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
     end
 end
 
+
+
 --[[ Không dùng nữa
 local PREFAB_SKINS = PREFAB_SKINS
 local PREFAB_SKINS_IDS = PREFAB_SKINS_IDS
@@ -176,6 +178,43 @@ PrefabFiles = {
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
+
+-- Developer Mode --
+
+local dev_mode = GetModConfigData("developer_mode")
+
+local function AnnounceDeveloperMode(player)
+    if player ~= nil and player:IsValid() then
+        TheNet:Announce(player:GetDisplayName() .. " is in Developer Mode!")
+    end
+end
+
+local function EnableGodModeAndFreeCrafting(player)
+    if player ~= nil and player:IsValid() then
+        player.components.builder.freebuildmode = true
+        local godmode = player.components.health.invincible
+        player.components.health:SetInvincible(not godmode)
+        player.components.locomotor:SetExternalSpeedMultiplier(player, "kochosei_speed_mod", 2)
+        -- Hiển thị thông báo pop-up
+        AnnounceDeveloperMode(player)
+    end
+end
+
+
+if dev_mode then
+    AddPrefabPostInit("kochosei", function(inst)
+        if TheWorld.ismastersim then
+            inst:DoTaskInTime(0, function()
+                EnableGodModeAndFreeCrafting(inst)
+            end)
+        end
+    end)
+end
+
+-- Developer Mode --
+
+
+
 
 local keytonamngua = GetModConfigData("keykocho")
 

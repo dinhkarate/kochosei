@@ -20,7 +20,7 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "twigs",
     "cutgrass",
     "cutgrass",
-    "kochosei_ribbon",
+    "kochosei_hat2",
     "kochosei_lantern",
     "kochosei_apple",
 }
@@ -30,7 +30,7 @@ TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
-    image = "kochosei_ribbon.tex"
+    image = "kochosei_hat2.tex"
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_apple = {
@@ -74,7 +74,8 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod")
+    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.5)
+    -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
 local function onload(inst)

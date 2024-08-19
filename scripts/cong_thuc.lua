@@ -75,10 +75,10 @@ AddCharacterRecipe(
 )
 
 AddCharacterRecipe(
-	"kochosei_ribbon",
+	"kochosei_hat2",
 	{ Ingredient("silk", 3), Ingredient("rope", 1), Ingredient("pigskin", 1) },
 	TECH.NONE,
-	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_ribbon.tex", builder_tag = "kochosei" },
+	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "kochosei_hat2.tex", builder_tag = "kochosei" },
 	{ "CHARACTER" }
 )
 
