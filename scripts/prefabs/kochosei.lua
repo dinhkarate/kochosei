@@ -74,7 +74,8 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod")
+    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.5)
+    -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
 local function onload(inst)

@@ -603,4 +603,15 @@ configuration_options = {
 		},
 		default = "Default",
 	},
+
+	Title("Developer Mode"),
+	{
+        name = "developer_mode",
+        label = "Developer Mode",
+        options = {
+            {description = "Enabled", data = true},
+            {description = "Disabled", data = false},
+        },
+        default = false,
+    },
 }
