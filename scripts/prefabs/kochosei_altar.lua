@@ -56,8 +56,8 @@ end
 
 local assets = {
     Asset('ANIM', 'anim/quagmire_altar.zip'),
-    Asset("ATLAS", "images/inventoryimages/kochosei_ancient_book.xml"),
-    Asset("IMAGE", "images/inventoryimages/kochosei_ancient_book.tex"),
+    Asset("ATLAS", "images/inventoryimages/kochosei_inv.xml"),
+    Asset("IMAGE", "images/inventoryimages/kochosei_inv.tex"),
 }
 
 local function fn()
@@ -87,8 +87,8 @@ local function fn()
   if not TheWorld.ismastersim then
     return inst
   end
-    inst:AddComponent("prototyper")
-    inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.KOCHOSEI_ALTAR
+   -- inst:AddComponent("prototyper")
+   -- inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.KOCHOSEI_ALTAR
 
   inst:AddComponent('inspectable') -- 可检查
 

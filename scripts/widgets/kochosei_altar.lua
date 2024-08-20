@@ -249,7 +249,7 @@ InjectContainerWidgetMountButton()
 CreateChest('kochosei_altar', {
     button_info = {
         {
-            text = '献祭',
+            text = 'Summon',
             position = Vector3(0, -180, 0),
             fn = function(inst, doer)
                 if inst.replica.container ~= nil and
