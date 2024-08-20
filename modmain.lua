@@ -171,7 +171,10 @@ PrefabFiles = {
     "kochosei_buff",
     "kochosei_f_cmn_x",
     "kochosei_cay_hoa_sang",
-    "kochosei_gift"
+    "kochosei_gift",
+
+    -- 
+    "kochosei_altar",
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -218,6 +221,8 @@ TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái 
 modimport("scripts/value_dhkg_a") -- TUNING
 
 modimport("scripts/widgets/balovali") -- balovali
+
+modimport('scripts/widgets/kochosei_altar') -- kochosei_altar
 
 --[[
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
