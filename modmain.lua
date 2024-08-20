@@ -175,6 +175,10 @@ PrefabFiles = {
 
     -- 
     "kochosei_altar",
+    "kochosei_shadow",
+    "sharkitten_tornado",
+    "sharkitten_projectile",
+    "kochosei_enemy_d", -- T dùng )
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
