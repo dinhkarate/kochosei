@@ -29,7 +29,6 @@ TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
     image = "kochosei_lantern.tex"
 }
 
-
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_hat2 = {
     image = "kochosei_hat2.tex"
 }
@@ -75,8 +74,7 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.5)
-    -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
+    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod")
 end
 
 local function onload(inst)
