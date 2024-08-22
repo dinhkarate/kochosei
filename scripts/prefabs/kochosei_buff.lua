@@ -17,6 +17,7 @@ local function ExtendBuff(inst)
     local buffTaskKey = (inst.prefab == "elysia_3_buff" and "bufftask_3")
                      or (inst.prefab == "elysia_4_buff" and "bufftask_4")
                      or (inst.prefab == "elysia_5_buff" and "bufftask_5")
+                     or (inst.prefab == "kocho_buff_heal" and "bufftask_heal")
                      or "bufftask"
 
     if inst[buffTaskKey] then
@@ -124,6 +125,22 @@ local function OnDetached_5(inst, target)
     inst:Remove()
 end
 
+
+local function OnAttached_heal(inst, target)
+    AttachCommon(inst, target)
+    inst.bufftask_heal = inst:DoTaskInTime(5, StopBuff)
+    if target.components.health then
+    target.components.health:AddRegenSource(target, TUNING.KOCHO_TAMBOURIN_HEAL, 0.5, "heal_from_kochosei")
+    end
+end
+
+local function OnDetached_heal(inst, target)
+    if target and target:IsValid() then
+        target.components.health:RemoveRegenSource(target,"heal_from_kochosei")
+    end
+    inst:Remove()
+end
+
 local function common()
     local inst = CreateEntity()
 
@@ -151,4 +168,5 @@ end
 return Prefab("elysia_2_buff", function() return create_elysia_buff(OnAttached, OnDetached) end, nil, buff_prefabs),
        Prefab("elysia_3_buff", function() return create_elysia_buff(OnAttached_3, OnDetached_3) end, nil, buff_prefabs),
        Prefab("elysia_4_buff", function() return create_elysia_buff(OnAttached_4, OnDetached_4) end, nil, buff_prefabs),
-       Prefab("elysia_5_buff", function() return create_elysia_buff(OnAttached_5, OnDetached_5) end, nil, buff_prefabs)
+       Prefab("elysia_5_buff", function() return create_elysia_buff(OnAttached_5, OnDetached_5) end, nil, buff_prefabs),
+       Prefab("kocho_buff_heal", function() return create_elysia_buff(OnAttached_heal, OnDetached_heal) end, nil, buff_prefabs)
