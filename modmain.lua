@@ -56,6 +56,8 @@ if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
     end
 end
 
+
+
 --[[ Không dùng nữa
 local PREFAB_SKINS = PREFAB_SKINS
 local PREFAB_SKINS_IDS = PREFAB_SKINS_IDS
@@ -137,7 +139,7 @@ PrefabFiles = {
     "kochosei_none",
     "kochosei_miohm",
     "kochosei_bearger",
-    "kochosei_tambourin",
+    "kochosei_kochotambourin",
     "kochosei_hat",
     "kochosei_armor",
     "kochosei_lantern",
@@ -171,11 +173,50 @@ PrefabFiles = {
     "kochosei_buff",
     "kochosei_f_cmn_x",
     "kochosei_cay_hoa_sang",
-    "kochosei_gift"
+    "kochosei_gift",
+    --
+    "kochosei_harvest_book"
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
+
+-- Developer Mode --
+
+local dev_mode = GetModConfigData("developer_mode")
+
+local function AnnounceDeveloperMode(player)
+    if player ~= nil and player:IsValid() then
+        TheNet:Announce(player:GetDisplayName() .. " is in Developer Mode!")
+    end
+end
+
+local function EnableGodModeAndFreeCrafting(player)
+    if player ~= nil and player:IsValid() then
+        player.components.builder.freebuildmode = true
+        local godmode = player.components.health.invincible
+        player.components.health:SetInvincible(not godmode)
+        player.components.locomotor:SetExternalSpeedMultiplier(player, "kochosei_speed_mod", 2)
+        -- Hiển thị thông báo pop-up
+        AnnounceDeveloperMode(player)
+    end
+end
+
+
+if dev_mode then
+    AddPrefabPostInit("kochosei", function(inst)
+        if TheWorld.ismastersim then
+            inst:DoTaskInTime(0, function()
+                EnableGodModeAndFreeCrafting(inst)
+            end)
+        end
+    end)
+end
+
+-- Developer Mode --
+
+
+
 
 local keytonamngua = GetModConfigData("keykocho")
 
@@ -663,8 +704,6 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_2 = "Are You"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
-
-STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY .. " điểm độ bền"
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
 ACTIONS.HAUNT.fn = function(act)
