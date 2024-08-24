@@ -307,20 +307,6 @@ AddRecipe2(
 )
 
 AddRecipe2(
-	"kochosei_harvest_book",
-	{Ingredient(CHARACTER_INGREDIENT.SANITY, 150)},
-	TECH.NONE,
-	{ 	
-		builder_tag = "kochosei", 
-		product = "kochosei_harvest_book", 
-		atlas = "images/inventoryimages/kochosei_inv.xml",
-		image = "kochosei_ancient_books.tex",
-		builder_tag = "kochosei", 
-	},
-	{ "KOCHOSEI_TAB" }
-)
-
-AddRecipe2(
 	"kocho_polly_rogershat",
 	{ Ingredient("silk", 10) },
 	TECH.NONE,
@@ -393,7 +379,7 @@ if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA ~= 1 then
 		"lucky_hammer",
 		{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
 		TECH.NONE,
-		{ builder_tag = "mcw" },
+		{ builder_tag = "mcw", product = "ticoon_builder" },
 		{ "KOCHOSEI_TAB" }
 	)
 end
