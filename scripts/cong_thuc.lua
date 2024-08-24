@@ -379,7 +379,7 @@ if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA ~= 1 then
 		"lucky_hammer",
 		{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
 		TECH.NONE,
-		{ builder_tag = "mcw", product = "ticoon_builder" },
+		{ builder_tag = "mcw" },
 		{ "KOCHOSEI_TAB" }
 	)
 end
