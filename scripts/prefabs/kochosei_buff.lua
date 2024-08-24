@@ -100,6 +100,8 @@ local function OnAttached_3(inst, target)
     if target and target:IsValid() and target.components.combat then
         target:AddDebuff("sweettea_buff", "sweettea_buff")
         target.no_hoa_di = target:DoPeriodicTask(0.25, PlantTick)
+        target.components.locomotor:SetExternalSpeedMultiplier(target, "kochosei_speed_mod_ancient", 1.25)
+
     end
 end
 
@@ -109,6 +111,8 @@ local function OnDetached_3(inst, target)
             target.no_hoa_di:Cancel()
             target.no_hoa_di = nil
         end
+        target.components.locomotor:RemoveExternalSpeedMultiplier(target, "kochosei_speed_mod_ancient")
+
     end
     inst:Remove()
 end
@@ -195,8 +199,14 @@ local function create_elysia_buff(onAttached, onDetached)
     return inst
 end
 
-return Prefab("elysia_2_buff", function() return create_elysia_buff(OnAttached, OnDetached) end, nil, buff_prefabs),
-       Prefab("elysia_3_buff", function() return create_elysia_buff(OnAttached_3, OnDetached_3) end, nil, buff_prefabs),
-       Prefab("elysia_4_buff", function() return create_elysia_buff(OnAttached_4, OnDetached_4) end, nil, buff_prefabs),
-       Prefab("elysia_5_buff", function() return create_elysia_buff(OnAttached_5, OnDetached_5) end, nil, buff_prefabs),
-       Prefab("kocho_buff_heal", function() return create_elysia_buff(OnAttached_heal, OnDetached_heal) end, nil, buff_prefabs)
+return Prefab("elysia_2_buff", function()
+    return create_elysia_buff(OnAttached, OnDetached)
+end, nil, buff_prefabs), Prefab("elysia_3_buff", function()
+    return create_elysia_buff(OnAttached_3, OnDetached_3)
+end, nil, buff_prefabs), Prefab("elysia_4_buff", function()
+    return create_elysia_buff(OnAttached_4, OnDetached_4)
+end, nil, buff_prefabs), Prefab("elysia_5_buff", function()
+    return create_elysia_buff(OnAttached_5, OnDetached_5)
+end, nil, buff_prefabs), Prefab("kocho_buff_heal", function()
+    return create_elysia_buff(OnAttached_heal, OnDetached_heal)
+end, nil, buff_prefabs)
