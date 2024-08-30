@@ -22,13 +22,12 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "cutgrass",
     "kochosei_hat2",
     "kochosei_lantern",
-    "kochosei_apple",
+    "kochosei_apple"
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
     image = "kochosei_lantern.tex"
 }
-
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_hat2 = {
     image = "kochosei_hat2.tex"
@@ -75,8 +74,7 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.5)
-    -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
+    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod")
 end
 
 local function onload(inst)
@@ -499,12 +497,25 @@ local function chungtakphaidatungladongdoisao(inst, data)
     end
 end
 
+local function lai_nhai(inst)
+
+    if inst.components.talker then
+        inst.components.talker:Say(" Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION * 100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY .. " điểm độ bền", 10)
+    end
+    if inst.lai_nhai_ve_stats ~= nil then
+        inst.lai_nhai_ve_stats:Cancel()
+        inst.lai_nhai_ve_stats = nil
+    end
+end
+
 local master_postinit = function(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
     inst.OnNewSpawn = OnNewSpawn
     inst.soundsname = "kochosei"
     inst.kochoseiindancing = 0
     inst.components.talker.ontalkfn = ontalk
+
+    inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
 
     inst:AddComponent("reader")
     inst.components.health:SetMaxHealth(TUNING.KOCHOSEI_HEALTH)
