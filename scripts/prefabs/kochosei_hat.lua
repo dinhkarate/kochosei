@@ -37,33 +37,34 @@ local hatMappings = {
 }
 
 local function OnEquip(inst, owner)
-    local hatName = hatMappings[inst.prefab]
-    if hatName then
-        local checkbuild = inst.AnimState:GetBuild()
-        local checkskin = checkbuild == "kochosei_hat1" or checkbuild == "kochosei_hat3" or checkbuild == "kochosei_ribbon"
-        if not checkskin then
-            owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or hatName, "swap_hat")
-        end
+    --inst.skinname của kochosei_hat2 là nil vì là skin mặc định nên không có đối số 
+    local checkbuild = inst.AnimState:GetBuild()
+    local checkskin = checkbuild == "kochosei_hat1" or checkbuild == "kochosei_hat3" or checkbuild == "kochosei_ribbon"
+    local current_character_build = owner.AnimState:GetBuild()
 
-        if hatName == "kochosei_hatfl" and owner.components.sanity then
-            owner.components.sanity.neg_aura_absorb = TUNING.ARMOR_HIVEHAT_SANITY_ABSORPTION
-            if owner.components.sanity.mode == SANITY_MODE_INSANITY then
-                owner.components.sanity:EnableLunacy(true, "hatfl")
-            end
-            owner.tangst = true
-        end
-
-        if owner.AnimState:GetBuild() == "kochosei_snowmiku_skin1" and checkbuild == "kochosei_ribbon" then
-            owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or hatName, "swap_hat")
-        end
-        owner.AnimState:Show("HAT")
-        owner.AnimState:Show("HAIR_HAT")
+    if checkbuild == "kochosei_hat2" then
+        owner.AnimState:OverrideSymbol("swap_hat", checkbuild, "swap_hat")
     end
+
+    if current_character_build == "kochosei_snowmiku_skin1" and checkbuild == "kochosei_ribbon" then
+        owner.AnimState:OverrideSymbol("swap_hat", checkbuild, "swap_hat")
+    end
+
+    if inst.prefab == "kochosei_hatfl" and owner.components.sanity then
+        owner.components.sanity.neg_aura_absorb = TUNING.ARMOR_HIVEHAT_SANITY_ABSORPTION
+        if owner.components.sanity.mode == SANITY_MODE_INSANITY then
+            owner.components.sanity:EnableLunacy(true, "hatfl")
+        end
+        owner.AnimState:OverrideSymbol("swap_hat", checkbuild, "swap_hat")
+        owner.tangst = true
+    end
+
+    owner.AnimState:Show("HAT")
+    owner.AnimState:Show("HAIR_HAT")
 end
 
 local function OnUnequip(inst, owner)
-    local hatName = hatMappings[inst.prefab]
-    if hatName == "kochosei_hatfl" then
+    if inst.prefab == "kochosei_hatfl" then
         if owner ~= nil and owner.components.sanity ~= nil then
             owner.components.sanity.neg_aura_absorb = 0
             if owner.components.sanity.mode == SANITY_MODE_LUNACY then
@@ -130,7 +131,7 @@ local function commonfn()
     return inst
 end
 
-local function commonfn_ribbon()
+local function commonfn_hat2()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -193,16 +194,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         bank = "kochosei_hat1",
         basebuild = "kochosei_hat2",
         basebank = "kochosei_hat2"
-    })
 
-    Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_hat3", {
-        name = "空想 技:紫",
-        atlas = "images/inventoryimages/kochosei_inv.xml",
-        image = "kochosei_hat3",
-        build = "kochosei_hat3",
-        bank = "kochosei_hat3",
-        basebuild = "kochosei_hat2",
-        basebank = "kochosei_hat2"
     })
     Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_ribbon", {
         name = "Kyoshiki, Murasaki",
@@ -213,6 +205,17 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         bank = "kochosei_ribbon",
         basebuild = "kochosei_hat2",
         basebank = "kochosei_hat2"
+    })
+
+    Kochoseiapi.MakeItemSkin("kochosei_hat2", "kochosei_hat3", {
+        name = "空想 技:紫",
+        atlas = "images/inventoryimages/kochosei_inv.xml",
+        image = "kochosei_hat3",
+        build = "kochosei_hat3",
+        bank = "kochosei_hat3",
+        basebuild = "kochosei_hat2",
+        basebank = "kochosei_hat2"
+
     })
 end
 
@@ -245,9 +248,11 @@ STRINGS.RECIPE_DESC.KOCHOSEI_HAT2 = "Armor hat"
 STRINGS.NAMES.KOCHOSEI_HAT3 = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT3 = "Its butterfly right? :>"
 STRINGS.RECIPE_DESC.KOCHOSEI_HAT3 = "Armor hat"
-STRINGS.NAMES.KOCHOSEI_RIBBON = "Kochosei Ribbon"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
-STRINGS.RECIPE_DESC.KOCHOSEI_RIBBON = "ごめんなさい、アマナイさん。"
+
+
+STRINGS.NAMES.KOCHOSEI_HAT2 = "Kochosei Ribbon"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。🫸🔵🔴🫷🤌。 空想 技:紫 🫴🟣"
+STRINGS.RECIPE_DESC.KOCHOSEI_HAT2 = "ごめんなさい、アマナイさん。"
 
 --]]
 STRINGS.NAMES.KOCHOSEI_HAT2 = "Kochosei Ribbon"
@@ -260,6 +265,4 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HATFL = "No more worrying about hea
 STRINGS.RECIPE_DESC.KOCHOSEI_HATFL = "No more worrying about headaches, but something else is coming :>"
 
 return Prefab("kochosei_hatfl", kochosei_hatfl, assets), 
-    Prefab("kochosei_hat2", commonfn_ribbon, assets)
-
--- Con cò này, làm tới đây r thì Lua Beautify cái cho ngta dễ dòm
+    Prefab("kochosei_hat2", commonfn_hat2, assets)
