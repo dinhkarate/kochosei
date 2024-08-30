@@ -22,7 +22,7 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "cutgrass",
     "kochosei_hat2",
     "kochosei_lantern",
-    "kochosei_apple"
+    "kochosei_apple",
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
