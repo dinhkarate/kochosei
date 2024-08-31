@@ -307,20 +307,6 @@ AddRecipe2(
 )
 
 AddRecipe2(
-	"kochosei_harvest_book",
-	{Ingredient(CHARACTER_INGREDIENT.SANITY, 150)},
-	TECH.NONE,
-	{ 	
-		builder_tag = "kochosei", 
-		product = "kochosei_harvest_book", 
-		atlas = "images/inventoryimages/kochosei_inv.xml",
-		image = "kochosei_ancient_books.tex",
-		builder_tag = "kochosei", 
-	},
-	{ "KOCHOSEI_TAB" }
-)
-
-AddRecipe2(
 	"kocho_polly_rogershat",
 	{ Ingredient("silk", 10) },
 	TECH.NONE,

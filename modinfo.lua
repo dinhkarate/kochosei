@@ -7,7 +7,7 @@ Thank you for using this mod, you can use the config button below and let me kno
 	
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
-version = "4.1.0.3"
+version = "4.1.1"
 forumthread = ""
 
 folder_name = folder_name or "workshop-"
@@ -603,15 +603,4 @@ configuration_options = {
 		},
 		default = "Default",
 	},
-
-	Title("Developer Mode"),
-	{
-        name = "developer_mode",
-        label = "Developer Mode",
-        options = {
-            {description = "Enabled", data = true},
-            {description = "Disabled", data = false},
-        },
-        default = false,
-    },
 }

@@ -1,6 +1,6 @@
 local buff_prefabs = {
     "wolfgang_coach_buff_fx",
-    "cane_rose_fx",
+    "cane_rose_fx"
 }
 
 local function StopBuff(inst)
@@ -14,10 +14,7 @@ local function OnDeathEvent(inst, target)
 end
 
 local function ExtendBuff(inst)
-    local buffTaskKey = (inst.prefab == "elysia_3_buff" and "bufftask_3")
-                     or (inst.prefab == "elysia_4_buff" and "bufftask_4")
-                     or (inst.prefab == "elysia_5_buff" and "bufftask_5")
-                     or "bufftask"
+    local buffTaskKey = (inst.prefab == "elysia_3_buff" and "bufftask_3") or (inst.prefab == "elysia_4_buff" and "bufftask_4") or (inst.prefab == "elysia_5_buff" and "bufftask_5") or (inst.prefab == "kocho_buff_heal" and "bufftask_heal") or "bufftask"
 
     if inst[buffTaskKey] then
         inst[buffTaskKey]:Cancel()
@@ -45,6 +42,46 @@ local function OnAttached(inst, target)
     end
 end
 
+local PLANTS_RANGE = 1
+local MAX_PLANTS = 18
+local PLANTFX_TAGS = {
+    "wormwood_plant_fx"
+}
+local plantpool = {
+    1,
+    2,
+    3,
+    4
+}
+for i = #plantpool, 1, -1 do
+    table.insert(plantpool, table.remove(plantpool, math.random(i)))
+end
+local function PlantTick(inst)
+    if not inst.entity:IsVisible() then
+        return
+    end
+    local x, y, z = inst.Transform:GetWorldPosition()
+    if #TheSim:FindEntities(x, y, z, PLANTS_RANGE, PLANTFX_TAGS) < MAX_PLANTS then
+        local map = TheWorld.Map
+        local pt = Vector3(0, 0, 0)
+        local offset = FindValidPositionByFan(math.random() * 2 * PI, math.random() * PLANTS_RANGE, 3, function(offset)
+            pt.x = x + offset.x
+            pt.z = z + offset.z
+            local tile = map:GetTileAtPoint(pt:Get())
+            return tile ~= GROUND.ROCKY and tile ~= GROUND.ROAD and tile ~= GROUND.WOODFLOOR and tile ~= GROUND.CARPET and tile ~= GROUND.IMPASSABLE and tile ~= GROUND.INVALID and #TheSim:FindEntities(pt.x, 0, pt.z, 0.5, PLANTFX_TAGS) < 3 and map:IsDeployPointClear(pt, nil, 0.5) and not map:IsPointNearHole(pt, 0.4)
+        end)
+        if offset ~= nil then
+            local plant = SpawnPrefab("wormwood_plant_fx")
+            plant.Transform:SetPosition(x + offset.x, 0, z + offset.z)
+            -- randomize, favoring ones that haven't been used recently
+            local rnd = math.random()
+            rnd = table.remove(plantpool, math.clamp(math.ceil(rnd * rnd * #plantpool), 1, #plantpool))
+            table.insert(plantpool, rnd)
+            plant:SetVariation(rnd)
+        end
+    end
+end
+
 local function OnDetached(inst, target)
     if target and target:IsValid() and target.components.combat then
         target.components.combat.externaldamagemultipliers:RemoveModifier(inst, "buff_atk_kochosei")
@@ -62,21 +99,20 @@ local function OnAttached_3(inst, target)
 
     if target and target:IsValid() and target.components.combat then
         target:AddDebuff("sweettea_buff", "sweettea_buff")
-        target.magicfx_ancient = SpawnPrefab("cane_rose_fx")
-        if target.magicfx_ancient then
-            target.magicfx_ancient.entity:AddFollower()
-            target.magicfx_ancient.entity:SetParent(target.entity)
-            target.magicfx_ancient.Follower:FollowSymbol(target.GUID, "swap_body", 0, 0, 0)
-        end
+        target.no_hoa_di = target:DoPeriodicTask(0.25, PlantTick)
+        target.components.locomotor:SetExternalSpeedMultiplier(target, "kochosei_speed_mod_ancient", 1.25)
+
     end
 end
 
 local function OnDetached_3(inst, target)
     if target and target:IsValid() and target.components.combat then
-        if target.magicfx_ancient then
-            target.magicfx_ancient:Remove()
-            target.magicfx_ancient = nil
+        if target.no_hoa_di ~= nil then
+            target.no_hoa_di:Cancel()
+            target.no_hoa_di = nil
         end
+        target.components.locomotor:RemoveExternalSpeedMultiplier(target, "kochosei_speed_mod_ancient")
+
     end
     inst:Remove()
 end
@@ -124,6 +160,21 @@ local function OnDetached_5(inst, target)
     inst:Remove()
 end
 
+local function OnAttached_heal(inst, target)
+    AttachCommon(inst, target)
+    inst.bufftask_heal = inst:DoTaskInTime(5, StopBuff)
+    if target.components.health then
+        target.components.health:AddRegenSource(target, TUNING.KOCHO_TAMBOURIN_HEAL, 0.5, "heal_from_kochosei")
+    end
+end
+
+local function OnDetached_heal(inst, target)
+    if target and target:IsValid() then
+        target.components.health:RemoveRegenSource(target, "heal_from_kochosei")
+    end
+    inst:Remove()
+end
+
 local function common()
     local inst = CreateEntity()
 
@@ -148,7 +199,14 @@ local function create_elysia_buff(onAttached, onDetached)
     return inst
 end
 
-return Prefab("elysia_2_buff", function() return create_elysia_buff(OnAttached, OnDetached) end, nil, buff_prefabs),
-       Prefab("elysia_3_buff", function() return create_elysia_buff(OnAttached_3, OnDetached_3) end, nil, buff_prefabs),
-       Prefab("elysia_4_buff", function() return create_elysia_buff(OnAttached_4, OnDetached_4) end, nil, buff_prefabs),
-       Prefab("elysia_5_buff", function() return create_elysia_buff(OnAttached_5, OnDetached_5) end, nil, buff_prefabs)
+return Prefab("elysia_2_buff", function()
+    return create_elysia_buff(OnAttached, OnDetached)
+end, nil, buff_prefabs), Prefab("elysia_3_buff", function()
+    return create_elysia_buff(OnAttached_3, OnDetached_3)
+end, nil, buff_prefabs), Prefab("elysia_4_buff", function()
+    return create_elysia_buff(OnAttached_4, OnDetached_4)
+end, nil, buff_prefabs), Prefab("elysia_5_buff", function()
+    return create_elysia_buff(OnAttached_5, OnDetached_5)
+end, nil, buff_prefabs), Prefab("kocho_buff_heal", function()
+    return create_elysia_buff(OnAttached_heal, OnDetached_heal)
+end, nil, buff_prefabs)
