@@ -58,6 +58,8 @@ local function SpawnSharkittens(inst,target)
 	end
 end 
 
+-- Bây giờ vào con Sonoko nghiên cứu cái StateGraph bay lên bao gồm những Anim gì và sau đó tiến này sử dụng nó cho hoạt ảnh bay lên.
+-- Nếu không được thì bỏ tính năng bay lên của con này.
 local states =
 {
     State{
