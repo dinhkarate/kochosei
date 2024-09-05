@@ -437,7 +437,7 @@ local states =
 
     	onenter = function(inst)
     		inst.Physics:Stop()
-    		inst.AnimState:PlayAnimation("taunt")
+    		inst.AnimState:PlayAnimation("emoteXL_kiss")
     	end,
 
         timeline =

@@ -11,6 +11,13 @@ local assets =
 	Asset("ANIM", "anim/tigershark_water.zip"),
     --Asset("ANIM", "anim/tigershark.zip"),
 	Asset("ANIM", "anim/tigershark_water_ripples_build.zip"),
+    Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
+    Asset("SOUND", "sound/kochosei_voice.fsb"),
+    Asset("ANIM", "anim/kochosei.zip"),
+    Asset("ANIM", "anim/ghost_kochosei_build.zip"),
+    Asset("ANIM", "anim/kochosei_snowmiku_skin1.zip"),
+    Asset("ANIM", "anim/kochosei_skin_shinku_notfull.zip"),
+    Asset("ANIM", "anim/kochosei_skin_shinku_full.zip"),
 }
 
 local prefabs =
@@ -194,7 +201,7 @@ end
 local function MakeGround(inst)
     inst:ClearStateGraph()
     inst:SetStateGraph("SGtigershark_duke_ground")
-    inst.AnimState:SetBuild("tigershark_ground_build")
+    inst.AnimState:SetBuild("kochosei")
     inst:RemoveTag("aquatic")
     inst.DynamicShadow:Enable(true)
 end
@@ -244,11 +251,12 @@ local function fn()
 
     --inst:AddComponent("rowboatwakespawner")
 
-    inst.AnimState:SetBank("tigershark")
-    inst.AnimState:SetBuild("tigershark_water_build")
-    inst.AnimState:PlayAnimation("water_run", true)
+    inst.AnimState:SetBank("wilson")
+    inst.AnimState:SetBuild("kochosei")
+    inst.AnimState:SetScale(5, 5)
+    inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetRayTestOnBB(true)
-    inst.AnimState:AddOverrideBuild("tigershark_water_ripples_build")
+    --inst.AnimState:AddOverrideBuild("tigershark_water_ripples_build")
 	
 	inst._playingmusic = false
 	if not TheNet:IsDedicated() then
