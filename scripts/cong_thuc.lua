@@ -362,6 +362,20 @@ AddRecipe2(
 	{ "KOCHOSEI_TAB" }
 )
 
+AddRecipe2(
+	"kochosei_harvest_book",
+	{Ingredient(CHARACTER_INGREDIENT.SANITY, 150)},
+	TECH.NONE,
+	{ 	
+		builder_tag = "kochosei", 
+		product = "kochosei_harvest_book", 
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_ancient_books.tex",
+		builder_tag = "kochosei", 
+	},
+	{ "KOCHOSEI_TAB" }
+)
+
 --kitcoon craft
 AddRecipe2(
 	"kochosei_ticoon",
