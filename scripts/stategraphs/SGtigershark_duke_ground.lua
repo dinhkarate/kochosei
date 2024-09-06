@@ -148,8 +148,8 @@ local states =
             --inst.components.locomotor:EnableGroundSpeedMultiplier(false)
 			--inst.components.locomotor:SetExternalSpeedMultiplier(inst, "tigershark_duke_jump",0)
 			
-            inst.AnimState:PlayAnimation("ground_launch_up_pre")
-            inst.AnimState:PushAnimation("ground_launch_up_loop", true)
+            inst.AnimState:PlayAnimation("superjump_lag")
+            inst.AnimState:PushAnimation("superjump", true)
         end,
 		
 		
@@ -230,8 +230,8 @@ local states =
             pos.y = 45
             inst.Transform:SetPosition(pos:Get())
 
-            local shadow = SpawnPrefab("tigershark_duke_shadow")
-            shadow:Ground_Fall()
+            --local shadow = SpawnPrefab("tigershark_duke_shadow")
+            --shadow:Ground_Fall()
             local heading = TheCamera:GetHeading()
             local rotation = 180 - heading
 
@@ -243,9 +243,9 @@ local states =
                 rotation = rotation + 360
             end
 
-            shadow.Transform:SetRotation(rotation)
+            --shadow.Transform:SetRotation(rotation)
             local x,y,z = inst:GetPosition():Get()
-            shadow.Transform:SetPosition(x,0,z)
+            --shadow.Transform:SetPosition(x,0,z)
         end,
 
         ontimeout = function(inst)
@@ -270,7 +270,7 @@ local states =
             ChangeToCharacterPhysics(inst)
 	        inst.components.locomotor.disable = true
             inst.Physics:SetMotorVel(0,-JUMP_SPEED,0)
-            inst.AnimState:PlayAnimation("ground_launch_down_loop", true)
+            inst.AnimState:PlayAnimation("superjump_land", true)
             inst.Physics:SetCollides(false)
             inst.sg:SetTimeout(JUMP_SPEED/45 + 0.2)
             inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/dive_attack")
@@ -318,7 +318,7 @@ local states =
         onenter = function(inst)
             inst.Physics:Stop()
             inst.components.locomotor.disable = false
-            inst.AnimState:PlayAnimation("ground_launch_down_pst")
+            inst.AnimState:PlayAnimation("idle_loop")
             inst.components.groundpounder:GroundPound()
             --inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/land_explode")
 			inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound")
@@ -554,7 +554,7 @@ CommonStates.AddRunStates(states,
     },
 },
 {
-    run = "run",
+    run = "run_loop",
 })
 
 return StateGraph("SGtigershark_duke_ground", states, events, "idle", actionhandlers)
