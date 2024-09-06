@@ -74,7 +74,7 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 2)
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 3)
     -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
@@ -377,6 +377,7 @@ end
 local function OnNewSpawn(inst)
     inst:DoTaskInTime(1, GetKochoMap)
     inst:DoTaskInTime(3, givefood)
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 end
 
 --[[---------------------------------Level Miomhm---------------------
