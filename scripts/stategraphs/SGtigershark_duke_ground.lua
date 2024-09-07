@@ -2,6 +2,104 @@ local JUMP_SPEED = 120
 local JUMP_LAND_OFFSET = 3
 local JUMP_HEIGHT_DELTA = 1.5
 
+local function StartLight(inst)
+    inst._startlighttask = nil
+    inst.Light:Enable(true)
+    if inst._staffstar == nil then
+        inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+    end
+end
+
+local function StopLight(inst)
+    inst._stoplighttask = nil
+    inst.Light:Enable(false)
+    if inst._staffstar == nil then
+        inst.AnimState:ClearBloomEffectHandle()
+    end
+end
+
+local function StopFX(inst)
+    if inst._fxpulse ~= nil then
+        inst._fxpulse:KillFX()
+        inst._fxpulse = nil
+    end
+    if inst._fxfront ~= nil or inst._fxback ~= nil then
+        if inst._fxback ~= nil then
+            inst._fxfront:KillFX()
+            inst._fxfront = nil
+        end
+        if inst._fxback ~= nil then
+            inst._fxback:KillFX()
+            inst._fxback = nil
+        end
+        if inst._stoplighttask ~= nil then
+            inst._stoplighttask:Cancel()
+        end
+        inst._stoplighttask = inst:DoTaskInTime(9 * FRAMES, StopLight)
+    end
+    if inst._startlighttask ~= nil then
+        inst._startlighttask:Cancel()
+        inst._startlighttask = nil
+    end
+end
+
+local function StartFX(inst)
+    if inst._fxfront == nil or inst._fxback == nil then
+        local x, y, z = inst.Transform:GetWorldPosition()
+
+        if inst._fxpulse ~= nil then
+            inst._fxpulse:Remove()
+        end
+        inst._fxpulse = SpawnPrefab("positronpulse")
+        inst._fxpulse.Transform:SetPosition(x, y, z)
+
+        if inst._fxfront ~= nil then
+            inst._fxfront:Remove()
+        end
+        inst._fxfront = SpawnPrefab("positronbeam_front")
+        inst._fxfront.Transform:SetPosition(x, y, z)
+
+        if inst._fxback ~= nil then
+            inst._fxback:Remove()
+        end
+        inst._fxback = SpawnPrefab("positronbeam_back")
+        inst._fxback.Transform:SetPosition(x, y, z)
+
+        if inst._startlighttask ~= nil then
+            inst._startlighttask:Cancel()
+        end
+        inst._startlighttask = inst:DoTaskInTime(3 * FRAMES, StartLight)
+    end
+    if inst._stoplighttask ~= nil then
+        inst._stoplighttask:Cancel()
+        inst._stoplighttask = nil
+    end
+    inst:DoTaskInTime(40 * FRAMES, StopFX)
+end
+
+
+
+
+
+local function onattackfn(inst)
+    if inst.components.health and not inst.components.health:IsDead()
+    and (inst.sg:HasStateTag("hit") or not inst.sg:HasStateTag("busy")) then
+        if inst.sg:HasStateTag("running") then
+            inst.sg:GoToState("attack")
+        else
+            inst.sg:GoToState("attack_pre")
+        end
+    end
+end
+
+local function onattackedfn(inst)
+    if not inst.components.health:IsDead() and not
+    inst.sg:HasStateTag("attack") and not
+    inst.sg:HasStateTag("specialattack") then
+        inst.sg:GoToState("hit")
+    end
+end
+
 local actionhandlers =
 {
 	ActionHandler(ACTIONS.EAT, "eat"),
@@ -16,6 +114,7 @@ local events =
 	CommonHandlers.OnFreeze(),
 	CommonHandlers.OnAttack(),
 	CommonHandlers.OnAttacked(),
+    
 }
 
 local function ToggleOffPhysics(inst)
@@ -63,12 +162,28 @@ end
 local states =
 {
     State{
+		name = "chicken",
+		tags = { "idle", "dancing" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+			if inst.AnimState:IsCurrentAnimation("run_pst") then
+				inst.AnimState:PushAnimation("emoteXL_loop_dance6")
+			else
+				inst.AnimState:PlayAnimation("emoteXL_loop_dance6")
+			end
+			inst.AnimState:PushAnimation("emoteXL_loop_dance6", true)
+		end,
+	},
+
+    State{
         name = "idle",
         tags = {"idle", "canrotate"},
 
         onenter = function(inst)
             inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("idle")
+            inst.AnimState:PlayAnimation("idle_loop", true)
             inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/idle")
         end,
 
@@ -149,7 +264,7 @@ local states =
 			--inst.components.locomotor:SetExternalSpeedMultiplier(inst, "tigershark_duke_jump",0)
 			
             inst.AnimState:PlayAnimation("superjump_lag")
-            inst.AnimState:PushAnimation("superjump", true)
+            inst.AnimState:PushAnimation("superjump", false)
         end,
 		
 		
@@ -230,8 +345,8 @@ local states =
             pos.y = 45
             inst.Transform:SetPosition(pos:Get())
 
-            --local shadow = SpawnPrefab("tigershark_duke_shadow")
-            --shadow:Ground_Fall()
+            local shadow = SpawnPrefab("tigershark_duke_shadow")
+            shadow:Ground_Fall()
             local heading = TheCamera:GetHeading()
             local rotation = 180 - heading
 
@@ -243,9 +358,9 @@ local states =
                 rotation = rotation + 360
             end
 
-            --shadow.Transform:SetRotation(rotation)
+            shadow.Transform:SetRotation(rotation)
             local x,y,z = inst:GetPosition():Get()
-            --shadow.Transform:SetPosition(x,0,z)
+            shadow.Transform:SetPosition(x,0,z)
         end,
 
         ontimeout = function(inst)
@@ -270,7 +385,7 @@ local states =
             ChangeToCharacterPhysics(inst)
 	        inst.components.locomotor.disable = true
             inst.Physics:SetMotorVel(0,-JUMP_SPEED,0)
-            inst.AnimState:PlayAnimation("superjump_land", true)
+            inst.AnimState:PlayAnimation("superjump", true)
             inst.Physics:SetCollides(false)
             inst.sg:SetTimeout(JUMP_SPEED/45 + 0.2)
             inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/dive_attack")
@@ -281,7 +396,7 @@ local states =
             TimeEvent(20*FRAMES, function(inst) 
 				--inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/roar") 
 				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
-			end)
+			end),
         },
 
         ontimeout = function(inst)
@@ -318,7 +433,7 @@ local states =
         onenter = function(inst)
             inst.Physics:Stop()
             inst.components.locomotor.disable = false
-            inst.AnimState:PlayAnimation("idle_loop")
+            inst.AnimState:PlayAnimation("superjump_land")
             inst.components.groundpounder:GroundPound()
             --inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/land_explode")
 			inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound")
@@ -344,7 +459,7 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.components.combat:StartAttack()
-            inst.AnimState:PlayAnimation("atk")
+            inst.AnimState:PlayAnimation("emoteXL_kiss")
 
             inst.CanRun = false
             --inst.components.rowboatwakespawner:StopSpawning()
@@ -439,7 +554,9 @@ local states =
 
     	onenter = function(inst)
     		inst.Physics:Stop()
-    		inst.AnimState:PlayAnimation("emoteXL_kiss")
+    		inst.AnimState:PlayAnimation("deform_pre")
+            local x, y, z = inst.Transform:GetWorldPosition()
+                StartFX(inst)
     	end,
 
         timeline =

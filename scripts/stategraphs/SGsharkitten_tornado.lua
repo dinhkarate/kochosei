@@ -123,23 +123,39 @@ local states =
 
         onenter = function(inst,target)
 			inst.components.combat:StartAttack()
-            local kitten = SpawnPrefab("sharkitten_projectile")
-			local pos = inst:GetPosition()
-			local targetpos = target:GetPosition()
-			local theta = PI / 3 * math.random() 
-			local radius = 1
-			local offset = FindWalkableOffset(targetpos, theta, radius, 1, true, true) or Vector3(0,0,0)
-			
-			if inst.Transform:GetScale() >= 2 then 
-				kitten.components.ly_projectile:SetSpeed(20)
-			end 
-		
-		
-			kitten.components.ly_projectile:Throw(inst,targetpos+offset,true,function()
-				kitten.Transform:SetPosition(pos:Get())
-			end)
-			
-			inst.sg:GoToState("idle")
+            local kitcoon_prefabs = {
+                "catcoon_build",
+                "ticoon_build",
+            }
+            local kitten = SpawnPrefab("catcoon_build_projectile")
+            local random_index = math.random(1, #kitcoon_prefabs)
+            local selected_kitcoon = kitcoon_prefabs[random_index]
+
+            if selected_kitcoon ~= nil and selected_kitcoon == "ticoon_build" then
+                kitten.AnimState:SetBuild(selected_kitcoon)
+            end
+
+            --if selected_kitcoon ~= nil and (selected_kitcoon ~= "catcoon_build" or selected_kitcoon ~= "ticoon_build") then
+                --kitten.AnimState:SetBank("kitcoon")
+                --kitten.AnimState:SetBuild(selected_kitcoon.."_build")
+                -- Cai djt me thieu chu build xam cac that
+            --end
+            --Bỏ, mấy con kitcoon ko có anim death
+            local pos = inst:GetPosition()
+            local targetpos = target:GetPosition()
+            local theta = PI / 3 * math.random() 
+            local radius = 1
+            local offset = FindWalkableOffset(targetpos, theta, radius, 1, true, true) or Vector3(0,0,0)
+            
+            if inst.Transform:GetScale() >= 2 then 
+                kitten.components.ly_projectile:SetSpeed(20)
+            end 
+        
+        
+            kitten.components.ly_projectile:Throw(inst,targetpos+offset,true,function()
+                kitten.Transform:SetPosition(pos:Get())
+            end)
+            inst.sg:GoToState("idle")
         end,
     },
 	

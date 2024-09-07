@@ -181,6 +181,7 @@ PrefabFiles = {
     "sharkitten_tornado",
     "sharkitten_projectile",
     "kochosei_enemy_d", -- T dùng )
+    "tigershark_duke_shadow",
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --

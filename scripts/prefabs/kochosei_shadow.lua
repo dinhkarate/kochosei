@@ -147,7 +147,14 @@ local function FindSharkHome(inst)
 end
 
 local function OnAttacked(inst, data)
-    inst.components.combat:SetTarget(data.attacker)
+	if data.attacker ~= nil then
+		if data.attacker.components.combat and data.attacker.userid ~= nil then
+			inst.components.combat:SetTarget(data.attacker)
+		end
+		if data.attacker.components.combat and data.attacker:HasTag("epic") then
+			inst.components.combat:SuggestTarget(data.attacker)
+		end
+	end
 end
 
 local function RetargetFn(inst)
@@ -189,15 +196,6 @@ local function ontimerdone(inst, data)
     end
 end
 
-local function MakeWater(inst)
-    inst:ClearStateGraph()
-    inst:SetStateGraph("SGtigershark_duke_water")
-    inst.AnimState:SetBuild("tigershark_water_build")
-    inst.AnimState:AddOverrideBuild("tigershark_water_ripples_build")
-    inst:AddTag("aquatic")
-    inst.DynamicShadow:Enable(false)
-end
-
 local function MakeGround(inst)
     inst:ClearStateGraph()
     inst:SetStateGraph("SGtigershark_duke_ground")
@@ -222,11 +220,22 @@ local function CanBeAttacked(inst, attacker)
     return not inst.sg:HasStateTag("specialattack")
 end
 
+local function OnHitOther(inst, data)
+	local target = data.target
+	if target ~= nil then
+		local health = target.components.health
+		if health and health:IsDead() then
+			inst.sg:GoToState("chicken")
+		end
+	end
+end
+
 local function fn()
 
 	local inst = CreateEntity()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+    inst.entity:AddLight()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
 	inst.entity:AddNetwork()
@@ -245,17 +254,26 @@ local function fn()
     inst:AddTag("largecreature")
     inst:AddTag("epic")
 
+
+    inst.Light:SetRadius(2)
+    inst.Light:SetIntensity(.75)
+    inst.Light:SetFalloff(.75)
+    inst.Light:SetColour(128 / 255, 128 / 255, 255 / 255)
+    inst.Light:Enable(false)
+
     --MakePoisonableCharacter(inst)
     MakeCharacterPhysics(inst, 1000, 1.33)
 	--MakeGiantCharacterPhysics(inst, 1000, 1.33)
 
     --inst:AddComponent("rowboatwakespawner")
 
+    inst:SetStateGraph("SGtigershark_duke_ground")
+
     inst.AnimState:SetBank("wilson")
-    inst.AnimState:SetBuild("kochosei")
-    inst.AnimState:SetScale(5, 5)
-    inst.AnimState:PlayAnimation("idle", true)
-    inst.AnimState:SetRayTestOnBB(true)
+    inst.AnimState:SetBuild("kochosei_snowmiku_skin1")
+    inst.AnimState:Hide("ARM_carry")
+    inst.AnimState:SetScale(4, 4)
+    inst.AnimState:PlayAnimation("idle")
     --inst.AnimState:AddOverrideBuild("tigershark_water_ripples_build")
 	
 	inst._playingmusic = false
@@ -270,6 +288,8 @@ local function fn()
     end
 	
 	inst.Physics:SetCollisionCallback(oncollide)
+
+
 
     inst:AddComponent("inspectable")
     inst.no_wet_prefix = true
@@ -298,7 +318,7 @@ local function fn()
     inst.components.groundpounder.noTags = {"sharkitten","tadalin"}
 
     inst:AddComponent("combat")
-    inst.components.combat:SetDefaultDamage(TUNING.DEERCLOPS_DAMAGE*6)
+    inst.components.combat:SetDefaultDamage(300)
     inst.components.combat:SetRange(TUNING.TIGERSHARK_ATTACK_RANGE, TUNING.TIGERSHARK_ATTACK_RANGE)
     --inst.components.combat:SetAreaDamage(TUNING.TIGERSHARK_SPLASH_RADIUS, TUNING.TIGERSHARK_SPLASH_DAMAGE/TUNING.TIGERSHARK_DAMAGE)
     inst.components.combat:SetAttackPeriod(TUNING.TIGERSHARK_ATTACK_PERIOD)
@@ -339,28 +359,15 @@ local function fn()
     inst.FindSharkHome = FindSharkHome
     inst.GetTarget = GetTarget
     inst.MakeGround = MakeGround
-    inst.MakeWater = MakeWater
 
-    inst:SetStateGraph("SGtigershark_duke_water")
     inst:SetBrain(brain)
 
     inst:AddComponent("timer")
     inst:ListenForEvent("timerdone", ontimerdone)
     inst:ListenForEvent("attacked", OnAttacked)
-
-    inst:DoTaskInTime(1*FRAMES, function()
-        --[[if inst:GetIsOnWater() then
-            MakeWater(inst)
-            inst.sg:GoToState("idle")
-        else
-            MakeGround(inst)
-            inst.sg:GoToState("idle")
-        end--]]
-		MakeGround(inst)
-        inst.sg:GoToState("idle")
-    end)
+    inst:ListenForEvent("onhitother", OnHitOther)
 
 	return inst
 end
 
-return Prefab( "kochosei_shadow", fn, assets, prefabs)
+return Prefab("kochosei_shadow", fn, assets, prefabs)
