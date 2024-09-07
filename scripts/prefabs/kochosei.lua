@@ -74,7 +74,8 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, "kochosei_speed_mod")
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 3)
+    -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
 local function onload(inst)
@@ -376,6 +377,7 @@ end
 local function OnNewSpawn(inst)
     inst:DoTaskInTime(1, GetKochoMap)
     inst:DoTaskInTime(3, givefood)
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 end
 
 --[[---------------------------------Level Miomhm---------------------
@@ -500,7 +502,7 @@ end
 local function lai_nhai(inst)
 
     if inst.components.talker then
-        inst.components.talker:Say(" Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION * 100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY .. " điểm độ bền", 10)
+        inst.components.talker:Say(" Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền", 10)
     end
     if inst.lai_nhai_ve_stats ~= nil then
         inst.lai_nhai_ve_stats:Cancel()
