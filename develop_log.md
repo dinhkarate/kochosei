@@ -52,3 +52,7 @@ Mong muốn cho lần tiếp theo:
 + Hiểu được cách hoạt động của brain và stategraph. Hiện tại có thể dùng stategraph trong prefab nhưng không hiểu cách nó hoạt động cùng brain như thế nào.
 + Thay đổi tên của file, cũng như tên prefab.
 + Nếu đã hiểu được cách hoạt động của brain và stategraph với nhau. Hãy thử cho kochosei cầm một cây gậy và triệu hồi ra con xương trong một khoảng thời gian ngắn sau đó cho con xương chết.
++ Thay đổi UI cho Altar
++ Quyết định giữ Altar hay sử dụng cây tử đằng thay thế cho Altar!
++ Định nghĩa cách spawn cho kochosei_shadow
++ Đổi tên kochosei_shadow. Vì kochosei_shadow được dùng cho con sau này có skill teleport như shadow_bishop.
