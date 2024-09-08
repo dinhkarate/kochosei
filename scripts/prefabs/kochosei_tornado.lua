@@ -5,7 +5,7 @@ local assets =
     Asset("ANIM", "anim/swap_tornado_stick.zip"),
 }
 
-local brain = require("brains/sharkittentornadobrain")
+local brain = require("brains/kochoseitornadobrain")
 
 local function ontornadolifetime(inst)
     inst.task = nil
@@ -68,7 +68,7 @@ local function tornado_fn()
     inst.components.locomotor.walkspeed = TUNING.TORNADO_WALK_SPEED * .33
     inst.components.locomotor.runspeed = TUNING.TORNADO_WALK_SPEED
 
-    inst:SetStateGraph("SGsharkitten_tornado")
+    inst:SetStateGraph("SGkochosei_tornado")
     inst:SetBrain(brain)
 
     inst.WINDSTAFF_CASTER = nil
@@ -84,4 +84,4 @@ local function tornado_fn()
     return inst
 end
 
-return Prefab("sharkitten_tornado", tornado_fn, assets)
+return Prefab("kochosei_tornado", tornado_fn, assets)
