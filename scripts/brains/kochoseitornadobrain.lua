@@ -3,7 +3,7 @@ require "behaviours/leash"
 require "behaviours/chaseandattack"
 require "behaviours/standandattack"
 
-local SharkittenTornadoBrain = Class(Brain, function(self, inst)
+local KochoseiTornadoBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
 end)
 
@@ -15,7 +15,7 @@ local wanderTimes =
     randwaittime = .25,
 }
 
-function SharkittenTornadoBrain:OnStart()
+function KochoseiTornadoBrain:OnStart()
     local root = 
     PriorityNode(
     {
@@ -27,4 +27,4 @@ function SharkittenTornadoBrain:OnStart()
     self.bt = BT(self.inst, root)
 end
 
-return SharkittenTornadoBrain
+return KochoseiTornadoBrain

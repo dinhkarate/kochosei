@@ -330,4 +330,4 @@ local states =
     },
 }
 
-return StateGraph("SGsharkitten_tornado", states, events, "empty")
+return StateGraph("SGkochosei_tornado", states, events, "empty")

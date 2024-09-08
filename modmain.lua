@@ -178,7 +178,7 @@ PrefabFiles = {
     -- 
     "kochosei_altar",
     "kochosei_shadow",
-    "sharkitten_tornado",
+    "kochosei_tornado",
     "sharkitten_projectile",
     "kochosei_enemy_d", -- T dùng )
     "tigershark_duke_shadow",

@@ -56,3 +56,11 @@ Mong muốn cho lần tiếp theo:
 + Quyết định giữ Altar hay sử dụng cây tử đằng thay thế cho Altar!
 + Định nghĩa cách spawn cho kochosei_shadow
 + Đổi tên kochosei_shadow. Vì kochosei_shadow được dùng cho con sau này có skill teleport như shadow_bishop.
+
+
+
+Tiến hành lại quy trình khi đổi tên.
+1. Đổi tên thành phần + commit
+2. Đổi tên File
+
+Mục đích để tường minh hơn và biết rõ hơn mình đã thay đổi ở đâu

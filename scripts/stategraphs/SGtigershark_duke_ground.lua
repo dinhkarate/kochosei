@@ -133,7 +133,7 @@ local function ToggleOnPhysics(inst)
     inst.Physics:CollidesWith(COLLISION.GIANTS)
 end
 
-local function SpawnSharkittens(inst,target)
+local function SpawnSharkittens(inst,target) --Cần thiết thì sẽ đổi luôn tên hàm
 	target = target or inst.components.combat.target
 	if not (target and target:IsValid()) then 
 		return 
@@ -144,7 +144,7 @@ local function SpawnSharkittens(inst,target)
 		local radius = 8
 		local offset = FindWalkableOffset(pos, theta, radius, 8, true, true) or Vector3(0,0,0)
 		
-		local tornado = SpawnPrefab("sharkitten_tornado")
+		local tornado = SpawnPrefab("kochosei_tornado")
 		
 		if inst.components.health:GetPercent() <= 0.5 then 
 			tornado.Transform:SetScale(2,2,1)
