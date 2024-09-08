@@ -87,4 +87,4 @@ local function fn()
 	return inst
 end
 
-return Prefab("tigershark_duke_shadow", fn, assets, prefabs)
+return Prefab("kochosei_tigershark_duke_shadow", fn, assets, prefabs)

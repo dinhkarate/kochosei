@@ -1,10 +1,6 @@
 local assets=
 {
  --   Asset("ANIM", "anim/sharkitten_basic.zip"),
-	Asset("ANIM", "anim/kochosei.zip"),
-	Asset("ANIM", "anim/player_actions.zip"),
-    Asset("ANIM", "anim/player_basic.zip"),
-    Asset("ANIM", "anim/player_idles.zip"),
 	Asset("ANIM", "anim/catcoon_basic.zip"),
 	Asset("ANIM", "anim/kitcoon_basic.zip"),
 	Asset("ANIM", "anim/catcoon_actions.zip"),
@@ -197,7 +193,7 @@ local function make(TenBuild_Catcoon)
 
 		inst.OnLongUpdate = grow
 		
-		inst:ListenForEvent("death",ondeath)
+		inst:ListenForEvent("death", ondeath)
 
 		return inst
 	end, 

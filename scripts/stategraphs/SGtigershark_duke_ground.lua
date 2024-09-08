@@ -345,7 +345,7 @@ local states =
             pos.y = 45
             inst.Transform:SetPosition(pos:Get())
 
-            local shadow = SpawnPrefab("tigershark_duke_shadow")
+            local shadow = SpawnPrefab("kochosei_tigershark_duke_shadow")
             shadow:Ground_Fall()
             local heading = TheCamera:GetHeading()
             local rotation = 180 - heading
@@ -674,4 +674,4 @@ CommonStates.AddRunStates(states,
     run = "run_loop",
 })
 
-return StateGraph("SGtigershark_duke_ground", states, events, "idle", actionhandlers)
+return StateGraph("SGkochosei_duke", states, events, "idle", actionhandlers)

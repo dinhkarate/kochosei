@@ -198,7 +198,7 @@ end
 
 local function MakeGround(inst)
     inst:ClearStateGraph()
-    inst:SetStateGraph("SGtigershark_duke_ground")
+    inst:SetStateGraph("SGkochosei_duke")
     inst.AnimState:SetBuild("kochosei")
     inst:RemoveTag("aquatic")
     inst.DynamicShadow:Enable(true)
@@ -267,7 +267,7 @@ local function fn()
 
     --inst:AddComponent("rowboatwakespawner")
 
-    inst:SetStateGraph("SGtigershark_duke_ground")
+    inst:SetStateGraph("SGkochosei_duke")
 
     inst.AnimState:SetBank("wilson")
     inst.AnimState:SetBuild("kochosei_snowmiku_skin1")
