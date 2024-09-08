@@ -74,7 +74,8 @@ local function onbecamehuman(inst)
 end
 
 local function onbecameghost(inst)
-    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 3)
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 5)
+
     -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
@@ -378,6 +379,8 @@ local function OnNewSpawn(inst)
     inst:DoTaskInTime(1, GetKochoMap)
     inst:DoTaskInTime(3, givefood)
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
+    --Cái này không cần thiết lắm khi set ở dưới kia rồi nhưng cứ để đi
+
 end
 
 --[[---------------------------------Level Miomhm---------------------
@@ -537,6 +540,9 @@ local master_postinit = function(inst)
     inst.components.eater.PrefersToEat = anvaochetnguoiay
     inst.customidleanim = "idle_wilson"
     inst.OnLoad = onload
+
+    inst:AddComponent("locomotor")
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("kochoseimain") -- Giết ếch, giết df, giết bướm, nó lỗi thì xóa dòng này
 
