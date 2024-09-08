@@ -370,4 +370,4 @@ local function fn()
 	return inst
 end
 
-return Prefab("kochosei_shadow", fn, assets, prefabs)
+return Prefab("kochosei_duke", fn, assets, prefabs)
