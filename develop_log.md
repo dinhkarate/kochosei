@@ -64,3 +64,18 @@ Tiến hành lại quy trình khi đổi tên.
 2. Đổi tên File
 
 Mục đích để tường minh hơn và biết rõ hơn mình đã thay đổi ở đâu
+
+kochosei_duke có 3 hành động chính khi tương tác với player
+1. Triệu hồi bão
+2. Bay
+3. Đánh
+
+
+Chase and Attack
+
+Charge Behaviour <Success>
+Chase and Ram   <Success>
+Hai cái này thoả mãn thì kochosei_duke sẽ nhảy
+Làm thế nào mà ChaseAndRam(...) lại biết cho SG thực hiện sg jump -> từ sg jump sẽ dẫn đến các sg khác. Tại sao là sg jump chứ không phải là sg khác? Làm thế nào mà ChaseAndRam nhận diện được
+
+-> Bằng cách xác định tag (Chỉ một phần) -> Phải xem nhiều SG hơn mới hiểu được
