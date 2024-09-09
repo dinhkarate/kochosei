@@ -76,6 +76,11 @@ Chase and Attack
 Charge Behaviour <Success>
 Chase and Ram   <Success>
 Hai cái này thoả mãn thì kochosei_duke sẽ nhảy
-Làm thế nào mà ChaseAndRam(...) lại biết cho SG thực hiện sg jump -> từ sg jump sẽ dẫn đến các sg khác. Tại sao là sg jump chứ không phải là sg khác? Làm thế nào mà ChaseAndRam nhận diện được
+Làm thế nào mà WhileNode(...ChaseAndRam(...)) lại biết cho SG thực hiện sg jump -> từ sg jump sẽ dẫn đến các sg khác. Tại sao là sg jump chứ không phải là sg khác? Làm thế nào mà ChaseAndRam nhận diện được
 
 -> Bằng cách xác định tag (Chỉ một phần) -> Phải xem nhiều SG hơn mới hiểu được
+
+Vấn đề 2. sg taunt hoạt động như thế nào với brain
+
+Giả thuyết 1. Tag có ảnh hưởng đến SG nào được call -> một phần đúng với special attack không đúng với busy của chicken và taunt
+Giả thuyết 2. Xoá bỏ toàn bộ các SG jump và fall, fallback, fallpost, thêm vào tags special attack cho chicken. Kiểm tra xem chicken có được trigger hay không.
