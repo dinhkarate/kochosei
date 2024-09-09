@@ -162,7 +162,7 @@ end
 local states =
 {
     State{
-		name = "chicken",
+		name = "taunt",
 		tags = { "idle", "dancing" },
 
 		onenter = function(inst)
@@ -549,7 +549,7 @@ local states =
     },
 
     State{
-    	name = "taunt",
+    	name = "chicken",
     	tags = {"busy"},
 
     	onenter = function(inst)
