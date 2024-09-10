@@ -97,9 +97,9 @@ function TigersharkDukeBrain:OnStart()
     local root = PriorityNode(
     {
         ---- Combat Actions ----
-        WhileNode(function() return self.inst.CanRun and self.inst.components.combat.target and
-            (distsq(self.inst:GetPosition(), self.inst.components.combat.target:GetPosition()) > 10*10 or self.inst.sg:HasStateTag("running")) end,
-                "Charge Behaviours", ChaseAndRam(self.inst, MAX_CHASE_TIME, GIVE_UP_DIST, MAX_CHARGE_DIST)),
+        --WhileNode(function() return self.inst.CanRun and self.inst.components.combat.target and
+            --(distsq(self.inst:GetPosition(), self.inst.components.combat.target:GetPosition()) > 10*10 or self.inst.sg:HasStateTag("running")) end,
+                --"Charge Behaviours", ChaseAndRam(self.inst, MAX_CHASE_TIME, GIVE_UP_DIST, MAX_CHARGE_DIST)),
                 --Các giá trị trong self.inst đều đã được định nghĩa
         ChaseAndAttack(self.inst),
         ----Vậy nên dưới này không cần định nghĩa lại với hàm ChaseandAttack

@@ -83,4 +83,8 @@ Làm thế nào mà WhileNode(...ChaseAndRam(...)) lại biết cho SG thực hi
 Vấn đề 2. sg taunt hoạt động như thế nào với brain
 
 Giả thuyết 1. Tag có ảnh hưởng đến SG nào được call -> một phần đúng với special attack không đúng với busy của chicken và taunt
-Giả thuyết 2. Xoá bỏ toàn bộ các SG jump và fall, fallback, fallpost, thêm vào tags special attack cho chicken. Kiểm tra xem chicken có được trigger hay không.
+Giả thuyết 2. Xoá bỏ toàn bộ các SG jump và fall, fallback, fallpost, thêm vào tags special attack cho chicken. Kiểm tra xem chicken có được trigger hay không. =>
+Giả thuyết 3. Xoá bỏ đi một phần brain -> chỉ có ChaseandAttack hoặc chỉ ChaseandRam vẫn hoạt động bình thường cho toàn bộ SG. -> Mọi thứ sụp đổ.
+Giả thuyết 4. Thay đổi giá trị của chicken và taunt với nhau. ~~Chicken thật sự hoạt động => brain tương tác với các thành phần trong state => Vẫn chưa xác định được các thành phần này.~~ Bậy
+Taunt vẫn hoạt động => brain tương tác với tên state. Hiện đã xác định được với taunt còn jump thì sao? Tại sao brain không định nghĩa cụ thể các state ra. Trong chaseandram và chaseandattack hoàn toàn không có các thành phần này.
+Giả thuyết 5. Component Locomotor sẽ quy định cách con boss di chuyển đến target như thế nào bằng cách xác định vị trí của target bằng GoToPoint
