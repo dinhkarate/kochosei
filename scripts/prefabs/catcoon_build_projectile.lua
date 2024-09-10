@@ -1,10 +1,8 @@
 local assets=
 {
- --   Asset("ANIM", "anim/sharkitten_basic.zip"),
 	Asset("ANIM", "anim/catcoon_basic.zip"),
 	Asset("ANIM", "anim/kitcoon_basic.zip"),
 	Asset("ANIM", "anim/catcoon_actions.zip"),
---	Asset("ANIM", "anim/sharkitten_build.zip"),
 	Asset("SOUND", "sound/hound.fsb"),
 }
 

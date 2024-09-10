@@ -4,13 +4,6 @@
 
 local assets =
 {
-	Asset("ANIM", "anim/tigershark_build.zip"),
-    Asset("ANIM", "anim/tigershark_ground_build.zip"),
-	Asset("ANIM", "anim/tigershark_ground.zip"),
-    Asset("ANIM", "anim/tigershark_water_build.zip"),
-	Asset("ANIM", "anim/tigershark_water.zip"),
-    --Asset("ANIM", "anim/tigershark.zip"),
-	Asset("ANIM", "anim/tigershark_water_ripples_build.zip"),
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("SOUND", "sound/kochosei_voice.fsb"),
     Asset("ANIM", "anim/kochosei.zip"),
@@ -32,45 +25,34 @@ local prefabs =
     "shark_gills",
 }
 
-SetSharedLootTable('tigershark_duke',
+SetSharedLootTable('kochosei_duke',
 {
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
-    {"fishmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
+    {"humanmeat", 1.00},
 
-    {"houndstooth", 1.00},
-    {"houndstooth", 0.50},
-    {"houndstooth", 1.00},
-    {"houndstooth", 0.50},
-    {"houndstooth", 1.00},
-    {"houndstooth", 0.50},
-    {"houndstooth", 1.00},
-    {"houndstooth", 0.50},
-    {"houndstooth", 1.00},
-    {"houndstooth", 0.50},
-    {"houndstooth", 1.00},
-    {"houndstooth", 0.50},
+    {"lucky_hammer", 1.00},
+    {"kochosei_armor_1", 1.00},
+    {"kochosei_umbrella", 1.00},
+    {"kochosei_card", 1.00},
+    
 
-  --  {"shark_gills", 1.00},
-  --  {"shark_gills", 1.00},
     {"deerclops_eyeball", 0.33},
-  --  {"shark_gills", 0.10},
+
 })
 
 local TARGET_DIST = 20
 local HEALTH_THRESHOLD = 0.1
 local HOME_PROTECTION_DISTANCE = 60
 
-local brain = require "brains/tigershark_dukebrain"
+local brain = require "brains/kochosei_dukebrain"
 
 local function PushMusic(inst)
     if ThePlayer == nil then
@@ -308,7 +290,7 @@ local function fn()
     inst.components.eater.ablefoods = { "MEAT", "VEGGIE", "GENERIC" }
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('tigershark_duke')
+    inst.components.lootdropper:SetChanceLootTable('kochosei_duke')
 
     inst:AddComponent("groundpounder")
     inst.components.groundpounder.destroyer = true

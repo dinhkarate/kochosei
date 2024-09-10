@@ -13,7 +13,7 @@ local DO_ACTIONS_DISTANCE = 30
 local FOOD_TAGS = {"edible"}
 local NO_TAGS = {"FX", "NOCLICK", "DECOR", "INLIMBO", "kittenchow"}
 
-local TigersharkDukeBrain = Class(Brain, function(self, inst)
+local KochoseiDukeBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
 end)
 
@@ -93,7 +93,7 @@ local function FindWaterAction(inst)
     end
 end
 
-function TigersharkDukeBrain:OnStart()
+function KochoseiDukeBrain:OnStart()
     local root = PriorityNode(
     {
         ---- Combat Actions ----
@@ -121,4 +121,4 @@ function TigersharkDukeBrain:OnStart()
     self.bt = BT(self.inst, root)
 end
 
-return TigersharkDukeBrain
+return KochoseiDukeBrain
