@@ -15,21 +15,21 @@ local function onclose(inst)
 end
 
 local function onhammered(inst, worker)
-  if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then -- 正在燃烧
-    inst.components.burnable:Extinguish() -- 扑灭火
+  if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then 
+    inst.components.burnable:Extinguish() 
   end
-  inst.components.lootdropper:DropLoot() -- 掉落战利品
+  inst.components.lootdropper:DropLoot()
   if inst.components.container ~= nil then
-    inst.components.container:DropEverything() -- 掉落物品
+    inst.components.container:DropEverything() 
   end
 end
 
 local function onhit(inst, worker)
   
-    inst.AnimState:PlayAnimation('ending') -- 敲
-    inst.AnimState:PushAnimation('ending_loop', true) -- 关闭
+    inst.AnimState:PlayAnimation('ending')
+    inst.AnimState:PushAnimation('ending_loop', true)
 
-    if inst.components.container ~= nil then -- 掉落物品
+    if inst.components.container ~= nil then
       inst.components.container:DropEverything()
       inst.components.container:Close()
     end
@@ -69,16 +69,16 @@ local function fn()
   inst.entity:AddMiniMapEntity()
   inst.entity:AddNetwork()
 
-  --inst.MiniMapEntity:SetIcon('treasurechest.png') -- 图标
+  --inst.MiniMapEntity:SetIcon('treasurechest.png') 
 
-  inst:AddTag('structure') -- 建筑
-  inst:AddTag('chest') -- 箱子
+  inst:AddTag('structure') 
+  inst:AddTag('chest') 
 
   inst.AnimState:SetBank('quagmire_altar')
   inst.AnimState:SetBuild('quagmire_altar')
   inst.AnimState:PlayAnimation('ending_loop',true)
 
-  MakeSnowCoveredPristine(inst) -- 积雪
+  MakeSnowCoveredPristine(inst)
 
   MakeObstaclePhysics(inst, .5)
 
@@ -90,27 +90,27 @@ local function fn()
    -- inst:AddComponent("prototyper")
    -- inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.KOCHOSEI_ALTAR
 
-  inst:AddComponent('inspectable') -- 可检查
+  inst:AddComponent('inspectable') 
 
-  inst:AddComponent('container') -- 容器
+  inst:AddComponent('container') 
   inst.components.container:WidgetSetup('kochosei_altar')
   inst.components.container.onopenfn = onopen
   inst.components.container.onclosefn = onclose
 
 
-  inst:AddComponent('lootdropper') -- 战利品掉落（锤子锤掉）
-  inst:AddComponent('workable') -- 可交互
-  inst.components.workable:SetWorkAction(ACTIONS.HAMMER) -- 锤子
+  inst:AddComponent('lootdropper')
+  inst:AddComponent('workable') 
+  inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
   inst.components.workable:SetWorkLeft(9999) 
-  inst.components.workable:SetOnWorkCallback(onhit) -- 锤掉
-  --inst.components.workable:SetOnFinishCallback(onhammered) -- 交互
+  inst.components.workable:SetOnWorkCallback(onhit)
+  --inst.components.workable:SetOnFinishCallback(onhammered) 
 
-  MakeMediumPropagator(inst) -- 制作中号传播者?
-  inst:AddComponent('hauntable') -- 作祟
+  MakeMediumPropagator(inst) 
+  inst:AddComponent('hauntable') 
   inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
 
-  inst:ListenForEvent('onbuilt', onbuilt) -- 建
-  MakeSnowCovered(inst) -- 大雪覆盖
+  inst:ListenForEvent('onbuilt', onbuilt) 
+  MakeSnowCovered(inst) 
 
   -- Save / load is extended by some prefab variants
   inst.OnSave = onsave

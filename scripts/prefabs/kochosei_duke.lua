@@ -41,7 +41,11 @@ SetSharedLootTable('kochosei_duke',
     {"lucky_hammer", 1.00},
     {"kochosei_armor_1", 1.00},
     {"kochosei_umbrella", 1.00},
-    {"kochosei_card", 1.00},
+
+
+    {"kochosei_card_attack", 0.33},
+    {"kochosei_card_defend", 0.33},
+    {"kochosei_card_health", 0.33},
     
 
     {"deerclops_eyeball", 0.33},

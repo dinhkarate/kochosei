@@ -182,7 +182,8 @@ PrefabFiles = {
     "catcoon_build_projectile",
     "kochosei_enemy_d", -- T dùng )
     "kochosei_tigershark_duke_shadow",
-    "kochosei_card"
+    "kochosei_card",
+    "kochosei_boss",
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --

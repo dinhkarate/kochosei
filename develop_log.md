@@ -89,3 +89,22 @@ Giả thuyết 4. Thay đổi giá trị của chicken và taunt với nhau. ~~C
 Taunt vẫn hoạt động => brain tương tác với tên state. Hiện đã xác định được với taunt còn jump thì sao? Tại sao brain không định nghĩa cụ thể các state ra. Trong chaseandram và chaseandattack hoàn toàn không có các thành phần này.
 Giả thuyết 5. Component Locomotor sẽ quy định cách con boss di chuyển đến target như thế nào bằng cách xác định vị trí của target bằng GoToPoint -> Không chắc
 Giả thuyết 6 nếu giả thuyết 5 đúng. Locomotor ảnh hưởng đến cách jump hoạt động. Hiện tại đã tìm ra hàm OnUpdate trong locomotor
+Ngưng kiểm chứng
+
+**Đưa ra được kết luận sg"taunt" có liên hệ với BattleCry()**
+**sg"jump" có liên hệ với OnUpdate trong Locomotor. Hàm này quá phức tạp, không hiểu hết được, nhưng để dùng thì không vấn đề.**
+
+10/09
+Sửa toàn bộ dấu vết còn sót lại.
+Thêm kochosei_card
+Gồm ba loại card. Item được drop cho boss kochosei_duke (tạm thời)
+
+Nếu được hãy làm hệ thống merge cho mấy tấm thẻ này.
+Ý tưởng 1. Merge trong Kochosei_Altar
+Ý tưởng 2. Merge bằng action của player
+
+
+Thêm kochosei_duke_crown
+
+Mong muốn tiếp theo:
+Chỉnh sửa được SG khi summon. Cho nó ngầu lòi xíu

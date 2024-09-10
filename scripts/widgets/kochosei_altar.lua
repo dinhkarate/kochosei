@@ -1,4 +1,3 @@
--- 玩游戏就好好玩游戏
 local _G = GLOBAL
 local TUNING = _G.TUNING
 local Ingredient = _G.Ingredient
@@ -17,67 +16,24 @@ function DefaultValue(value, default_Value)
     if value == nil then return default_Value end
     return value
 end
-local BossjtRigorous = DefaultValue(TUNING.BOSSJT_RIGOROUS, true) -- 困难
+local BossjtRigorous = DefaultValue(TUNING.BOSSJT_RIGOROUS, true) 
 local BossjtConsumeAllMaterials = DefaultValue(
                                          TUNING.BOSSJT_CONSUME_ALL_MATERIALS,
-                                         false) -- 噩梦
-local BossjtByMenus = DefaultValue(TUNING.BOSSJT_BY_MENUS, false) -- 查找
+                                         false)
+local BossjtByMenus = DefaultValue(TUNING.BOSSJT_BY_MENUS, false)
 local BossjtAcceptsstacks = DefaultValue(TUNING.BOSSJT_ACCEPTSSTACKS,
-                                            false) -- 叠堆
+                                            false)
 local BossjtRecipes = DefaultValue(TUNING.BOSSJT_RECIPES, {
     {
-        name = 'kemomimi_boss_dragon_bai',
+        name = 'kochosei_duke',
         numtogive = 1,
         builder_tag = nil,
         ingredients = {
-          Ingredient("kemomimi_boss_dragon_bai_zh", 1), nil, nil,
-          nil, nil, nil,
-          nil, nil, nil
+          Ingredient("kochosei_apple", 1), Ingredient("kochosei_apple", 1), Ingredient("kochosei_apple", 1),
+          Ingredient("kochosei_apple", 1), Ingredient("kochosei_duke_crown", 1), Ingredient("kochosei_apple", 1),
+          Ingredient("kochosei_apple", 1), Ingredient("kochosei_apple", 1), Ingredient("kochosei_apple", 1)
         }
     },
-    {
-      name = 'kemomimi_boss_ds',
-      numtogive = 1,
-      builder_tag = nil,
-      ingredients = {
-          Ingredient("kemomimi_boss_ds_zh", 1), nil, nil,
-          nil, nil, nil,
-          nil, nil, nil
-
-      }
-    },
-    {
-      name = 'kemomimi_boss_fs',
-      numtogive = 1,
-      builder_tag = nil,
-      ingredients = {
-          Ingredient("kemomimi_boss_fs_zh", 1), nil, nil,
-          nil, nil, nil,
-          nil, nil, nil
-
-      }
-    },
-         {
-        name = 'kemomimi_boss_hmz',
-        numtogive = 1,
-        builder_tag = nil,
-        ingredients = {
-          Ingredient("kemomimi_boss_hmz_zh", 1), nil, nil,
-          nil, nil, nil,
-          nil, nil, nil
-        }
-    }, 
-
-
-
-
-
-
-
-
-
-
-
 })
 -- ================================================================================
 
@@ -153,13 +109,13 @@ local function InjectContainerWidgetMountButton()
     end)
 end
 
--- 创建容器
+
 local function CreateChest(chest_name, widget, param)
     local params = {}
     params[chest_name] = {
         widget = {
             slotpos = {},
-            slotbg = { -- 设置格子样式
+            slotbg = { 
                 {
                     atlas = "images/ui/boss_slot.xml",
                     image = "boss_slot.tex"
@@ -234,7 +190,7 @@ local function CreateChest(chest_name, widget, param)
                                        function() return true end
     function containers.widgetsetup(container, prefab, ...)
         local t = prefab or container.inst.prefab
-        if t == chest_name then -- 添加自己的容器
+        if t == chest_name then 
             local param = params[t]
             for k, v in pairs(param) do container[k] = v end
             container:SetNumSlots(container.widget.slotpos ~= nil and
@@ -261,7 +217,7 @@ CreateChest('kochosei_altar', {
         }
     }
 }, {
-    acceptsstacks = BossjtAcceptsstacks, -- 禁止叠堆
+    acceptsstacks = BossjtAcceptsstacks, 
     itemtestfn = function(inst, item, slot)
         -- return item:IsValid() and item.components.leader == nil and not (item:HasTag('irreplaceable') or item:HasTag('bundle'))
         return item:IsValid() and item.components.leader == nil and
@@ -298,30 +254,30 @@ AddModRPCHandler('kochosei_altar', 'synthesis', function(player, kochosei_altar)
 
         if container:IsEmpty() then
             return player.components.talker:Say(
-                       '我是不是要准备一些材料呢？')
+                       'Mang đồ nhét vô')
         end
 
         local find_fn = function(recipe)
-            if #recipe.ingredients <= 0 then return false end -- 无材料 不可以
-            -- if not GetValidRecipe(recipe.name) then return false end -- 失效的不可以制作（傻不拉几的，不知道判断了啥）
-            if recipe.placer ~= nil then return false end -- 建筑 不可以
+            if #recipe.ingredients <= 0 then return false end
+
+            if recipe.placer ~= nil then return false end
             if recipe.builder_tag and not player:HasTag(recipe.builder_tag) then
                 return false
-            end -- 无标签 不可以
+            end 
             if recipe.character_ingredients and #recipe.character_ingredients >
-                0 then return false end -- 需要玩家属性的不可以制作
+                0 then return false end 
             if recipe.tech_ingredients and #recipe.tech_ingredients > 0 then
                 return false
-            end -- 需要科技的不可以制作（雕像啥的）
+            end 
             if recipe.level and recipe.level.ORPHANAGE > 0 then
                 return false
-            end -- 宠物不可以制作
+            end 
 
             local amount = 0
             local hasIngredient = Every(recipe.ingredients,
                                         function(ingredient, index)
 
-                -- 严谨模式一比一位置
+               
                 if BossjtRigorous then
                     local item = container:GetItemInSlot(index)
                     local item_prefab = (item and item.prefab) or nil
@@ -350,21 +306,21 @@ AddModRPCHandler('kochosei_altar', 'synthesis', function(player, kochosei_altar)
             return hasIngredient
         end
 
-        -- 获取当前可以制作的菜单
+       
         local recipe = Find(BossjtRecipes, find_fn)
         if recipe == nil and BossjtAcceptsstacks == true and BossjtByMenus ==
             true then recipe = FindItem(AllRecipes, find_fn) end
 
-        -- 没有找到可以制作的物品
+      
         if recipe == nil then
             if BossjtConsumeAllMaterials then
                 container:RemoveAllItems()
             end
             return player.components.talker:Say(
-                       '材料似乎不太对，到底哪里出了问题？')
+                       'Hình như sai nguyên liệu rồi! ><')
         end
 
-        -- 删除需要的材料
+       
         for i = 1, container:GetNumSlots(), 1 do
             local ingredient = recipe.ingredients[i]
             if ingredient then
@@ -372,28 +328,28 @@ AddModRPCHandler('kochosei_altar', 'synthesis', function(player, kochosei_altar)
             end
         end
 
-        -- 经过层层筛选，终于拿到将要制作的武器
+       
         local prefab = SpawnPrefab(recipe.product or recipe.name) -- recipe.product 不知道是哪个~
 
-        -- 这也不对？是bug吧？
+
         if prefab == nil then
             return player.components.talker:Say(
-                       '咦？应该成功才对哇，奇奇怪怪的？')
+                       'Ừ thì, chắc là thành công rồi đó')
         end
 
-        -- 可以制作，但是发现不可以放入背包的~
+
         local x, y, z = player.Transform:GetWorldPosition()
         prefab.Transform:SetPosition(x, y, z)
         if prefab.components.inventoryitem == nil then
            -- prefab:Remove()
             return player.components.talker:Say(
-                       '摇摆吧，命运的摇摆；刻画既来之时，穿梭于未来与过去！上级召唤：现身吧！ ')--我他妈太中二了哈哈哈哈哈哈
+                       'É é é ')
         end
 
-        -- 尽情的放入背包的吧！
+
         for i = 1, recipe.numtogive or 1, 1 do
             player.components.inventory:GiveItem(prefab)
-            return player.components.talker:Say('好耶！制作成功！')
+            return player.components.talker:Say('Hảo hảo!')
         end
 
     end
