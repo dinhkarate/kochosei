@@ -329,8 +329,8 @@ AddModRPCHandler('kochosei_altar', 'synthesis', function(player, kochosei_altar)
         end
 
        
-        local prefab = SpawnPrefab(recipe.product or recipe.name) -- recipe.product 不知道是哪个~
-
+        local prefab = SpawnPrefab(recipe.product or recipe.name) 
+        --Hàm spawn nó ở đây. Giả thuyết là khó lòng định nghĩa ở đây, để thử định nghĩa trong OnNewSpawn hoặc OnSpawn tại prefab của boss
 
         if prefab == nil then
             return player.components.talker:Say(
