@@ -1,6 +1,4 @@
---Need to make this enemy much less player focused.
---Doesn't target player by default.
-    --Only if hit or if sharkittens threatened.
+require("worldsettingsutil")
 
 local assets =
 {
@@ -57,6 +55,75 @@ local HEALTH_THRESHOLD = 0.1
 local HOME_PROTECTION_DISTANCE = 60
 
 local brain = require "brains/kochosei_dukebrain"
+
+
+
+--------------------------------------------------------------------------
+
+local function OnFocusCamera(inst)
+    if inst._camerafocusvalue > FRAMES then
+        inst._camerafocusvalue = inst._camerafocusvalue - FRAMES
+        local k = math.min(1, inst._camerafocusvalue) / 1
+        TheFocalPoint.components.focalpoint:StartFocusSource(inst, nil, nil, 10 * k, 28 * k, 4)
+    else
+        inst._camerafocustask:Cancel()
+        inst._camerafocustask = nil
+        inst._camerafocusvalue = nil
+        TheFocalPoint.components.focalpoint:StopFocusSource(inst)
+    end
+end
+
+local function OnCameraFocusDirty(inst)
+    if inst._camerafocus:value() > 0 then
+        if inst._camerafocus:value() <= 1 then
+            inst._camerafocusvalue = math.huge
+            if inst._camerafocustask == nil then
+                inst._camerafocustask = inst:DoPeriodicTask(0, OnFocusCamera)
+                OnFocusCamera(inst)
+            end
+        elseif inst._camerafocustask ~= nil then
+            inst._camerafocusvalue = 3
+            OnFocusCamera(inst)
+        end
+    elseif inst._camerafocustask ~= nil then
+        inst._camerafocustask:Cancel()
+        inst._camerafocustask = nil
+        inst._camerafocusvalue = nil
+        TheFocalPoint.components.focalpoint:StopFocusSource(inst)
+    end
+end
+
+local function SetCameraFocus(inst, level)
+    if level ~= inst._camerafocus:value() then
+        inst._camerafocus:set(level)
+        if not TheNet:IsDedicated() then
+            OnCameraFocusDirty(inst)
+        end
+    end
+end
+
+--------------------------------------------------------------------------
+
+local function OnNewSpawn(inst)
+    inst.sg:GoToState("changefrommonkey")
+    SetCameraFocus(inst, 2)
+end
+
+
+local function NhieuChuyen(inst, id, forcetext)
+    STRINGS.KOCHOSEI_DUKE_TALK = {
+        "Kẻ xấc xược! Ngươi nghĩ rằng mình có thể thách thức một Công tước ư?", --sg appear_pre
+        "Sức mạnh của ngươi chỉ là trò trẻ con đối với ta!", --sg chicken
+        "Ngươi sẽ phải trả giá bằng máu cho sự ngạo mạn của mình!", --sg taunt
+        "Một kẻ yếu đuối như ngươi không bao giờ có thể đánh bại ta!", --sg jump
+        "Không... không thể nào... Ta là bất khả chiến bại...", --sg death
+        "Ngươi thực sự nghĩ mình có thể đối đầu với ta? Thật nực cười!" --sg laugh
+    }
+    -- Chỉ được thêm vào sau. Vì đang quy định bằng id. Thêm vào ở trước sẽ gặp vấn đề
+    
+    local strtbl = "KOCHOSEI_DUKE_TALK"
+    inst.components.talker:Chatter(strtbl, id, 2, forcetext, CHATPRIORITIES.LOW)
+end
 
 local function PushMusic(inst)
     if ThePlayer == nil then
@@ -210,7 +277,11 @@ local function OnHitOther(inst, data)
 	local target = data.target
 	if target ~= nil then
 		local health = target.components.health
-		if health and health:IsDead() then
+        local random = math.random(1,2)
+		if health and health:IsDead() and random == 1 then
+			inst.sg:GoToState("chicken")
+		end
+        if health and health:IsDead() and random == 2 then
 			inst.sg:GoToState("chicken")
 		end
 	end
@@ -275,7 +346,15 @@ local function fn()
 	
 	inst.Physics:SetCollisionCallback(oncollide)
 
-
+    local talker = inst:AddComponent("talker")
+    talker.fontsize = 40
+    talker.font = TALKINGFONT
+    talker.colour = Vector3(125 / 255, 17 / 255, 255 / 255)
+    talker.offset = Vector3(0, -700, 0)
+    talker.symbol = "fossil_chest"
+    talker.name_colour = Vector3(66/256, 9/256, 135/256)
+    talker.chaticon = "npcchatflair_stalker"
+    talker:MakeChatter()
 
     inst:AddComponent("inspectable")
     inst.no_wet_prefix = true
@@ -346,6 +425,9 @@ local function fn()
     inst.GetTarget = GetTarget
     inst.MakeGround = MakeGround
 
+    inst.OnNewSpawn = OnNewSpawn
+    inst.NhieuChuyen = NhieuChuyen
+
     inst:SetBrain(brain)
 
     inst:AddComponent("timer")
@@ -353,7 +435,19 @@ local function fn()
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("onhitother", OnHitOther)
 
+    if not TheWorld.ismastersim then
+        inst:ListenForEvent("camerafocusdirty", OnCameraFocusDirty)
+
+        return inst
+    end
+
+    inst._camerafocus = net_tinybyte(inst.GUID, "kochosei_duke._camerafocus", "camerafocusdirty")
+    inst._camerafocustask = nil
 	return inst
 end
+
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_DUKE = "Công tước Kochosei"
+--STRINGS.RECIPE_DESC.KOCHOSEI_DUKE = "Công tước Kochosei"
+STRINGS.NAMES.KOCHOSEI_DUKE = "Công tước Kochosei"
 
 return Prefab("kochosei_duke", fn, assets, prefabs)

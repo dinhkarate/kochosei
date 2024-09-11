@@ -161,6 +161,66 @@ end
 -- Nếu không được thì bỏ tính năng bay lên của con này.
 local states =
 {
+
+    -- appear_pre > appear
+    State{
+        name = "appear_pre",
+        tags = { "busy", "nopredict", "transform", "nomorph", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.components.locomotor:Stop()
+            TheNet:Announce("Kochosei Duke xuất thế!!! Anh em lên đảo chơi nó thôi")
+            inst.AnimState:PlayAnimation("deform_pre")
+            inst:NhieuChuyen(1, true)
+            StartFX(inst)
+            SpawnPrefab("monkey_deform_pre_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:AddStateTag("noattack")
+                    inst.components.health:SetInvincible(true)
+                    inst.sg:GoToState("appear")
+                end
+            end),
+        },
+
+    },
+
+    State{
+        name = "appear",
+        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("deform_pst")
+
+            SpawnPrefab("monkey_deform_pst_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end,
+
+        timeline =
+        {
+            TimeEvent(15*FRAMES, function(inst)
+            end),
+
+            TimeEvent(20*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("nointerrupt")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
     State{
 		name = "chicken",
 		tags = { "idle", "dancing" },
@@ -185,6 +245,31 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("idle_loop", true)
             inst.SoundEmitter:PlaySound("dontstarve_DLC002/creatures/tiger_shark/idle")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end)
+        },
+    },
+
+    State{
+        name = "laugh",
+        tags = {"idle", "canrotate"},
+
+        onenter = function(inst)
+            inst:NhieuChuyen(6, true)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+			if inst.AnimState:IsCurrentAnimation("run_pst") then
+				inst.AnimState:PushAnimation("emote_laugh")
+			else
+				inst.AnimState:PlayAnimation("emote_laugh")
+			end
+			inst.AnimState:PushAnimation("emote_laugh", true)
+
         end,
 
         events =
@@ -259,6 +344,7 @@ local states =
         tags = {"busy", "specialattack"},
 
         onenter = function(inst)
+            inst:NhieuChuyen(4, true)
             inst.components.locomotor:Stop()
             --inst.components.locomotor:EnableGroundSpeedMultiplier(false)
 			--inst.components.locomotor:SetExternalSpeedMultiplier(inst, "tigershark_duke_jump",0)
@@ -531,7 +617,8 @@ local states =
             inst.Physics:Stop()
             RemovePhysicsColliders(inst)
             inst.components.lootdropper:DropLoot(Vector3(inst.Transform:GetWorldPosition()))
-			inst.components.lootdropper:SpawnLootPrefab("tigershark_duke_cinder",inst:GetPosition())
+            inst:NhieuChuyen(5, true)
+            print("Cai nay chay")
         end,
 
         timeline =
