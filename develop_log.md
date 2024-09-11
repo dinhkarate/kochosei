@@ -108,3 +108,7 @@ Thêm kochosei_duke_crown
 
 Mong muốn tiếp theo:
 Chỉnh sửa được SG khi summon. Cho nó ngầu lòi xíu
+
+
+
+Tự dưng nghĩ ra ý tưởng viết sudoku trong chest của game. Khi giải đượcc thì sẽ tăng slot của chest lên
