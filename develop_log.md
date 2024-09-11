@@ -133,3 +133,5 @@ Mai làm nốt vài cái nữa là up được rồi
 2. Kiểm tra Focalpoint chỉnh sửa con số cho hợp lý.
 3. Thêm công thức cho kochosei_duke_crown
 4. Thêm altar lên đảo
+Quên mất còn 1 vụ
+5. Update công thức cho con mcw, bữa giờ chưa update.
