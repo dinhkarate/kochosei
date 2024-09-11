@@ -99,10 +99,10 @@ local function fn()
 
 
   inst:AddComponent('lootdropper')
-  inst:AddComponent('workable') 
-  inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-  inst.components.workable:SetWorkLeft(9999) 
-  inst.components.workable:SetOnWorkCallback(onhit)
+  --inst:AddComponent('workable') 
+  --inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+  --inst.components.workable:SetWorkLeft(9999) 
+  --inst.components.workable:SetOnWorkCallback(onhit)
   --inst.components.workable:SetOnFinishCallback(onhammered) 
 
   MakeMediumPropagator(inst) 
@@ -119,9 +119,10 @@ local function fn()
   return inst
 end
 
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ALTAR = "Tế Đàn"
+--STRINGS.RECIPE_DESC.KOCHOSEI_ALTAR = "Tế Đàn"
+STRINGS.NAMES.KOCHOSEI_ALTAR = "Tế Đàn"
+
 return Prefab('kochosei_altar', fn, assets), MakePlacer(
-  'kochosei_altar_placer',
-  'quagmire_altar',
-  'quagmire_altar',
-  'idle_empty'
+  'kochosei_altar_placer'
 )

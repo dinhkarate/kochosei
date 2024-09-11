@@ -329,8 +329,10 @@ AddModRPCHandler('kochosei_altar', 'synthesis', function(player, kochosei_altar)
         end
 
        
-        local prefab = SpawnPrefab(recipe.product or recipe.name) -- recipe.product 不知道是哪个~
-
+        local prefab = SpawnPrefab(recipe.product or recipe.name)
+        if prefab then
+            prefab.sg:GoToState("appear_pre")
+        end
 
         if prefab == nil then
             return player.components.talker:Say(

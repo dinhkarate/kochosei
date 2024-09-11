@@ -58,6 +58,7 @@ local HOME_PROTECTION_DISTANCE = 60
 
 local brain = require "brains/kochosei_dukebrain"
 
+
 local function PushMusic(inst)
     if ThePlayer == nil then
         inst._playingmusic = false
@@ -275,7 +276,7 @@ local function fn()
 	
 	inst.Physics:SetCollisionCallback(oncollide)
 
-
+    inst:AddComponent("focalpoint")
 
     inst:AddComponent("inspectable")
     inst.no_wet_prefix = true
@@ -346,6 +347,7 @@ local function fn()
     inst.GetTarget = GetTarget
     inst.MakeGround = MakeGround
 
+
     inst:SetBrain(brain)
 
     inst:AddComponent("timer")
@@ -355,5 +357,9 @@ local function fn()
 
 	return inst
 end
+
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_DUKE = "Công tước Kochosei"
+--STRINGS.RECIPE_DESC.KOCHOSEI_DUKE = "Công tước Kochosei"
+STRINGS.NAMES.KOCHOSEI_DUKE = "Công tước Kochosei"
 
 return Prefab("kochosei_duke", fn, assets, prefabs)

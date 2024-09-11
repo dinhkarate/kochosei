@@ -108,3 +108,24 @@ Thêm kochosei_duke_crown
 
 Mong muốn tiếp theo:
 Chỉnh sửa được SG khi summon. Cho nó ngầu lòi xíu
+
+
+Ngày khủng bố 9/11
+
+Tiếc quá tiếc cho talker:Chatter setup mọi thứ ok hết rồi thì xung đột với sg, brain, chịu chết. Bỏ, để đó, lỡ một ngày nào đó lại nghĩ ra chỗ dùng. Cụ thể lỗi: Sẽ không cho kochosei thực hiện sg taunt nữa. Có thể xung đột khá là sâu đấy nên thôi dừng là hạnh phúc.
+
+Cho Altar không thể bị hammered nữa.
+
+Chỉnh sửa widget để có thể spawn với sg. Boss sau này khi spawn đều sẽ dùng sg appear_pre sau đó thích làm sg như thế nào thì tuỳ.
+
+Muốn add vụ khoá camera vào nhưng có vẻ khó quá. Vãi thật làm được luôn này =)) dume
+Hên là components focalpoint không có xung đột như talker
+
+Thôi nghỉ
+
+Mai làm nốt vài cái nữa là up được rồi
+
+1. Sửa TUNING
+2. Kiểm tra Focalpoint chỉnh sửa con số cho hợp lý.
+3. Thêm công thức cho kochosei_duke_crown
+4. Thêm altar lên đảo
