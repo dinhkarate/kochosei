@@ -754,6 +754,7 @@ AddPrefabPostInit("cay_hoa_sang", function(inst)
     end
 end)
 
+--[[
 AddStategraphPostInit("wilson", function(sg)
 	local frun_start_onenter = sg.states.run_start.onenter
 	sg.states.run_start.onenter = function(inst)
@@ -763,3 +764,4 @@ AddStategraphPostInit("wilson", function(sg)
         end
 	end
 end)
+--]]

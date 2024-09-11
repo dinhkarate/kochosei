@@ -69,7 +69,7 @@ local function spawnfcmnx(inst)
 end
 
 local function stopkochostop(inst)
-    if inst.sg:HasStateTag("moving") then
+    if inst.sg:HasStateTag("moving") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
         inst.kochostop = 0
     end
 end
@@ -578,7 +578,7 @@ local master_postinit = function(inst)
     inst:ListenForEvent("healthdelta", phandamge)
     inst:ListenForEvent("picksomething", onpick)
     inst:ListenForEvent("onhitother", OnHitOther)
-    --inst:ListenForEvent("newstate", stopkochostop)
+    inst:ListenForEvent("newstate", stopkochostop)
 
     inst.wlist = wlist
     ---------------------------Kén ăn------------------
