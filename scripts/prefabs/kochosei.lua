@@ -43,13 +43,34 @@ for k, v in pairs(TUNING.GAMEMODE_STARTING_ITEMS) do
 end
 local prefabs = FlattenTree(start_inv, true)
 
-local function haru(inst)
+local function spawnfcmnx(inst)
     local dist = 0.5 * math.random()
     local theta = 2 * PI * math.random()
     local x, y, z = inst.Transform:GetWorldPosition()
     local fx = SpawnPrefab("crab_king_icefx")
     if fx then
         fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
+    end
+    if inst.sg.currentstate.name ~= "emote" then
+        inst.sg:GoToState("emote", {
+            anim = {
+                {
+                    "emote_pre_sit2",
+                    "emote_loop_sit2"
+                }
+            },
+            loop = true,
+            fx = false,
+            mounted = true,
+            mountsound = "walk",
+            mountsounddelay = 6 * FRAMES
+        })
+    end
+end
+
+local function stopkochostop(inst)
+    if inst.sg:HasStateTag("moving") then
+        inst.kochostop = 0
     end
 end
 
@@ -75,7 +96,6 @@ end
 
 local function onbecameghost(inst)
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 5)
-
     -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
@@ -186,12 +206,23 @@ local HEAL_CANT_TAGS = {
     "wall"
 }
 local function OnTaskTick(inst)
+
     if inst.components.health:IsDead() or inst:HasTag("playerghost") then
         return
+    end
+    if not inst.components.locomotor.wantstomoveforward then
+        inst.kochostop = inst.kochostop + 1
+    else
+        inst.kochostop = 0
+    end
+
+    if inst.kochostop >= 60 then
+        spawnfcmnx(inst)
     end
     if inst.components.sanity:GetPercent() < 1 then
         return
     end
+
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, 8, HEAL_MUST_TAGS, HEAL_CANT_TAGS)
     for i, v in ipairs(ents) do
@@ -200,19 +231,7 @@ local function OnTaskTick(inst)
             v.components.health:DeltaPenalty(-0.01) -- con cò, số gì bé V~
         end
     end
-    if inst.kochostop == nil then
-        inst.kochostop = 0
-    end
 
-    if not inst.components.locomotor.wantstomoveforward then
-        inst.kochostop = inst.kochostop + 1
-    else
-        inst.kochostop = 0
-    end
-
-    if inst.kochostop >= 60 then
-        haru(inst)
-    end
 end
 
 ---------------------------Kén ăn------------------
@@ -378,9 +397,7 @@ end
 local function OnNewSpawn(inst)
     inst:DoTaskInTime(1, GetKochoMap)
     inst:DoTaskInTime(3, givefood)
-    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
-    --Cái này không cần thiết lắm khi set ở dưới kia rồi nhưng cứ để đi
-
+    -- inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 end
 
 --[[---------------------------------Level Miomhm---------------------
@@ -518,9 +535,13 @@ local master_postinit = function(inst)
     inst.OnNewSpawn = OnNewSpawn
     inst.soundsname = "kochosei"
     inst.kochoseiindancing = 0
+    inst.kochostop = 0
+
     inst.components.talker.ontalkfn = ontalk
 
     inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
+
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("reader")
     inst.components.health:SetMaxHealth(TUNING.KOCHOSEI_HEALTH)
@@ -541,9 +562,6 @@ local master_postinit = function(inst)
     inst.customidleanim = "idle_wilson"
     inst.OnLoad = onload
 
-    inst:AddComponent("locomotor")
-    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
-
     inst:AddComponent("kochoseimain") -- Giết ếch, giết df, giết bướm, nó lỗi thì xóa dòng này
 
     inst:AddComponent("sttptmau") -- Sát thương theo pt máu kiểm tra hàm OnHitOther
@@ -560,6 +578,7 @@ local master_postinit = function(inst)
     inst:ListenForEvent("healthdelta", phandamge)
     inst:ListenForEvent("picksomething", onpick)
     inst:ListenForEvent("onhitother", OnHitOther)
+    --inst:ListenForEvent("newstate", stopkochostop)
 
     inst.wlist = wlist
     ---------------------------Kén ăn------------------

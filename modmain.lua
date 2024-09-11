@@ -753,3 +753,13 @@ AddPrefabPostInit("cay_hoa_sang", function(inst)
         SetUpvalue(fn, TARGET_MUST_TAGS_index, TARGET_MUST_TAGS)
     end
 end)
+
+AddStategraphPostInit("wilson", function(sg)
+	local frun_start_onenter = sg.states.run_start.onenter
+	sg.states.run_start.onenter = function(inst)
+		frun_start_onenter(inst)
+		if inst:HasTag("kochosei") then 
+            inst.kochostop = 0
+        end
+	end
+end)
