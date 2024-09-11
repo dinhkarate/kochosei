@@ -110,6 +110,10 @@ Mong muốn tiếp theo:
 Chỉnh sửa được SG khi summon. Cho nó ngầu lòi xíu
 
 
+
+Tự dưng nghĩ ra ý tưởng viết sudoku trong chest của game. Khi giải đượcc thì sẽ tăng slot của chest lên
+
+
 Ngày khủng bố 9/11
 
 Tiếc quá tiếc cho talker:Chatter setup mọi thứ ok hết rồi thì xung đột với sg, brain, chịu chết. Bỏ, để đó, lỡ một ngày nào đó lại nghĩ ra chỗ dùng. Cụ thể lỗi: Sẽ không cho kochosei thực hiện sg taunt nữa. Có thể xung đột khá là sâu đấy nên thôi dừng là hạnh phúc.
