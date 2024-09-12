@@ -1,7 +1,5 @@
 <h1 align="center">
-    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2733891656">
         Modded Character in Don't Starve Together
-    </a>
 </h1>
 <h3 align="center">
     <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2733891656">
