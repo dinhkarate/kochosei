@@ -2,9 +2,9 @@ Assets = {
 
 
     -- Kochosei Altar --
-    Asset("IMAGE", "images/ui/boss_slot.tex"),
-    Asset("ATLAS", "images/ui/boss_slot.xml"),
-    Asset("ANIM", "anim/ui_boss.zip"),
+    Asset("IMAGE", "images/ui/hect_slot.tex"),
+    Asset("ATLAS", "images/ui/hect_slot.xml"),
+    Asset("ANIM", "anim/kochosei_ui_boss.zip"),
     -- Kochosei Altar --
     --------------------------------------------------------------------------------
 

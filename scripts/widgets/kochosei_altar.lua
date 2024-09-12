@@ -117,44 +117,44 @@ local function CreateChest(chest_name, widget, param)
             slotpos = {},
             slotbg = { 
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 },
                 {
-                    atlas = "images/ui/boss_slot.xml",
-                    image = "boss_slot.tex"
+                    atlas = "images/ui/hect_slot.xml",
+                    image = "hect_slot.tex"
                 }
             },
-            animbank = 'ui_chest_3x3',
-            animbuild = 'ui_boss',
+            animbank = 'kochosei_ui_boss',
+            animbuild = 'kochosei_ui_boss',
             pos = Vector3(0, 200, 0),
             side_align_tip = 160,
             button_info = {}
@@ -206,7 +206,7 @@ CreateChest('kochosei_altar', {
     button_info = {
         {
             text = 'Summon',
-            position = Vector3(0, -180, 0),
+            position = Vector3(0, -160, 0),
             fn = function(inst, doer)
                 if inst.replica.container ~= nil and
                     not inst.replica.container:IsBusy() then
@@ -317,7 +317,7 @@ AddModRPCHandler('kochosei_altar', 'synthesis', function(player, kochosei_altar)
                 container:RemoveAllItems()
             end
             return player.components.talker:Say(
-                       'Hình như sai nguyên liệu rồi! ><')
+                       'Hình như sai nguyên liệu rồi!')
         end
 
        

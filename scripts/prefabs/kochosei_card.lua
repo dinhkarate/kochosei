@@ -52,11 +52,10 @@ local function make(code, description, check_des_boolean, alter_description, fil
         local currentMaxHealth = owner.components.health.maxhealth
         local DeltaHealth = owner.components.health.maxhealth - owner.components.health.currenthealth
         if owner:HasTag("player") then
-            
-            if code == "defend" then
+            if code == "kochosei_card_defend" then
                 owner.components.health:SetMaxDamageTakenPerHit(currentMaxHealth/10)
             end
-            if code == "attack" then
+            if code == "kochosei_card_attack" then
                 -- Hắn dùng ExternalDamageMulti
                 -- Mình dùng BaseDamage
                 if owner.components.combat.damagemultiplier ~= nil then
@@ -67,7 +66,7 @@ local function make(code, description, check_des_boolean, alter_description, fil
                 end
 
             end
-            if code == "health" then
+            if code == "kochosei_card_health" then
                 owner.components.health:SetMaxHealth(currentMaxHealth + 500)
                 owner.components.health:SetCurrentHealth(currentMaxHealth - DeltaHealth + 500)
                 owner.components.health:DoDelta(0.01)
@@ -91,26 +90,27 @@ local function make(code, description, check_des_boolean, alter_description, fil
         local DeltaHealth = owner.components.health.maxhealth - owner.components.health.currenthealth
         if owner:HasTag("player") then
 
-            if code == "defend" then
+            if code == "kochosei_card_defend" then
                 owner.components.health:SetMaxDamageTakenPerHit(nil)
             end
-            if code == "attack" then
+            if code == "kochosei_card_attack" then
                 -- Hắn dùng ExternalDamageMulti
                 -- Mình dùng BaseDamage
                 if owner.components.combat.damagemultiplier ~= nil then
                     owner.components.combat.damagemultiplier = owner.components.combat.damagemultiplier / 2
-                    print("Khác nil")
                 -- Lúc Equip đã gán giá trị cho nó lên gấp đôi, vì vậy nên không cần else ở đây
                 end
             end
-            if code == "health" then
+            if code == "kochosei_card_health" then
                 owner.components.health:SetMaxHealth(currentMaxHealth - 500)
-                if (currentMaxHealth - DeltaHealth - 500) > 0 then
-                    owner.components.health:SetCurrentHealth(currentMaxHealth - DeltaHealth - 500)
-                    owner.components.health:DoDelta(-0.01)
-                else
-                    owner.components.health:SetCurrentHealth(1)
-                    owner.components.health:DoDelta(-0.01)
+                owner.components.health:DoDelta(DeltaHealth)
+                -- Cố tình gỡ thì thấp hơn 500 máu thì cút
+                --if (currentMaxHealth - DeltaHealth - 500) > 0 then
+                --    owner.components.health:SetCurrentHealth(currentMaxHealth - DeltaHealth - 500)
+                --    owner.components.health:DoDelta(-0.01)
+                --else
+                --    owner.components.health:SetCurrentHealth(1)
+                --    owner.components.health:DoDelta(-0.01)
                 --DoDelta để lấy hiệu ứng trên thanh máu
                 end
             end

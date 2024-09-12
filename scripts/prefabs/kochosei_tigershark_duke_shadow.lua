@@ -2,7 +2,7 @@ local easing = require("easing")
 
 local assets =
 {
-	Asset("ANIM", "anim/tigershark_shadow.zip")
+	Asset("ANIM", "anim/kochosei_tigershark_shadow.zip")
 }
 
 local function OnRemove(inst)
