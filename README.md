@@ -1,4 +1,4 @@
-##Modded Character in Don't Starve Together<br />
+<h1 align="center">Modded Character in Don't Starve Together</h1>
 [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=2733891656)<br />
 [Changelog](https://steamcommunity.com/sharedfiles/filedetails/changelog/2733891656)<br />
 
