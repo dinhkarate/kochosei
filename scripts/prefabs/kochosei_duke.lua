@@ -282,8 +282,8 @@ local function fn()
     inst.no_wet_prefix = true
 	
 	inst:AddComponent("locomotor")
-	inst.components.locomotor.walkspeed = TUNING.TIGERSHARK_WALK_SPEED
-	inst.components.locomotor.runspeed = TUNING.TIGERSHARK_RUN_SPEED
+	inst.components.locomotor.walkspeed = TUNING.KOCHOSEI_DUKE_WALK_SPEED
+	inst.components.locomotor.runspeed = TUNING.KOCHOSEI_DUKE_RUN_SPEED
 
 	inst:AddComponent("knownlocations")
 
@@ -306,9 +306,9 @@ local function fn()
 
     inst:AddComponent("combat")
     inst.components.combat:SetDefaultDamage(300)
-    inst.components.combat:SetRange(TUNING.TIGERSHARK_ATTACK_RANGE, TUNING.TIGERSHARK_ATTACK_RANGE)
-    --inst.components.combat:SetAreaDamage(TUNING.TIGERSHARK_SPLASH_RADIUS, TUNING.TIGERSHARK_SPLASH_DAMAGE/TUNING.TIGERSHARK_DAMAGE)
-    inst.components.combat:SetAttackPeriod(TUNING.TIGERSHARK_ATTACK_PERIOD)
+    inst.components.combat:SetRange(TUNING.KOCHOSEI_DUKE_ATTACK_RANGE, TUNING.KOCHOSEI_DUKE_ATTACK_RANGE)
+    --inst.components.combat:SetAreaDamage(TUNING.KOCHOSEI_DUKE_SPLASH_RADIUS, TUNING.KOCHOSEI_DUKE_SPLASH_DAMAGE/TUNING.KOCHOSEI_DUKE_DAMAGE)
+    inst.components.combat:SetAttackPeriod(TUNING.KOCHOSEI_DUKE_ATTACK_PERIOD)
     inst.components.combat:SetRetargetFunction(3, RetargetFn)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
     inst.components.combat:SetHurtSound("dontstarve_DLC001/creatures/bearger/hurt")

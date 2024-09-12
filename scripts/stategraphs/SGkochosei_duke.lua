@@ -225,6 +225,7 @@ local states =
             TimeEvent(20*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("nointerrupt")
                 OnStopFocusCamera(inst)
+                inst.components.health:SetInvincible(false)
             end),
         },
 

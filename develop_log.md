@@ -129,9 +129,12 @@ Thôi nghỉ
 
 Mai làm nốt vài cái nữa là up được rồi
 
-1. Sửa TUNING
-2. Kiểm tra Focalpoint chỉnh sửa con số cho hợp lý.
-3. Thêm công thức cho kochosei_duke_crown
-4. Thêm altar lên đảo
+1. Sửa TUNING (12/09) Đã sửa thành máu 100k
+2. Kiểm tra Focalpoint chỉnh sửa con số cho hợp lý. (12/09) Đã chỉnh về 100. Không chỉnh nữa, để nguyên, khi nào test gặp vấn đề thì sửa sau
+3. Thêm công thức cho kochosei_duke_crown (12/09) Đã thêm
+4. Thêm altar lên đảo (12/09) Đã thêm
 Quên mất còn 1 vụ
-5. Update công thức cho con mcw, bữa giờ chưa update.
+5. Update công thức cho con mcw, bữa giờ chưa update. (12/09) Không sửa, do đã được sửa ở branch khác chỉ cần merge
+
+12/09
+Mới thay đổi xong giao diện cho kochosei_altar

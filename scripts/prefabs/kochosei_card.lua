@@ -112,7 +112,7 @@ local function make(code, description, check_des_boolean, alter_description, fil
                 --    owner.components.health:SetCurrentHealth(1)
                 --    owner.components.health:DoDelta(-0.01)
                 --DoDelta để lấy hiệu ứng trên thanh máu
-                end
+                --end
             end
 
             owner:RemoveEventCallback("ms_respawnedfromghost", onbecamehuman)
