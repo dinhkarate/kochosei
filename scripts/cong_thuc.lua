@@ -371,6 +371,7 @@ AddRecipe2(
 		product = "kochosei_harvest_book", 
 		atlas = "images/inventoryimages/kochosei_inv.xml",
 		image = "kochosei_ancient_books.tex",
+		builder_tag = "kochosei", 
 	},
 	{ "KOCHOSEI_TAB" }
 )
