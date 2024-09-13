@@ -1776,6 +1776,19 @@ return {
                         rotation = 0,
                         visible = true,
                         properties = {}
+                    },
+                    {
+                        id =187,
+                        name = "kochosei_altar",
+                        type = "kochosei_altar",
+                        shape = "rectangle",
+                        x = 1838,
+                        y = 1723,
+                        width = 60,
+                        height = 54,
+                        rotation = 0,
+                        visible = true,
+                        properties = {}
                     }
                 }
             }
