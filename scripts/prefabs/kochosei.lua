@@ -22,7 +22,7 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "cutgrass",
     "kochosei_hat2",
     "kochosei_lantern",
-    "kochosei_apple"
+    "kochosei_apple",
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
@@ -397,7 +397,8 @@ end
 local function OnNewSpawn(inst)
     inst:DoTaskInTime(1, GetKochoMap)
     inst:DoTaskInTime(3, givefood)
-    -- inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
+    --inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
+    --Dinh: Bỏ luôn đi
 end
 
 --[[---------------------------------Level Miomhm---------------------
@@ -541,6 +542,7 @@ local master_postinit = function(inst)
 
     inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
 
+    inst:AddComponent("locomotor")
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("reader")
@@ -561,6 +563,9 @@ local master_postinit = function(inst)
     inst.components.eater.PrefersToEat = anvaochetnguoiay
     inst.customidleanim = "idle_wilson"
     inst.OnLoad = onload
+
+    inst:AddComponent("locomotor")
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("kochoseimain") -- Giết ếch, giết df, giết bướm, nó lỗi thì xóa dòng này
 
