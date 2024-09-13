@@ -171,7 +171,22 @@ PrefabFiles = {
     "kochosei_buff",
     "kochosei_f_cmn_x",
     "kochosei_cay_hoa_sang",
-    "kochosei_gift"
+
+    "kochosei_gift",
+    --
+    "kochosei_harvest_book",
+
+
+    -- 
+    "kochosei_altar",
+    "kochosei_duke",
+    "kochosei_tornado",
+    "catcoon_build_projectile",
+    "kochosei_enemy_d", -- T dùng )
+    "kochosei_tigershark_duke_shadow",
+    "kochosei_card",
+    "kochosei_boss",
+
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -218,6 +233,8 @@ TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái 
 modimport("scripts/value_dhkg_a") -- TUNING
 
 modimport("scripts/widgets/balovali") -- balovali
+
+modimport('scripts/widgets/kochosei_altar') -- kochosei_altar
 
 --[[
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
@@ -664,7 +681,9 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
 
-STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY .. " điểm độ bền"
+
+STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
+
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
 ACTIONS.HAUNT.fn = function(act)
@@ -751,3 +770,15 @@ AddPrefabPostInit("cay_hoa_sang", function(inst)
         SetUpvalue(fn, TARGET_MUST_TAGS_index, TARGET_MUST_TAGS)
     end
 end)
+
+--[[
+AddStategraphPostInit("wilson", function(sg)
+	local frun_start_onenter = sg.states.run_start.onenter
+	sg.states.run_start.onenter = function(inst)
+		frun_start_onenter(inst)
+		if inst:HasTag("kochosei") then 
+            inst.kochostop = 0
+        end
+	end
+end)
+--]]

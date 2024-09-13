@@ -362,6 +362,20 @@ AddRecipe2(
 	{ "KOCHOSEI_TAB" }
 )
 
+AddRecipe2(
+	"kochosei_harvest_book",
+	{Ingredient(CHARACTER_INGREDIENT.SANITY, 150)},
+	TECH.NONE,
+	{ 	
+		builder_tag = "kochosei", 
+		product = "kochosei_harvest_book", 
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_ancient_books.tex",
+		builder_tag = "kochosei", 
+	},
+	{ "KOCHOSEI_TAB" }
+)
+
 --kitcoon craft
 AddRecipe2(
 	"kochosei_ticoon",
@@ -376,14 +390,22 @@ AddRecipe2(
 -- 🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣
 if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA ~= 1 then
 	AddRecipe2(
-		"lucky_hammer",
+		"lucky_hammer_mcw",
 		{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
 		TECH.NONE,
-		{ builder_tag = "mcw", product = "ticoon_builder" },
+		{ builder_tag = "mcw", product = "lucky_hammer"},
 		{ "KOCHOSEI_TAB" }
 	)
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+AddRecipe2(
+	"kochosei_duke_crown",
+	{ Ingredient("yellowgem", 1) },
+	TECH.NONE,
+	{ builder_tag = nil, product = "kochosei_duke_crown" , atlas = "images/inventoryimages/kochosei_duke_crown.xml", image = "kochosei_duke_crown.tex"},
+	{ "KOCHOSEI_TAB" }
+)
 
 AddCharacterRecipe(
 	"kochosei_lantern",
