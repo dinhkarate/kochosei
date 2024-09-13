@@ -174,6 +174,17 @@ PrefabFiles = {
     "kochosei_gift",
     --
     "kochosei_harvest_book",
+
+    -- 
+    "kochosei_altar",
+    "kochosei_duke",
+    "kochosei_tornado",
+    "catcoon_build_projectile",
+    "kochosei_enemy_d", -- T dùng )
+    "kochosei_tigershark_duke_shadow",
+    "kochosei_card",
+    "kochosei_boss",
+
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -220,6 +231,8 @@ TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái 
 modimport("scripts/value_dhkg_a") -- TUNING
 
 modimport("scripts/widgets/balovali") -- balovali
+
+modimport('scripts/widgets/kochosei_altar') -- kochosei_altar
 
 --[[
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then

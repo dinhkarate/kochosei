@@ -22,7 +22,7 @@ TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.KOCHOSEI = {
     "cutgrass",
     "kochosei_hat2",
     "kochosei_lantern",
-    "kochosei_apple"
+    "kochosei_apple",
 }
 
 TUNING.STARTING_ITEM_IMAGE_OVERRIDE.kochosei_lantern = {
@@ -75,7 +75,6 @@ end
 
 local function onbecameghost(inst)
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 5)
-
     -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
 end
 
@@ -378,9 +377,8 @@ end
 local function OnNewSpawn(inst)
     inst:DoTaskInTime(1, GetKochoMap)
     inst:DoTaskInTime(3, givefood)
-    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
-    --Cái này không cần thiết lắm khi set ở dưới kia rồi nhưng cứ để đi
-
+    --inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
+    --Dinh: Bỏ luôn đi
 end
 
 --[[---------------------------------Level Miomhm---------------------
@@ -521,6 +519,9 @@ local master_postinit = function(inst)
     inst.components.talker.ontalkfn = ontalk
 
     inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
+
+    inst:AddComponent("locomotor")
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("reader")
     inst.components.health:SetMaxHealth(TUNING.KOCHOSEI_HEALTH)
