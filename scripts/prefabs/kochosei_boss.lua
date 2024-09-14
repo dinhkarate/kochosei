@@ -43,9 +43,7 @@ local function make(code, description, check_des_boolean, alter_description, fil
     end,
     {
         Asset("ANIM", "anim/"..fileanim..".zip"),
-        Asset("ATLAS", "images/inventoryimages/"..fileanim..".xml"),
-
-
+        Asset("ATLAS", "images/inventoryimages/"..fileanim..".xml")
     })
 end
 
