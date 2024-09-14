@@ -138,3 +138,36 @@ Quên mất còn 1 vụ
 
 12/09
 Mới thay đổi xong giao diện cho kochosei_altar
+
+
+14/09
+Lên ý tưởng cho multitool có khả năng đổi skill
+1. khi onUse sẽ kích hoạt sg là taizhen_cosplay
+	inst:AddComponent("useableitem") -- Đổi damage sang dạng bình thường, tránh 1 số mod ghi đè planardamage khiến cây búa trở nên kỳ lạ
+	inst.components.useableitem:SetOnUseFn(onUse)
+2. onUse cũng thay đổi build và anim cũng như function hoạt động của item
+3. Thêm ongive hay accept test nếu cần thiết.
+	inst:AddComponent("trader")
+	inst.components.trader:SetAcceptTest(AcceptTest)
+	inst.components.trader.onaccept = OnGetItemFromPlayer
+	inst.components.trader.onrefuse = OnRefuseItem
+    inst:DoPeriodicTask(0.1, OnUpdate)
+Note: Mình vẫn có thể update các components của item và item đó vẫn giữ nguyên giá trị. Vì vậy khá hay nếu như làm onuse hay giveitem vào để cập nhật tính năng. Khá là hay đấy. Không cần phải merge cho phiền nữa.
+Ý tưởng về phôi kochosei_card
+1. Tạo chỗ để craft phôi
+2. Khi give các item vào phôi thì sẽ cho các stat của item đó.
+    Chỉ cần một hàm onAcceptItemFromPlayer kèm với 3 câu điều kiện ngắn là được
+    Trong hàm đó update luôn khi character examine.
+Viết lại ý tưởng về kochosei_shadow
+1. Các sg sẽ giống như shadow_bishop
+2. Chet se roi ra thu gi thi chua biet
+3. Muốn nó có animation là phân thân rồi đánh bay vèo vèo vèo thay vì như con bishop phèn ỉa
+Viết lại ý tưởng về biến hình.
+1. Ấn nút sẽ biến hình, cập nhật các thông số hiện tại
+2. Thay đổi bằng một nút, khi đó sẽ thay đổi luôn cả giao diện máu não và đói
+3. Cho Thanh não thành thanh countdown 300s
+4. Bình thường sẽ cho countdown tăng lên
+5. Cách biến hình. Lựa chọn một trong hai cách.
+5.1. Biến bằng key
+5.2. Biến bằng food như con woodie
+6. Animation khi biến bình. Ý tưởng là cho kochosei bay lên, và rồi con bướm xuất hiện.
