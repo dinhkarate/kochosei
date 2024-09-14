@@ -18,7 +18,8 @@ local function make(code, description, check_des_boolean, alter_description, fil
     inst.Light:SetRadius(.5)
     inst.Light:SetFalloff(.7)
     inst.Light:SetIntensity(.5)
-    inst.Light:SetColour(238/255, 155/255, 143/255)  
+    inst.Light:SetColour(238/255, 155/255, 143/255)
+    
     inst.Transform:SetScale(1.5 ,1.5, 1.5)
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then 
@@ -36,10 +37,12 @@ local function make(code, description, check_des_boolean, alter_description, fil
     inst.AnimState:PlayAnimation('kochosei_card',true)
     inst.components.inventoryitem.keepondeath = true
 
+
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.MEDAL or EQUIPSLOTS.NECK or EQUIPSLOTS.BODY
 
-   
+    
+
 
 
     local function onbecamehuman(owner)
@@ -142,7 +145,7 @@ local function make(code, description, check_des_boolean, alter_description, fil
     end,
     {
         Asset("ANIM", "anim/kochosei_card.zip"),
-        Asset("ATLAS", "images/inventoryimages/kochosei_card.xml"),
+        Asset("ATLAS", "images/inventoryimages/kochosei_card.xml")
     })
 end
 
