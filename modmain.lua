@@ -56,8 +56,6 @@ if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
     end
 end
 
-
-
 --[[ Không dùng nữa
 local PREFAB_SKINS = PREFAB_SKINS
 local PREFAB_SKINS_IDS = PREFAB_SKINS_IDS
@@ -139,7 +137,7 @@ PrefabFiles = {
     "kochosei_none",
     "kochosei_miohm",
     "kochosei_bearger",
-    "kochosei_kochotambourin",
+    "kochosei_tambourin",
     "kochosei_hat",
     "kochosei_armor",
     "kochosei_lantern",
@@ -176,47 +174,21 @@ PrefabFiles = {
     "kochosei_gift",
     --
     "kochosei_harvest_book",
+
+    -- 
+    "kochosei_altar",
+    "kochosei_duke",
+    "kochosei_tornado",
+    "catcoon_build_projectile",
+    "kochosei_enemy_d", -- T dùng )
+    "kochosei_tigershark_duke_shadow",
+    "kochosei_card",
+    "kochosei_boss",
+
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
-
--- Developer Mode --
-
-local dev_mode = GetModConfigData("developer_mode")
-
-local function AnnounceDeveloperMode(player)
-    if player ~= nil and player:IsValid() then
-        TheNet:Announce(player:GetDisplayName() .. " is in Developer Mode!")
-    end
-end
-
-local function EnableGodModeAndFreeCrafting(player)
-    if player ~= nil and player:IsValid() then
-        player.components.builder.freebuildmode = true
-        local godmode = player.components.health.invincible
-        player.components.health:SetInvincible(not godmode)
-        player.components.locomotor:SetExternalSpeedMultiplier(player, "kochosei_speed_mod", 2)
-        -- Hiển thị thông báo pop-up
-        AnnounceDeveloperMode(player)
-    end
-end
-
-
-if dev_mode then
-    AddPrefabPostInit("kochosei", function(inst)
-        if TheWorld.ismastersim then
-            inst:DoTaskInTime(0, function()
-                EnableGodModeAndFreeCrafting(inst)
-            end)
-        end
-    end)
-end
-
--- Developer Mode --
-
-
-
 
 local keytonamngua = GetModConfigData("keykocho")
 
@@ -259,6 +231,8 @@ TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái 
 modimport("scripts/value_dhkg_a") -- TUNING
 
 modimport("scripts/widgets/balovali") -- balovali
+
+modimport('scripts/widgets/kochosei_altar') -- kochosei_altar
 
 --[[
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
@@ -705,7 +679,7 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
 
-STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
+
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
 ACTIONS.HAUNT.fn = function(act)
@@ -792,3 +766,15 @@ AddPrefabPostInit("cay_hoa_sang", function(inst)
         SetUpvalue(fn, TARGET_MUST_TAGS_index, TARGET_MUST_TAGS)
     end
 end)
+
+--[[
+AddStategraphPostInit("wilson", function(sg)
+	local frun_start_onenter = sg.states.run_start.onenter
+	sg.states.run_start.onenter = function(inst)
+		frun_start_onenter(inst)
+		if inst:HasTag("kochosei") then 
+            inst.kochostop = 0
+        end
+	end
+end)
+--]]

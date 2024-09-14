@@ -1,5 +1,17 @@
 Assets = {
 
+
+    -- Kochosei Altar --
+    Asset("IMAGE", "images/ui/hect_slot.tex"),
+    Asset("ATLAS", "images/ui/hect_slot.xml"),
+    Asset("ANIM", "anim/kochosei_ui_boss.zip"),
+
+    Asset("ATLAS", "images/inventoryimages/kochosei_duke_crown.xml"),
+    Asset("IMAGE", "images/inventoryimages/kochosei_duke_crown.tex"),
+    Asset("ATLAS", "images/inventoryimages/kochosei_card.xml"),
+    Asset("IMAGE", "images/inventoryimages/kochosei_card.tex"),
+
+    -- Kochosei Altar --
     --------------------------------------------------------------------------------
 
     Asset("ATLAS", "images/cb_kochofood.xml"),
@@ -57,6 +69,8 @@ Assets = {
     Asset("SOUNDPACKAGE", "sound/kochosei_streetlight1_musicbox.fev"),
     Asset("SOUND", "sound/kochosei_streetlight1_musicbox.fsb"),
     Asset("ANIM", "anim/miku_usagi_backpack_2x4.zip"),
+
+
 }
 
 --RemapSoundEvent("dontstarve/characters/kochosei/talk_LP", "kochosei_voice/sound/talk_LP")
