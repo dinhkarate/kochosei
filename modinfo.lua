@@ -9,7 +9,7 @@ Thank you for using this mod, you can use the config button below and let me kno
 author = "Mio, dinhkarate, Haruhi Kawaii"
 
 
-version = "4.2.0"
+version = "4.2.4"
 
 
 forumthread = ""
