@@ -549,7 +549,10 @@ local master_postinit = function(inst)
 
     inst.components.talker.ontalkfn = ontalk
 
-    inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
+    --inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
+
+    inst:AddComponent("locomotor")
+    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("locomotor")
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)

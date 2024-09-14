@@ -19,33 +19,33 @@ local function make(code, description, check_des_boolean, alter_description, fil
     inst.Light:SetFalloff(.7)
     inst.Light:SetIntensity(.5)
     inst.Light:SetColour(238/255, 155/255, 143/255)
-    inst.AnimState:SetBloomEffectHandle( "shaders/anim.ksh" ) 
-    inst:AddComponent("inspectable")
-    inst:AddComponent("inventoryitem")
-
+    inst.AnimState:SetBloomEffectHandle( "shaders/anim.ksh" )    
     inst.AnimState:SetBank(fileanim)
     inst.AnimState:SetBuild(fileanim)
     inst.AnimState:PlayAnimation(fileanim, true)
-    inst.components.inventoryitem.keepondeath = true
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/"..fileanim..".xml"
-    inst.components.inventoryitem.imagename = fileanim
-    inst:AddComponent("equippable")
-    inst.components.equippable.equipslot = EQUIPSLOTS.MEDAL or EQUIPSLOTS.NECK or EQUIPSLOTS.BODY
-
-    
     inst.Transform:SetScale(1.5 ,1.5, 1.5)
+    
     inst.entity:SetPristine()
+    --Cđmm TheWorld.ismastersim phải đặt trước các components
     if not TheWorld.ismastersim then 
         return inst
     end
+    inst:AddComponent("inspectable")
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.keepondeath = true
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/kochosei_duke_crown.xml"
+    inst.components.inventoryitem.imagename = 'kochosei_duke_crown'
 
-
+    inst:AddComponent("equippable")
+    inst.components.equippable.equipslot = EQUIPSLOTS.MEDAL or EQUIPSLOTS.NECK or EQUIPSLOTS.BODY
 
     return inst
     end,
     {
         Asset("ANIM", "anim/"..fileanim..".zip"),
         Asset("ATLAS", "images/inventoryimages/"..fileanim..".xml"),
+
+
     })
 end
 
