@@ -679,7 +679,7 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
 
-
+--STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
 ACTIONS.HAUNT.fn = function(act)
@@ -766,15 +766,3 @@ AddPrefabPostInit("cay_hoa_sang", function(inst)
         SetUpvalue(fn, TARGET_MUST_TAGS_index, TARGET_MUST_TAGS)
     end
 end)
-
---[[
-AddStategraphPostInit("wilson", function(sg)
-	local frun_start_onenter = sg.states.run_start.onenter
-	sg.states.run_start.onenter = function(inst)
-		frun_start_onenter(inst)
-		if inst:HasTag("kochosei") then 
-            inst.kochostop = 0
-        end
-	end
-end)
---]]

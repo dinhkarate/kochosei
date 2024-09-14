@@ -5,7 +5,6 @@ Assets = {
     Asset("IMAGE", "images/ui/hect_slot.tex"),
     Asset("ATLAS", "images/ui/hect_slot.xml"),
     Asset("ANIM", "anim/kochosei_ui_boss.zip"),
-
     Asset("ATLAS", "images/inventoryimages/kochosei_duke_crown.xml"),
     Asset("IMAGE", "images/inventoryimages/kochosei_duke_crown.tex"),
     Asset("ATLAS", "images/inventoryimages/kochosei_card.xml"),
