@@ -19,25 +19,30 @@ local function make(code, description, check_des_boolean, alter_description, fil
     inst.Light:SetFalloff(.7)
     inst.Light:SetIntensity(.5)
     inst.Light:SetColour(238/255, 155/255, 143/255)
-    inst.AnimState:SetBloomEffectHandle( "shaders/anim.ksh" ) 
-    inst:AddComponent("inspectable")
-    inst:AddComponent("inventoryitem")
-
-    inst.AnimState:SetBank("kochosei_card")
-    inst.AnimState:SetBuild("kochosei_card")
-    inst.AnimState:PlayAnimation('kochosei_card',true)
-    inst.components.inventoryitem.keepondeath = true
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/kochosei_card.xml"
-    inst.components.inventoryitem.imagename = 'kochosei_card'
-    inst:AddComponent("equippable")
-    inst.components.equippable.equipslot = EQUIPSLOTS.MEDAL or EQUIPSLOTS.NECK or EQUIPSLOTS.BODY
-
     
     inst.Transform:SetScale(1.5 ,1.5, 1.5)
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then 
         return inst
     end
+
+
+    inst:AddComponent("inspectable")
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/kochosei_card.xml"
+    inst.components.inventoryitem.imagename = 'kochosei_card'
+
+    inst.AnimState:SetBank("kochosei_card")
+    inst.AnimState:SetBuild("kochosei_card")
+    inst.AnimState:PlayAnimation('kochosei_card',true)
+    inst.components.inventoryitem.keepondeath = true
+
+
+    inst:AddComponent("equippable")
+    inst.components.equippable.equipslot = EQUIPSLOTS.MEDAL or EQUIPSLOTS.NECK or EQUIPSLOTS.BODY
+
+    
+
 
 
     local function onbecamehuman(owner)
@@ -140,7 +145,7 @@ local function make(code, description, check_des_boolean, alter_description, fil
     end,
     {
         Asset("ANIM", "anim/kochosei_card.zip"),
-        Asset("ATLAS", "images/inventoryimages/kochosei_card.xml"),
+        Asset("ATLAS", "images/inventoryimages/kochosei_card.xml")
     })
 end
 
