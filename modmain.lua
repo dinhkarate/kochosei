@@ -36,14 +36,13 @@ for _, v in ipairs(modsToLoad) do
     if Mod.name:find("%[API%] Modded Skins") then
         TUNING.KOCHOSEI_CHECKMOD = 1
         print("Mod found:", v, Mod.name)
-        break
     end
     if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
         TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
         print("Mod found:", v, Mod.name)
-        break
     end
 end
+
 
 if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
     for _, v in ipairs(listmodneedcheck) do

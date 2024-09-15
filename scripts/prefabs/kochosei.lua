@@ -43,13 +43,28 @@ for k, v in pairs(TUNING.GAMEMODE_STARTING_ITEMS) do
 end
 local prefabs = FlattenTree(start_inv, true)
 
-local function haru(inst)
+local function spawnfcmnx(inst)
     local dist = 0.5 * math.random()
     local theta = 2 * PI * math.random()
     local x, y, z = inst.Transform:GetWorldPosition()
     local fx = SpawnPrefab("crab_king_icefx")
     if fx then
         fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
+    end
+    if inst.kochostop >= 120 and inst.sg.currentstate.name ~= "emote" then
+        inst.sg:GoToState("emote", {
+            anim = {
+                {
+                    "emote_pre_sit2",
+                    "emote_loop_sit2"
+                }
+            },
+            loop = true,
+            fx = false,
+            mounted = true,
+            mountsound = "walk",
+            mountsounddelay = 6 * FRAMES
+        })
     end
 end
 
@@ -84,8 +99,6 @@ local function onload(inst)
 
     if inst:HasTag("playerghost") then
         onbecameghost(inst)
-    else
-        onbecamehuman(inst)
     end
 end
 
@@ -188,6 +201,15 @@ local function OnTaskTick(inst)
     if inst.components.health:IsDead() or inst:HasTag("playerghost") then
         return
     end
+	if not inst.components.locomotor.wantstomoveforward then
+        inst.kochostop = inst.kochostop + 1
+    else
+        inst.kochostop = 0
+    end
+
+    if inst.kochostop >= 60 then
+        spawnfcmnx(inst)
+    end
     if inst.components.sanity:GetPercent() < 1 then
         return
     end
@@ -199,21 +221,13 @@ local function OnTaskTick(inst)
             v.components.health:DeltaPenalty(-0.01) -- con cò, số gì bé V~
         end
     end
-    if inst.kochostop == nil then
-        inst.kochostop = 0
-    end
 
-    if not inst.components.locomotor.wantstomoveforward then
-        inst.kochostop = inst.kochostop + 1
-    else
+end
+local function stopkochostop(inst)
+    if inst.sg:HasStateTag("moving") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
         inst.kochostop = 0
-    end
-
-    if inst.kochostop >= 60 then
-        haru(inst)
     end
 end
-
 ---------------------------Kén ăn------------------
 local kochoseikhongan = {
     "butterflywings",
@@ -525,11 +539,12 @@ local master_postinit = function(inst)
     inst.OnNewSpawn = OnNewSpawn
     inst.soundsname = "kochosei"
     inst.kochoseiindancing = 0
+	inst.kochostop = 0
     inst.components.talker.ontalkfn = ontalk
 
     --inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
 
-    inst:AddComponent("locomotor")
+
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("reader")
@@ -570,6 +585,7 @@ local master_postinit = function(inst)
     inst:ListenForEvent("healthdelta", phandamge)
     inst:ListenForEvent("picksomething", onpick)
     inst:ListenForEvent("onhitother", OnHitOther)
+    inst:ListenForEvent("newstate", stopkochostop)
 
     inst.wlist = wlist
     ---------------------------Kén ăn------------------

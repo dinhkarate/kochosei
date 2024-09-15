@@ -356,48 +356,7 @@ local function fn()
 	inst:DoPeriodicTask(0.1, OnUpdate)
 
 	inst:AddComponent("timer")
-        inst:AddComponent("farmtiller")
-        inst["components"]["farmtiller"]["Till"] = function(self, pt, doer)
-            local owner = inst["components"]["inventoryitem"]["owner"] or inst
-            local x1, y1, z1 = owner["Transform"]:GetWorldPosition()
-            local x2, y2, z2 = TheWorld["Map"]:GetTileCenterPoint(x1, y1, z1)
-            local ents = TheWorld["Map"]:GetEntitiesOnTileAtPoint(x2, 0x0, z2)
-            local TILLSOIL_IGNORE_TAGS = {
-                "NOBLOCK",
-                "player",
-                "FX",
-                "INLIMBO",
-                "DECOR",
-                "WALKABLEPLATFORM",
-                "soil",
-                "medal_farm_plow"
-            }
-            for _, ent in ipairs(ents) do
-                if ent ~= inst and ent:HasTag("soil") then
-                    ent:PushEvent("collapsesoil")
-                end
-            end
-            for i = 0x0, 0x2 do
-                for k = 0x0, 0x2 do
-                    local loction_x = x2 + 1.3 * i - 1.3
-                    local loction_z = z2 + 1.3 * k - 1.3
-                    if
-                        TheWorld["Map"]:IsDeployPointClear(
-                            Vector3(loction_x, 0x0, loction_z),
-                            nil,
-                            GetFarmTillSpacing(),
-                            nil,
-                            nil,
-                            nil,
-                            TILLSOIL_IGNORE_TAGS
-                        )
-                     then
-                        SpawnPrefab("farm_soil")["Transform"]:SetPosition(loction_x, 0x0, loction_z)
-                    end
-                end
-            end
-            return true
-        end
+
 	inst:AddComponent("cuocdoiquabatcongdi")
 	inst.components.cuocdoiquabatcongdi:Vukhi()
 

@@ -388,7 +388,7 @@ AddRecipe2(
 -- Bán mình cho MCW, đừng cản t 
 -- Gomen, Amanai. Ore wa ima, omae no tame ni okottenai. Daremo nikunjainai. Ima wa tada tada kono sekai ga kokochi ii.
 -- 🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣
-if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA ~= 1 then
+if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA == 1 then
 	AddRecipe2(
 		"lucky_hammer_mcw",
 		{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
