@@ -171,3 +171,10 @@ Viết lại ý tưởng về biến hình.
 5.1. Biến bằng key
 5.2. Biến bằng food như con woodie
 6. Animation khi biến bình. Ý tưởng là cho kochosei bay lên, và rồi con bướm xuất hiện.
+
+(16/09) 
+Xem qua các SG của shadow_bishop và rồi ghi nhận lại các SG. Nó có một SG cha, có một ít hướng đối tượng trong đó nên cũng khá cực.
+
+Kết quả mong muốn:
+1. Một con boss có khả năng tàng hình bay đến mục tiêu. Nếu con boss có khả năng nâng cấp được thì làm. Theo mình biết thì con bishop không có sg attack chỉ có bay đến mục tiêu một cách invincible mà thôi.
+2. Nếu hiểu được cách hướng đối tượng hoạt động, hãy làm thành bộ ba, trông có vẻ hay ấy

@@ -32,7 +32,7 @@ local brains =
 {
     ["shadow_rook"] = require("brains/shadow_rookbrain"),
     ["shadow_knight"] = require("brains/shadow_knightbrain"),
-    ["kochosei_altar_shadow"] = require("brains/kochosei_altar_shadowbrain"),
+    ["kochosei_shadow"] = require("brains/kochosei_shadowbrain"),
 }
 
 local PHYS_RADIUS =
@@ -530,5 +530,5 @@ local function bishopfxfn()
 end
 
 return 
-    Prefab("kochosei_altar_shadow", bishopfn, createassets("kochosei_altar_shadow"), createprefabs({ "kochosei_altar_shadow_fx"--[[, "shadow_mitre", "shadow_sceptre"]] })),
-    Prefab("kochosei_altar_shadow_fx", bishopfxfn, bishopfxassets)
+    Prefab("kochosei_shadow", bishopfn, createassets("kochosei_altar_shadow"), createprefabs({ "kochosei_altar_shadow_fx"--[[, "shadow_mitre", "shadow_sceptre"]] })),
+    Prefab("kochosei_shadow_fx", bishopfxfn, bishopfxassets)
