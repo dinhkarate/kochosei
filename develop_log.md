@@ -1,4 +1,4 @@
-##06/09/2024
+## 06/09
 
 superjump_lag
 superjump
@@ -22,7 +22,7 @@ Mong muốn:
 
 
 
-#(07/09)
+## (07/09)
 Đang thắc mắc cách hoạt động của brain và SG. Thật sự không hiểu cách là nó vào phase taunt và phase jump như thế nào. Trong brain không thấy đề cập bất cứ gì cả. Trong prefab cũng không.
 
 Nhưng cấu thành logic của một entity chỉ cần 3 file đó là được. Về mặt Brain khá khó hiểu, mình chỉ hiểu mấy cái cơ bản như chaseattack, leash các thứ, còn các behaviour còn lại thì không hiểu hoàn toàn.
@@ -94,7 +94,7 @@ Ngưng kiểm chứng
 **Đưa ra được kết luận sg"taunt" có liên hệ với BattleCry()**
 **sg"jump" có liên hệ với OnUpdate trong Locomotor. Hàm này quá phức tạp, không hiểu hết được, nhưng để dùng thì không vấn đề.**
 
-10/09
+## 10/09
 Sửa toàn bộ dấu vết còn sót lại.
 Thêm kochosei_card
 Gồm ba loại card. Item được drop cho boss kochosei_duke (tạm thời)
@@ -114,7 +114,7 @@ Chỉnh sửa được SG khi summon. Cho nó ngầu lòi xíu
 Tự dưng nghĩ ra ý tưởng viết sudoku trong chest của game. Khi giải đượcc thì sẽ tăng slot của chest lên
 
 
-Ngày khủng bố 9/11
+## Ngày khủng bố 9/11
 
 Tiếc quá tiếc cho talker:Chatter setup mọi thứ ok hết rồi thì xung đột với sg, brain, chịu chết. Bỏ, để đó, lỡ một ngày nào đó lại nghĩ ra chỗ dùng. Cụ thể lỗi: Sẽ không cho kochosei thực hiện sg taunt nữa. Có thể xung đột khá là sâu đấy nên thôi dừng là hạnh phúc.
 
@@ -136,11 +136,11 @@ Mai làm nốt vài cái nữa là up được rồi
 Quên mất còn 1 vụ
 5. Update công thức cho con mcw, bữa giờ chưa update. (12/09) Không sửa, do đã được sửa ở branch khác chỉ cần merge
 
-12/09
+## 12/09
 Mới thay đổi xong giao diện cho kochosei_altar
 
 
-14/09
+## 14/09
 Lên ý tưởng cho multitool có khả năng đổi skill
 1. khi onUse sẽ kích hoạt sg là taizhen_cosplay
 	inst:AddComponent("useableitem") -- Đổi damage sang dạng bình thường, tránh 1 số mod ghi đè planardamage khiến cây búa trở nên kỳ lạ
@@ -172,9 +172,20 @@ Viết lại ý tưởng về biến hình.
 5.2. Biến bằng food như con woodie
 6. Animation khi biến bình. Ý tưởng là cho kochosei bay lên, và rồi con bướm xuất hiện.
 
-(16/09) 
+## 16/09
 Xem qua các SG của shadow_bishop và rồi ghi nhận lại các SG. Nó có một SG cha, có một ít hướng đối tượng trong đó nên cũng khá cực.
 
 Kết quả mong muốn:
 1. Một con boss có khả năng tàng hình bay đến mục tiêu. Nếu con boss có khả năng nâng cấp được thì làm. Theo mình biết thì con bishop không có sg attack chỉ có bay đến mục tiêu một cách invincible mà thôi.
 2. Nếu hiểu được cách hướng đối tượng hoạt động, hãy làm thành bộ ba, trông có vẻ hay ấy
+
+
+
+
+
+## 25/09
+- Tạo branch KochoseiBow/master
+- Bow of the ruined king
+Dựa trên MCW Bow để làm.
+- Gồm Animation khi đánh bằng bow
+- Đánh theo phần trăm máu hiện tại của kẻ địch, giống như Gươm Suy Vong.
