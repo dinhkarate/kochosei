@@ -517,12 +517,10 @@ end
 local function lai_nhai(inst)
 local durability = tonumber(TUNING.KOCHO_HAT1_DURABILITY)
 local laydoben
--- Check if durability is a valid number
 if durability then
     laydoben = durability + (TUNING.KOCHOSEI_CHECKWIFI * 2)
 else
-    -- Handle the case where durability is not a valid number
-    laydoben = "vô hạn" -- or any other fallback value you'd prefer
+    laydoben = "vô hạn" 
 end
 
     if inst.components.talker then
@@ -542,7 +540,7 @@ local master_postinit = function(inst)
 	inst.kochostop = 0
     inst.components.talker.ontalkfn = ontalk
 
-    --inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
+    inst.lai_nhai_ve_stats = inst:DoTaskInTime(5, lai_nhai)
 
 
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)

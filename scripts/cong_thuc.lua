@@ -118,8 +118,16 @@ AddCharacterRecipe("kochosei_building_redlantern", { Ingredient("log", 10) }, TE
 	placer = "kochosei_building_redlantern_placer",
 	min_spacing = 1,
 }, { "CHARACTER" })
---Con cò mio
-------------------------------
+
+AddCharacterRecipe("kochosei_may_gacha", { Ingredient("log", 10) }, TECH.SCIENCE_ONE, {
+	atlas = "images/inventoryimages/kochosei_inv.xml",
+	image = "kochosei_may_gacha.tex",
+	builder_tag = "kochosei",
+	placer = "kochosei_may_gacha_placer",
+	min_spacing = 1,
+}, { "CHARACTER" })
+
+----------------------Con cò mio------------------------------
 
 AddCharacterRecipe(
 	"kocho_lotus",
@@ -371,7 +379,6 @@ AddRecipe2(
 		product = "kochosei_harvest_book", 
 		atlas = "images/inventoryimages/kochosei_inv.xml",
 		image = "kochosei_ancient_books.tex",
-		builder_tag = "kochosei", 
 	},
 	{ "KOCHOSEI_TAB" }
 )

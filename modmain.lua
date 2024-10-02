@@ -54,12 +54,11 @@ if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
         end
     end
 end
-
---[[ Không dùng nữa
+---- API skin cũ không dùng nữa nhưng vẫn để đó, biết đâu sau lại cần
+--[[ 
 local PREFAB_SKINS = PREFAB_SKINS
 local PREFAB_SKINS_IDS = PREFAB_SKINS_IDS
 local SKIN_AFFINITY_INFO = require("skin_affinity_info")
-	Không dùng nữa
 --]]
 -------------------Assets--------------
 modimport("scripts/kochoas")
@@ -171,6 +170,7 @@ PrefabFiles = {
     "kochosei_f_cmn_x",
     "kochosei_cay_hoa_sang",
     "kochosei_gift",
+    "kochosei_may_gacha",
     --
     "kochosei_harvest_book",
 
@@ -227,7 +227,7 @@ local function SendnamnguaRPC()
 end
 TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái gì nữa
 
-modimport("scripts/value_dhkg_a") -- TUNING
+modimport("scripts/value_dhkg_a") -- TUNING- Value đ hiểu kiểu gì ạ
 
 modimport("scripts/widgets/balovali") -- balovali
 
@@ -476,11 +476,35 @@ AddComponentAction("SCENE", "follower", function(inst, doer, actions, right)
     end
 end)
 
+local KOCHOSEI_MAY_GACHA = GLOBAL.Action({
+    distance = 1
+})
+KOCHOSEI_MAY_GACHA.str = "Làm tí bạn, sợ gì"
+KOCHOSEI_MAY_GACHA.id = "IT GACHA TIME"
+
+KOCHOSEI_MAY_GACHA.fn = function(act)
+    if act.target.prefab == "kochosei_may_gacha" then
+    return true
+    end
+end
+
+AddAction(KOCHOSEI_MAY_GACHA)
+
+AddComponentAction("SCENE", "kochoseimaygacha", function(inst, doer, actions, right)
+    if right then
+        if inst.prefab == "kochosei_may_gacha" then
+            table.insert(actions, KOCHOSEI_MAY_GACHA)
+        end
+    end
+end)
 AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
 AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
 
 AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_THA_T_RA, "dolongaction"))
 AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_THA_T_RA, "dolongaction"))
+
+AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA, "doshortaction"))
+AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA, "doshortaction"))
 
 --------Wick đó----------
 -- https://forums.kleientertainment.com/forums/topic/69732-dont-use-addingredientvalues-in-mods/#comment-806510
@@ -668,6 +692,7 @@ STRINGS.NAMES.CAY_HOA_SANG = "Cây Hoa Sáng"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.CAY_HOA_SANG = "Đừng sợ, nó không cắn đâu"
 STRINGS.NAMES.CAY_HOA_SANG = "Cây hóa sáng"
 STRINGS.RECIPE_DESC.CAY_HOA_SANG = "Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
+STRINGS.RECIPE_DESC.KOCHOSEI_MAY_GACHA = "Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
 
 STRINGS.SKIN_QUOTES.kochosei_snowmiku_skin1 = "Ai đó đã phải làm việc như trâu để có skin này. Congratulation"
 STRINGS.SKIN_DESCRIPTIONS.kochosei_snowmiku_skin1 = "o((>ω< ))o"

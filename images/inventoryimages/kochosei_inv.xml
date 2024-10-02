@@ -23,21 +23,22 @@
         <Element name="kochosei_hatfl_skin.tex" u1="0.125977" u2="0.249023" v1="0.250977" v2="0.374023" />
         <Element name="kochosei_house_icon.tex" u1="0.125977" u2="0.249023" v1="0.125977" v2="0.249023" />
         <Element name="kochosei_lantern.tex" u1="0.125977" u2="0.249023" v1="0.000976563" v2="0.124023" />
-        <Element name="kochosei_purplemagic.tex" u1="0.250977" u2="0.374023" v1="0.750977" v2="0.874023" />
-        <Element name="kochosei_ribbon.tex" u1="0.375977" u2="0.499023" v1="0.750977" v2="0.874023" />
-        <Element name="kochosei_streetlight1_left.tex" u1="0.500977" u2="0.624023" v1="0.750977" v2="0.874023" />
-        <Element name="kochosei_streetlight1_musicbox.tex" u1="0.625977" u2="0.749023" v1="0.750977" v2="0.874023" />
-        <Element name="kochosei_streetlight1_right.tex" u1="0.750977" u2="0.874023" v1="0.750977" v2="0.874023" />
-        <Element name="kochosei_tab_icon.tex" u1="0.875977" u2="0.999023" v1="0.750977" v2="0.874023" />
-        <Element name="kochosei_torigate.tex" u1="0.250977" u2="0.374023" v1="0.625977" v2="0.749023" />
-        <Element name="kochosei_umbrella.tex" u1="0.250977" u2="0.374023" v1="0.500977" v2="0.624023" />
-        <Element name="kochosei_wishlamp.tex" u1="0.250977" u2="0.374023" v1="0.375977" v2="0.499023" />
-        <Element name="kochotambourin.tex" u1="0.250977" u2="0.374023" v1="0.250977" v2="0.374023" />
-        <Element name="lucky_hammer.tex" u1="0.250977" u2="0.374023" v1="0.125977" v2="0.249023" />
-        <Element name="miku_usagi_backpack.tex" u1="0.250977" u2="0.374023" v1="0.000976563" v2="0.124023" />
-        <Element name="miohm.tex" u1="0.375977" u2="0.499023" v1="0.625977" v2="0.749023" />
-        <Element name="ms_kochosei_hat2.tex" u1="0.500977" u2="0.624023" v1="0.625977" v2="0.749023" />
-        <Element name="ms_kochosei_hat3.tex" u1="0.625977" u2="0.749023" v1="0.625977" v2="0.749023" />
+        <Element name="kochosei_may_gacha.tex" u1="0.250977" u2="0.374023" v1="0.750977" v2="0.874023" />
+        <Element name="kochosei_purplemagic.tex" u1="0.375977" u2="0.499023" v1="0.750977" v2="0.874023" />
+        <Element name="kochosei_ribbon.tex" u1="0.500977" u2="0.624023" v1="0.750977" v2="0.874023" />
+        <Element name="kochosei_streetlight1_left.tex" u1="0.625977" u2="0.749023" v1="0.750977" v2="0.874023" />
+        <Element name="kochosei_streetlight1_musicbox.tex" u1="0.750977" u2="0.874023" v1="0.750977" v2="0.874023" />
+        <Element name="kochosei_streetlight1_right.tex" u1="0.875977" u2="0.999023" v1="0.750977" v2="0.874023" />
+        <Element name="kochosei_tab_icon.tex" u1="0.250977" u2="0.374023" v1="0.625977" v2="0.749023" />
+        <Element name="kochosei_torigate.tex" u1="0.250977" u2="0.374023" v1="0.500977" v2="0.624023" />
+        <Element name="kochosei_umbrella.tex" u1="0.250977" u2="0.374023" v1="0.375977" v2="0.499023" />
+        <Element name="kochosei_wishlamp.tex" u1="0.250977" u2="0.374023" v1="0.250977" v2="0.374023" />
+        <Element name="kochotambourin.tex" u1="0.250977" u2="0.374023" v1="0.125977" v2="0.249023" />
+        <Element name="lucky_hammer.tex" u1="0.250977" u2="0.374023" v1="0.000976563" v2="0.124023" />
+        <Element name="miku_usagi_backpack.tex" u1="0.375977" u2="0.499023" v1="0.625977" v2="0.749023" />
+        <Element name="miohm.tex" u1="0.500977" u2="0.624023" v1="0.625977" v2="0.749023" />
+        <Element name="ms_kochosei_hat2.tex" u1="0.625977" u2="0.749023" v1="0.625977" v2="0.749023" />
+        <Element name="ms_kochosei_hat3.tex" u1="0.750977" u2="0.874023" v1="0.625977" v2="0.749023" />
     </Elements>
     <StraightAlpha>false</StraightAlpha>
 </Atlas>
