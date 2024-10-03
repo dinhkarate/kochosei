@@ -142,10 +142,10 @@ local prkochofood = {
 
         priority = 30,
         foodtype = FOODTYPE.MEAT,
-        health = TUNING.HEALING_MED * 2,
-        hunger = TUNING.CALORIES_LARGE * 2,
+        health = TUNING.HEALING_MED * 3,
+        hunger = TUNING.CALORIES_LARGE * 3,
         perishtime = TUNING.PERISH_MED,
-        sanity = TUNING.SANITY_MED * 2,
+        sanity = TUNING.SANITY_MED * 4,
         cooktime = 1,
         potlevel = "med",
         temperature = TUNING.HOT_FOOD_BONUS_TEMP * 2,
@@ -153,7 +153,7 @@ local prkochofood = {
     },
     kochofood_bunreal = {
         test = function(cooker, names, tags)
-            return tags.veggie and tags.veggie >= 2 and tags.fish and tags.fish >= 1 and not tags.inedible
+            return tags.veggie and tags.veggie >= 2 and tags.fish and tags.fish >= 1 and not tags.inedible and not tags.tom
         end,
 
         priority = 30,

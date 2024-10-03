@@ -47,12 +47,14 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(4)
     inst.components.workable:SetOnFinishCallback(onhammered)
-    inst.components.workable:SetOnWorkCallback(onhit)
+    inst.components.workable:SetOnWorkCallback(function()
+        
+    end)
 
     return inst
 end
 
-STRINGS.NAMES.KOCHOSEI_MAY_GACHA = "Máy gacha bạc bịp hợp pháp"
+STRINGS.NAMES.KOCHOSEI_MAY_GACHA = "Máy gacha hợp pháp"
 STRINGS.RECIPE_DESC.KOCHOSEI_MAY_GACHA = "Bạn ơi đừng nghiện nữa, nhà mình còn gì nữa đâu"
 
 return Prefab("kochosei_may_gacha", fn, assets), 
