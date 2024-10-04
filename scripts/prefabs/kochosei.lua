@@ -91,12 +91,14 @@ end
 local function onbecameghost(inst)
     inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 5)
     -- Buff tăng tốc khi chết, đỡ tốn time di chuyển
+
+
+    inst.kochostop = 0
 end
 
 local function onload(inst)
     inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
     inst:ListenForEvent("ms_becameghost", onbecameghost)
-
     if inst:HasTag("playerghost") then
         onbecameghost(inst)
     end
@@ -199,15 +201,17 @@ local HEAL_CANT_TAGS = {
 }
 local function OnTaskTick(inst)
     if inst.components.health:IsDead() or inst:HasTag("playerghost") then
+        inst.kochostop = 0
         return
     end
-	if not inst.components.locomotor.wantstomoveforward then
+	if not inst.components.locomotor.wantstomoveforward and not (inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("dead")) then
         inst.kochostop = inst.kochostop + 1
     else
         inst.kochostop = 0
     end
 
-    if inst.kochostop >= 60 then
+    if inst.kochostop >= 120 then
+        -- Nếu đang trong trạng thái chết mà đổi state sẽ gây crash
         spawnfcmnx(inst)
     end
     if inst.components.sanity:GetPercent() < 1 then
@@ -224,7 +228,7 @@ local function OnTaskTick(inst)
 
 end
 local function stopkochostop(inst)
-    if inst.sg:HasStateTag("moving") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
+    if inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("dead") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
         inst.kochostop = 0
     end
 end

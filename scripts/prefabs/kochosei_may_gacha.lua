@@ -15,10 +15,18 @@ local function onhammered(inst, worker)
     inst:Remove()
 end
 
-local function onhit(inst)
+local function banoidungnghiennua(inst)
+    local fx = SpawnPrefab("fx_book_rain")
+    local x, y, z = inst.Transform:GetWorldPosition()
+
+    fx.Transform:SetPosition(x+1.5, y+7, z)
+    if TheWorld.state.precipitation ~= "none" then
+        TheWorld:PushEvent("ms_forceprecipitation", false)
+    else
+        TheWorld:PushEvent("ms_forceprecipitation", true)
+    end
 
 end
-
 
 local function fn()
     local inst = CreateEntity()
@@ -27,7 +35,7 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 	--MakeInventoryPhysics(inst) -- Nó cần phải bé bé, to quá nó vương nhà
-    MakeObstaclePhysics(inst, 0.5)
+    inst:SetPhysicsRadiusOverride(1.5)
 
     inst.AnimState:SetBank("kochosei_may_gacha")
     inst.AnimState:SetBuild("kochosei_may_gacha")
@@ -42,7 +50,16 @@ local function fn()
     
     inst:AddComponent("kochoseimaygacha")
 
+    inst:AddComponent("timer")
+
     inst:AddComponent("lootdropper")
+--[[
+    local constructionsite = inst:AddComponent("constructionsite")
+    constructionsite:SetConstructionPrefab("construction_container")
+    constructionsite:SetOnConstructedFn(function ()
+        
+    end)
+--]]
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(4)
@@ -50,6 +67,7 @@ local function fn()
     inst.components.workable:SetOnWorkCallback(function()
         
     end)
+    inst:ListenForEvent("banoidungnghiennua", banoidungnghiennua)
 
     return inst
 end

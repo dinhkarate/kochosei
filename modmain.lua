@@ -495,7 +495,8 @@ KOCHOSEI_MAY_GACHA.str = "Làm tí bạn, sợ gì"
 KOCHOSEI_MAY_GACHA.id = "IT GACHA TIME"
 
 KOCHOSEI_MAY_GACHA.fn = function(act)
-	if act.target.prefab == "kochosei_may_gacha" then
+	if not act.target.components.timer:TimerExists("maygacha") then
+		act.target.components.kochoseimaygacha:Gachatime() 
 		return true
 	end
 end
@@ -504,7 +505,7 @@ AddAction(KOCHOSEI_MAY_GACHA)
 
 AddComponentAction("SCENE", "kochoseimaygacha", function(inst, doer, actions, right)
 	if right then
-		if inst.prefab == "kochosei_may_gacha" then
+		if inst.prefab == "kochosei_may_gacha" and not inst.components.timer:TimerExists("maygacha") then
 			table.insert(actions, KOCHOSEI_MAY_GACHA)
 		end
 	end
