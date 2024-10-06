@@ -15,6 +15,7 @@ end
 
 local function Gachatime(inst)
 	print(inst)
+	print(inst.GUID)
 end
 
 local function banoidungnghiennua(inst, data)

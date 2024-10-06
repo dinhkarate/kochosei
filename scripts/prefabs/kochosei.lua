@@ -51,21 +51,6 @@ local function spawnfcmnx(inst)
     if fx then
         fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
     end
-    if inst.kochostop >= 120 and inst.sg.currentstate.name ~= "emote" then
-        inst.sg:GoToState("emote", {
-            anim = {
-                {
-                    "emote_pre_sit2",
-                    "emote_loop_sit2"
-                }
-            },
-            loop = true,
-            fx = false,
-            mounted = true,
-            mountsound = "walk",
-            mountsounddelay = 6 * FRAMES
-        })
-    end
 end
 
 local function givefood(inst)
@@ -204,7 +189,7 @@ local function OnTaskTick(inst)
         inst.kochostop = 0
         return
     end
-	if not inst.components.locomotor.wantstomoveforward and not (inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("dead")) then
+	if not inst.components.locomotor.wantstomoveforward or inst.sg:HasStateTag("moving") then
         inst.kochostop = inst.kochostop + 1
     else
         inst.kochostop = 0
@@ -226,11 +211,6 @@ local function OnTaskTick(inst)
         end
     end
 
-end
-local function stopkochostop(inst)
-    if inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("dead") or inst.sg:HasStateTag("busy") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
-        inst.kochostop = 0
-    end
 end
 ---------------------------Kén ăn------------------
 local kochoseikhongan = {
@@ -587,7 +567,6 @@ local master_postinit = function(inst)
     inst:ListenForEvent("healthdelta", phandamge)
     inst:ListenForEvent("picksomething", onpick)
     inst:ListenForEvent("onhitother", OnHitOther)
-    inst:ListenForEvent("newstate", stopkochostop)
 
     inst.wlist = wlist
     ---------------------------Kén ăn------------------

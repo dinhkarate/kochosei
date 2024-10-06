@@ -433,6 +433,30 @@ for _, v in ipairs(allclone) do
 	end)
 end
 
+AddStategraphPostInit("wilson", function(sg)
+	local _old_funnyidle_onenter = sg.states.funnyidle.onenter
+	sg.states.funnyidle.onenter = function(inst)
+		_old_funnyidle_onenter (inst)
+		if inst:HasTag("kochosei") and inst.kochostop >= 120 and  inst.sg.currentstate.name ~= "emote" then
+	        inst.sg:GoToState("emote", {
+				anim = {
+					{
+						"emote_pre_sit2",
+						"emote_loop_sit2"
+					}
+				},
+				loop = true,
+				fx = false,
+				mounted = true,
+				mountsound = "walk",
+				mountsounddelay = 6 * FRAMES
+			})
+		end
+	end
+end)
+
+
+
 local NHAC_THA_T_RA = GLOBAL.Action({
 	distance = 1,
 })
