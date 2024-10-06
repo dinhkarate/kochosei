@@ -228,7 +228,7 @@ local function OnTaskTick(inst)
 
 end
 local function stopkochostop(inst)
-    if inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("dead") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
+    if inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("dead") or inst.sg:HasStateTag("busy") or inst.sg.currentstate.name == "eat" or inst.sg.currentstate.name == "quickeat"  then
         inst.kochostop = 0
     end
 end

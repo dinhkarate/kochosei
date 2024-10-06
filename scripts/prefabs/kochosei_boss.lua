@@ -48,5 +48,5 @@ local function make(code, description, check_des_boolean, alter_description, fil
 end
 
 return
-    make("kochosei_duke_crown", "Vương Miệng Công Tước", nil, "Vương Miệng của Kẻ Quyền Quý", "kochosei_duke_crown")
+    make("kochosei_duke_crown", "Vương Miện Công Tước", nil, "Vương Miện của Kẻ Quyền Quý", "kochosei_duke_crown") -- Con cò dinh sai chính tả
 

@@ -495,11 +495,14 @@ KOCHOSEI_MAY_GACHA.str = "Làm tí bạn, sợ gì"
 KOCHOSEI_MAY_GACHA.id = "IT GACHA TIME"
 
 KOCHOSEI_MAY_GACHA.fn = function(act)
-	if not act.target.components.timer:TimerExists("maygacha") then
-		act.target.components.kochoseimaygacha:Gachatime() 
-		return true
-	end
+    if act.target ~= nil and act.doer ~= nil then
+        if not act.target.components.timer:TimerExists("maygacha") then
+            act.target.components.kochoseimaygacha:Gachatime(act.doer) -- Truyền act.doer
+            return true
+        end
+    end
 end
+
 
 AddAction(KOCHOSEI_MAY_GACHA)
 
@@ -604,7 +607,7 @@ InsertIngredientValues({
 
 InsertIngredientValues({
 	"kochosei_apple_cooked",
-    "kochosei_apple"
+	"kochosei_apple",
 }, {
 	fruit = 1,
 	apple = 1,
@@ -689,7 +692,8 @@ STRINGS.NAMES.CAY_HOA_SANG = "Cây Hoa Sáng"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.CAY_HOA_SANG = "Đừng sợ, nó không cắn đâu"
 STRINGS.NAMES.CAY_HOA_SANG = "Cây hóa sáng"
 STRINGS.RECIPE_DESC.CAY_HOA_SANG = "Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_MAY_GACHA = "Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_MAY_GACHA =
+	"Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
 STRINGS.SKIN_QUOTES.kochosei_snowmiku_skin1 =
 	"Ai đó đã phải làm việc như trâu để có skin này. Congratulation"
 STRINGS.SKIN_DESCRIPTIONS.kochosei_snowmiku_skin1 = "o((>ω< ))o"
