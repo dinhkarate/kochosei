@@ -13,6 +13,8 @@ local function onhammered(inst, worker)
 	inst:Remove()
 end
 
+local foodkochosei = {}
+
 local itemt1 = {
 	"twigs",
 	"log",
@@ -23,44 +25,63 @@ local itemt1 = {
 	"poop",
 	"fertilizer",
 	"compost",
-
+	"purplegem",
+	"bluegem",
+	"redgem",
+	"orangegem",
+	"yellowgem",
+	"greengem",
 }
-
-
-local itemt2 = {
-	""
+local itemt2 = {}
+local stats_char = {
+	tang_sanity,
+	tang_hp,
+	tang_no,
+	tang_atk,
+	tang_atk_kochosei,
+	tang_speed,
+	tang_def,
+	tang_lam_viec,
+	giam_sanity,
+	giam_hp,
+	giam_no,
+	giam_atk,
+	giam_def,
+	giam_speed
 }
-local foodkochosei = {}
 
 for k, v in pairs(require("prkochofood")) do
 	table.insert(foodkochosei, v.name)
 end
 
-
 local function Gachatime(inst) -- Tới lúc gacha r
 	if not inst.components.timer then
 		inst:AddComponent("timer")
 	end
-
+	--[[ 
 	if inst.components.timer:TimerExists("Gacha cooldown") then
 		local timeleft = inst.components.timer:GetTimeLeft("Gacha cooldown")
 		local formatted_timeleft = math.floor(timeleft) -- lấy 3 số đầu
-		inst.components.talker:Say("Từ hoi ba, tham lam vậy đợi ".. formatted_timeleft .. "s nữa đi")
+		inst.components.talker:Say("Từ hoi ba, tham lam vậy đợi " .. formatted_timeleft .. "s nữa đi")
 		return
 	end
 
-	local spawnitem = 
-		
-	inst.components.timer:StartTimer("Gacha cooldown", 480) -- 8*6 48 đúng nguyên 1 ngày
+ ]]
+	local gifts = {}
+	table.insert(gifts, SpawnPrefab(itemt1[math.random(#itemt1)]))
+	table.insert(gifts, SpawnPrefab(foodkochosei[math.random(#foodkochosei)]))
 	
-	local kochosei_gift = SpawnPrefab ("kochosei_gift")
+	for i, v in ipairs(gifts) do
+		v:Remove()
+	end
+	inst.components.timer:StartTimer("Gacha cooldown", 480) -- 8*6 48 đúng nguyên 1 ngày
+
+	local kochosei_gift = SpawnPrefab("kochosei_gift")
+	kochosei_gift.components.unwrappable:WrapItems(gifts)
+
 	if inst.components.inventory and kochosei_gift then
 		inst.components.inventory:GiveItem(kochosei_gift)
 	end
-
-
-	print(inst)
-	print(inst.GUID)
 end
 
 local function banoidungnghiennua(inst, data)
@@ -71,7 +92,7 @@ local function banoidungnghiennua(inst, data)
 	local fx = SpawnPrefab("fx_book_rain")
 	local x, y, z = inst.Transform:GetWorldPosition()
 
-	fx.Transform:SetPosition(x + 1.5, y + 7, z)
+	fx.Transform:SetPosition(x + 1.8, y + 6.5, z)
 	if TheWorld.state.precipitation ~= "none" then
 		TheWorld:PushEvent("ms_forceprecipitation", false)
 	else

@@ -189,7 +189,7 @@ local function OnTaskTick(inst)
         inst.kochostop = 0
         return
     end
-	if not inst.components.locomotor.wantstomoveforward or inst.sg:HasStateTag("moving") then
+	if not inst.components.locomotor.wantstomoveforward or not inst.sg:HasStateTag("moving") then
         inst.kochostop = inst.kochostop + 1
     else
         inst.kochostop = 0
