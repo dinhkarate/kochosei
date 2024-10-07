@@ -13,7 +13,52 @@ local function onhammered(inst, worker)
 	inst:Remove()
 end
 
-local function Gachatime(inst)
+local itemt1 = {
+	"twigs",
+	"log",
+	"rocks",
+	"goldnugget",
+	"nightmarefuel",
+	"rottenegg",
+	"poop",
+	"fertilizer",
+	"compost",
+
+}
+
+
+local itemt2 = {
+	""
+}
+local foodkochosei = {}
+
+for k, v in pairs(require("prkochofood")) do
+	table.insert(foodkochosei, v.name)
+end
+
+
+local function Gachatime(inst) -- Tới lúc gacha r
+	if not inst.components.timer then
+		inst:AddComponent("timer")
+	end
+
+	if inst.components.timer:TimerExists("Gacha cooldown") then
+		local timeleft = inst.components.timer:GetTimeLeft("Gacha cooldown")
+		local formatted_timeleft = math.floor(timeleft) -- lấy 3 số đầu
+		inst.components.talker:Say("Từ hoi ba, tham lam vậy đợi ".. formatted_timeleft .. "s nữa đi")
+		return
+	end
+
+	local spawnitem = 
+		
+	inst.components.timer:StartTimer("Gacha cooldown", 480) -- 8*6 48 đúng nguyên 1 ngày
+	
+	local kochosei_gift = SpawnPrefab ("kochosei_gift")
+	if inst.components.inventory and kochosei_gift then
+		inst.components.inventory:GiveItem(kochosei_gift)
+	end
+
+
 	print(inst)
 	print(inst.GUID)
 end
