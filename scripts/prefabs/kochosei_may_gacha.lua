@@ -31,8 +31,84 @@ local itemt1 = {
 	"orangegem",
 	"yellowgem",
 	"greengem",
+	"flint",
+	"cutgrass",
+	"mosquitosack",
+	"tillweedsalve",
+	"kochosei_apple"
 }
-local itemt2 = {}
+local function tang_sanity(inst)
+	print("tang_sanity")		
+	inst.components.talker:Say("tang_sanity")
+end
+
+local function tang_hp(inst)
+	print("tang_hp")
+	inst.components.talker:Say("tang_hp")
+end
+
+local function tang_no(inst)
+	print("tang_no")
+	inst.components.talker:Say("tang_no")
+end
+
+local function tang_atk(inst)
+	print("tang_atk")
+	inst.components.talker:Say("tang_atk")
+end
+
+local function tang_atk_kochosei(inst)
+	print("tang_atk_kochosei")
+	inst.components.talker:Say("tang_atk_kochosei")
+end
+
+local function tang_speed(inst)
+	print("tang_speed")
+	inst.components.talker:Say("tang_speed")
+end
+
+local function tang_def(inst)
+	print("tang_def")
+	inst.components.talker:Say("tang_def")
+end
+
+local function tang_lam_viec(inst)
+	print("tang_lam_viec")
+	inst.components.talker:Say("tang_lam_viec")
+end
+
+local function giam_sanity(inst)
+	print("giam_sanity")
+	inst.components.talker:Say("giam_sanity")
+end
+
+local function giam_hp(inst)
+	print("giam_hp")
+	inst.components.talker:Say("giam_hp")
+end
+
+local function giam_no(inst)
+	print("giam_no")
+	inst.components.talker:Say("giam_no")
+end
+
+local function giam_atk(inst)
+	print("giam_atk")
+	inst.components.talker:Say("giam_atk")
+end
+
+local function giam_def(inst)
+	print("giam_def")
+	inst.components.talker:Say("giam_def")
+end
+
+local function giam_speed(inst)
+	print("giam_speed")
+	inst.components.talker:Say("giam_speed")
+end
+
+
+
 local stats_char = {
 	tang_sanity,
 	tang_hp,
@@ -47,8 +123,31 @@ local stats_char = {
 	giam_no,
 	giam_atk,
 	giam_def,
-	giam_speed
+	giam_speed,
 }
+
+local function random_stats_chr(inst)
+	print("random_stats_chr")
+	local selected_stat = stats_char[math.random(#stats_char)] -- chọn 1 stats ngẫu nhiên trong bảng để buff
+	return selected_stat(inst) 
+end
+
+--[[ local stats_char = {
+	tang_sanity,
+	tang_hp,
+	tang_no,
+	tang_atk,
+	tang_atk_kochosei,
+	tang_speed,
+	tang_def,
+	tang_lam_viec,
+	giam_sanity,
+	giam_hp,
+	giam_no,
+	giam_atk,
+	giam_def,
+	giam_speed,
+}  ]]
 
 for k, v in pairs(require("prkochofood")) do
 	table.insert(foodkochosei, v.name)
@@ -67,10 +166,11 @@ local function Gachatime(inst) -- Tới lúc gacha r
 	end
 
  ]]
+ 	random_stats_chr(inst)
 	local gifts = {}
 	table.insert(gifts, SpawnPrefab(itemt1[math.random(#itemt1)]))
 	table.insert(gifts, SpawnPrefab(foodkochosei[math.random(#foodkochosei)]))
-	
+
 	for i, v in ipairs(gifts) do
 		v:Remove()
 	end
@@ -89,10 +189,7 @@ local function banoidungnghiennua(inst, data)
 	if doer ~= nil then
 		Gachatime(doer)
 	end
-	local fx = SpawnPrefab("fx_book_rain")
-	local x, y, z = inst.Transform:GetWorldPosition()
 
-	fx.Transform:SetPosition(x + 1.8, y + 6.5, z)
 	if TheWorld.state.precipitation ~= "none" then
 		TheWorld:PushEvent("ms_forceprecipitation", false)
 	else

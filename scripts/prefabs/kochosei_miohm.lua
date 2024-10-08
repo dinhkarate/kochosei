@@ -44,15 +44,17 @@ local function TurnOff(inst)
 end
 
 local function OnEquip(inst, owner)
-
 	local spell = SpawnPrefab("electricchargedfx")
 	spell.Transform:SetPosition(owner.Transform:GetWorldPosition())
-		
-		
+
 	local skin_build = inst:GetSkinBuild()
 	if skin_build ~= nil then
 		owner:PushEvent("equipskinneditem", inst:GetSkinName())
-		owner.AnimState:OverrideSymbol("swap_object",skin_build or "swap_kochosei_purplebattleaxe",	"swap_kochosei_purplebattleaxe")
+		owner.AnimState:OverrideSymbol(
+			"swap_object",
+			skin_build or "swap_kochosei_purplebattleaxe",
+			"swap_kochosei_purplebattleaxe"
+		)
 	else
 		owner.AnimState:OverrideSymbol("swap_object", "swap_miohm", "swap_miohm")
 	end
@@ -108,7 +110,7 @@ local function light_fn()
 end
 
 local function freezeSpell(inst, target)
-    local weaponDamage = inst.components.weapon.damage + inst.components.planardamage.basedamage or 1
+	local weaponDamage = inst.components.weapon.damage + inst.components.planardamage.basedamage or 1
 	local attacker = inst.components.inventoryitem.owner
 	if target.components.sleeper ~= nil and target.components.sleeper:IsAsleep() then
 		target.components.sleeper:WakeUp()
@@ -127,7 +129,7 @@ local function freezeSpell(inst, target)
 	if target.components.freezable ~= nil then
 		target:PushEvent("attacked", { attacker = attacker, damage = 0, weapon = inst })
 		if target.components.health then
-			target.components.health:DoDelta(-(TUNING.MIOHM_DAMAGE_SPELL+weaponDamage))
+			target.components.health:DoDelta(-(TUNING.MIOHM_DAMAGE_SPELL + weaponDamage))
 		end
 		local x, y, z = target.Transform:GetWorldPosition()
 		local spell = SpawnPrefab("deer_ice_flakes")
@@ -189,9 +191,9 @@ local function aoeSpell(inst, target, caster)
 	if healthComponent and healthComponent.currenthealth > 100000 then
 		healthComponent:DoDelta(-damage)
 	end
-    local lightning = SpawnPrefab("moonstorm_lightning")
-    lightning.Transform:SetPosition(x, y, z)
-	
+	local lightning = SpawnPrefab("moonstorm_lightning")
+	lightning.Transform:SetPosition(x, y, z)
+
 	local lightningPrefab = "kochosei_moonstorm_ground_lightning_fx"
 	local numLightnings = 5
 
@@ -207,7 +209,6 @@ local function aoeSpell(inst, target, caster)
 	end
 end
 
-
 local function castFreeze(inst, target)
 	if target ~= nil and target:IsValid() and target.components.health then
 		aoeSpell(inst, target)
@@ -217,30 +218,40 @@ end
 -------------level-------------------
 
 local function applyupgrades(inst)
-    local maxUpgrades = TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2)
-    local upgrades = math.min(inst.levelmiohm, maxUpgrades)
-    local damage = upgrades + TUNING.MIOHM_DAMAGE
+	local maxUpgrades = TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2)
+	local upgrades = math.min(inst.levelmiohm, maxUpgrades)
+	local damage = upgrades + TUNING.MIOHM_DAMAGE
 
-    if inst.caybuasidanay == 1 then
-        inst.components.weapon:SetDamage(TUNING.MIOHM_DAMAGE)
-        inst.components.planardamage:SetBaseDamage(damage)
-    else
-        inst.components.weapon:SetDamage(damage)
-        inst.components.planardamage:SetBaseDamage(TUNING.MIOHM_DAMAGE)
-    end
+	if inst.caybuasidanay == 1 then
+		inst.components.weapon:SetDamage(TUNING.MIOHM_DAMAGE)
+		inst.components.planardamage:SetBaseDamage(damage)
+	else
+		inst.components.weapon:SetDamage(damage)
+		inst.components.planardamage:SetBaseDamage(TUNING.MIOHM_DAMAGE)
+	end
 end
 
-
 local function onUse(inst, owner)
-    inst.caybuasidanay = 1 - inst.caybuasidanay  
-    applyupgrades(inst)
+	inst.caybuasidanay = 1 - inst.caybuasidanay
+	applyupgrades(inst)
 
-    if inst.components.inventoryitem.owner then
-        local weaponDamage = inst.components.weapon.damage
-        local planarDamage = inst.components.planardamage.basedamage
-        inst.components.inventoryitem.owner.components.talker:Say(string.format("Đã đổi loại, Damage mặc định %d, Damage xuyên giáp %d", weaponDamage, planarDamage), nil, nil, nil, nil, { 255 / 255, 255 / 255, 0 / 255, 1 })
-    end
-    return false -- Sora id daze bezt, làm như này ngăn nó bị biến mất khi đã dùng
+	if inst.components.inventoryitem.owner then
+		local weaponDamage = inst.components.weapon.damage
+		local planarDamage = inst.components.planardamage.basedamage
+		inst.components.inventoryitem.owner.components.talker:Say(
+			string.format(
+				"Đã đổi loại, Damage mặc định %d, Damage xuyên giáp %d",
+				weaponDamage,
+				planarDamage
+			),
+			nil,
+			nil,
+			nil,
+			nil,
+			{ 255 / 255, 255 / 255, 0 / 255, 1 }
+		)
+	end
+	return false -- Sora id daze bezt, làm như này ngăn nó bị biến mất khi đã dùng
 end
 
 local function OnSave(inst, data)
@@ -258,10 +269,10 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
 	if item.prefab == "goldnugget" then
-		inst.levelmiohm = inst.levelmiohm + TUNING.KOCHOSEI_PER_KILL + (TUNING.KOCHOSEI_CHECKWIFI /50)
+		inst.levelmiohm = inst.levelmiohm + TUNING.KOCHOSEI_PER_KILL + (TUNING.KOCHOSEI_CHECKWIFI / 50)
 		applyupgrades(inst)
 		if type(TUNING.MIOHM_DURABILITY) == "number" then
-			local doben = inst.components.finiteuses:GetUses() + (50)
+			local doben = inst.components.finiteuses:GetUses() + 50
 			inst.components.finiteuses:SetUses(math.min(doben, TUNING.MIOHM_DURABILITY))
 		end
 	end

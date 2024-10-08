@@ -1,4 +1,3 @@
-
 local TUNING = GLOBAL.TUNING
 
 TUNING.KOCHOSEI_TURNOFFMUSIC = GetModConfigData("turnoffmusic")
@@ -59,8 +58,7 @@ TUNING.KOCHO_LUCKYHAMMER_DURABILITY = GetModConfigData("kocho_luckyhammer_durabi
 --Acient book--
 TUNING.KOCHO_ACIENTBOOKS_COOLDOWN = GetModConfigData("kocho_acientbooks_cooldown")
 
-
--- Kochosei Altar -- 
+-- Kochosei Altar --
 TUNING.KOCHOSEI_DUKE_WALK_SPEED = 8
 TUNING.KOCHOSEI_DUKE_RUN_SPEED = 12
 TUNING.KOCHOSEI_DUKE_HEALTH = 100000

@@ -1,36 +1,39 @@
 require("stategraphs/commonstates")
 local easing = require("easing")
 
-
 --------------------------------------------------------------------------
 
 local YAWNTARGET_CANT_TAGS = { "playerghost", "FX", "DECOR", "INLIMBO" }
 local YAWNTARGET_ONEOF_TAGS = { "sleeper", "player" }
 
 function yawnfn(inst)
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.BEARGER_YAWN_RANGE, nil, YAWNTARGET_CANT_TAGS, YAWNTARGET_ONEOF_TAGS)
-    for i, v in ipairs(ents) do
-        if v ~= inst and v:IsValid() and
-            not (v.components.freezable ~= nil and v.components.freezable:IsFrozen()) and
-            not (v.components.pinnable ~= nil and v.components.pinnable:IsStuck()) and
-            not (v.components.fossilizable ~= nil and v.components.fossilizable:IsFossilized()) then
-            local mount = v.components.rider ~= nil and v.components.rider:GetMount() or nil
-            if mount ~= nil then
-                mount:PushEvent("ridersleep", { sleepiness = 7, sleeptime = TUNING.BEARGER_YAWN_SLEEPTIME })
-            end
-            if v:HasTag("player") then
-                v:PushEvent("yawn", { grogginess = 4, knockoutduration = TUNING.BEARGER_YAWN_SLEEPTIME })
-            elseif v.components.sleeper ~= nil then
-                v.components.sleeper:AddSleepiness(7, TUNING.BEARGER_YAWN_SLEEPTIME)
-            elseif v.components.grogginess ~= nil then
-                v.components.grogginess:AddGrogginess(4, TUNING.BEARGER_YAWN_SLEEPTIME)
-            else
-                v:PushEvent("knockedout")
-            end
-        end
-    end
-    return true
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local ents =
+		TheSim:FindEntities(x, y, z, TUNING.BEARGER_YAWN_RANGE, nil, YAWNTARGET_CANT_TAGS, YAWNTARGET_ONEOF_TAGS)
+	for i, v in ipairs(ents) do
+		if
+			v ~= inst
+			and v:IsValid()
+			and not (v.components.freezable ~= nil and v.components.freezable:IsFrozen())
+			and not (v.components.pinnable ~= nil and v.components.pinnable:IsStuck())
+			and not (v.components.fossilizable ~= nil and v.components.fossilizable:IsFossilized())
+		then
+			local mount = v.components.rider ~= nil and v.components.rider:GetMount() or nil
+			if mount ~= nil then
+				mount:PushEvent("ridersleep", { sleepiness = 7, sleeptime = TUNING.BEARGER_YAWN_SLEEPTIME })
+			end
+			if v:HasTag("player") then
+				v:PushEvent("yawn", { grogginess = 4, knockoutduration = TUNING.BEARGER_YAWN_SLEEPTIME })
+			elseif v.components.sleeper ~= nil then
+				v.components.sleeper:AddSleepiness(7, TUNING.BEARGER_YAWN_SLEEPTIME)
+			elseif v.components.grogginess ~= nil then
+				v.components.grogginess:AddGrogginess(4, TUNING.BEARGER_YAWN_SLEEPTIME)
+			else
+				v:PushEvent("knockedout")
+			end
+		end
+	end
+	return true
 end
 
 --------------------------------------------------------------------------
@@ -59,15 +62,15 @@ local function ChooseAttack(inst, target)
 		return false
 	end
 
-    -- Clear out the inventory if he got interrupted
+	-- Clear out the inventory if he got interrupted
 	ClearInventory(inst)
 
 	if target:HasTag("beehive") then
 		inst.sg:GoToState("attack", target)
 		return true
-    end
+	end
 
-    if inst.sg:HasStateTag("running") then
+	if inst.sg:HasStateTag("running") then
 		if inst.canrunningbutt then
 			inst.Transform:SetRotation(inst.Transform:GetRotation() + 180)
 			inst.sg:GoToState("running_butt_pre", target)
@@ -76,21 +79,24 @@ local function ChooseAttack(inst, target)
 			inst.sg:GoToState("pound")
 			return true
 		end
-	elseif inst.components.sleeper ~= nil and inst:HasTag("hibernation") and not (inst.components.timer:TimerExists("Yawn") or inst.sg:HasStateTag("yawn")) then
-        inst.sg:GoToState("yawn")
+	elseif
+		inst.components.sleeper ~= nil
+		and inst:HasTag("hibernation")
+		and not (inst.components.timer:TimerExists("Yawn") or inst.sg:HasStateTag("yawn"))
+	then
+		inst.sg:GoToState("yawn")
 		return true
 	elseif not inst.components.timer:TimerExists("GroundPound") then
-        inst.sg:GoToState("pound")
+		inst.sg:GoToState("pound")
 		return true
-    end
+	end
 	inst.sg:GoToState("attack", target)
 	return true
 end
 
 --------------------------------------------------------------------------
 
-local COLLAPSIBLE_WORK_ACTIONS =
-{
+local COLLAPSIBLE_WORK_ACTIONS = {
 	CHOP = true,
 	DIG = true,
 	HAMMER = true,
@@ -98,12 +104,16 @@ local COLLAPSIBLE_WORK_ACTIONS =
 }
 local COLLAPSIBLE_TAGS = { "NPC_workable" }
 for k, v in pairs(COLLAPSIBLE_WORK_ACTIONS) do
-	table.insert(COLLAPSIBLE_TAGS, k.."_workable")
+	table.insert(COLLAPSIBLE_TAGS, k .. "_workable")
 end
-local NON_COLLAPSIBLE_TAGS = { "FX", --[["NOCLICK",]] "DECOR", "INLIMBO" }
+local NON_COLLAPSIBLE_TAGS = {
+	"FX", --[["NOCLICK",]]
+	"DECOR",
+	"INLIMBO",
+}
 
 local function DestroyStuff(inst, dist, radius, arc, nofx)
-    local x, y, z = inst.Transform:GetWorldPosition()
+	local x, y, z = inst.Transform:GetWorldPosition()
 	local rot = inst.Transform:GetRotation() * DEGREES
 	if dist ~= 0 then
 		x = x + dist * math.cos(rot)
@@ -115,8 +125,13 @@ local function DestroyStuff(inst, dist, radius, arc, nofx)
 			if arc == nil or ((x1 ~= x or z1 ~= z) and DiffAngleRad(rot, math.atan2(z - z1, x1 - x)) < arc) then
 				local work_action = v.components.workable:GetWorkAction()
 				--V2C: nil action for NPC_workable (e.g. campfires)
-				if (work_action == nil and v:HasTag("NPC_workable")) or
-					(v.components.workable:CanBeWorked() and work_action ~= nil and COLLAPSIBLE_WORK_ACTIONS[work_action.id])
+				if
+					(work_action == nil and v:HasTag("NPC_workable"))
+					or (
+						v.components.workable:CanBeWorked()
+						and work_action ~= nil
+						and COLLAPSIBLE_WORK_ACTIONS[work_action.id]
+					)
 				then
 					if not nofx then
 						SpawnPrefab("collapse_small").Transform:SetPosition(x1, y1, z1)
@@ -125,7 +140,7 @@ local function DestroyStuff(inst, dist, radius, arc, nofx)
 				end
 			end
 		end
-    end
+	end
 end
 
 --------------------------------------------------------------------------
@@ -148,10 +163,14 @@ local function DoArcAttack(inst, dist, radius, heavymult, mult, forcelanded, tar
 		x = x + dist * math.cos(rot)
 		z = z - dist * math.sin(rot)
 	end
-	for i, v in ipairs(TheSim:FindEntities(x, y, z, radius + AOE_RANGE_PADDING, AOE_TARGET_MUSTHAVE_TAGS, AOE_TARGET_CANT_TAGS)) do
-		if v ~= inst and
-			not (targets ~= nil and targets[v]) and
-			v:IsValid() and not v:IsInLimbo()
+	for i, v in
+		ipairs(TheSim:FindEntities(x, y, z, radius + AOE_RANGE_PADDING, AOE_TARGET_MUSTHAVE_TAGS, AOE_TARGET_CANT_TAGS))
+	do
+		if
+			v ~= inst
+			and not (targets ~= nil and targets[v])
+			and v:IsValid()
+			and not v:IsInLimbo()
 			and not (v.components.health ~= nil and v.components.health:IsDead())
 		then
 			local range = radius + v:GetPhysicsRadius(0)
@@ -159,13 +178,20 @@ local function DoArcAttack(inst, dist, radius, heavymult, mult, forcelanded, tar
 			local dx = x1 - x
 			local dz = z1 - z
 			local distsq = dx * dx + dz * dz
-			if distsq > 0 and distsq < range * range and
-				DiffAngleRad(rot, math.atan2(-dz, dx)) < ARC and
-				inst.components.combat:CanTarget(v)
+			if
+				distsq > 0
+				and distsq < range * range
+				and DiffAngleRad(rot, math.atan2(-dz, dx)) < ARC
+				and inst.components.combat:CanTarget(v)
 			then
 				inst.components.combat:DoAttack(v)
 				if mult ~= nil then
-					local strengthmult = (v.components.inventory ~= nil and v.components.inventory:ArmorHasTag("heavyarmor") or v:HasTag("heavybody")) and heavymult or mult
+					local strengthmult = (
+						v.components.inventory ~= nil and v.components.inventory:ArmorHasTag("heavyarmor")
+						or v:HasTag("heavybody")
+					)
+							and heavymult
+						or mult
 					if strengthmult > MAX_SIDE_TOSS_STR and x0 ~= nil then
 						--Don't toss as far to the side for frontal attacks
 						dx = x1 - x0
@@ -176,7 +202,15 @@ local function DoArcAttack(inst, dist, radius, heavymult, mult, forcelanded, tar
 							strengthmult = MAX_SIDE_TOSS_STR + (strengthmult - MAX_SIDE_TOSS_STR) * k * k
 						end
 					end
-					v:PushEvent("knockback", { knocker = inst, radius = radius + dist, strengthmult = strengthmult, forcelanded = forcelanded })
+					v:PushEvent(
+						"knockback",
+						{
+							knocker = inst,
+							radius = radius + dist,
+							strengthmult = strengthmult,
+							forcelanded = forcelanded,
+						}
+					)
 				end
 				if targets ~= nil then
 					targets[v] = true
@@ -207,9 +241,14 @@ local function DoAOEAttack(inst, dist, radius, heavymult, mult, forcelanded, tar
 		x = x + dist * math.cos(rot)
 		z = z - dist * math.sin(rot)
 	end
-	for i, v in ipairs(TheSim:FindEntities(x, y, z, radius + AOE_RANGE_PADDING, AOE_TARGET_MUSTHAVE_TAGS, AOE_TARGET_CANT_TAGS)) do
-		if v ~= inst and v:IsValid() and not v:IsInLimbo() and
-			not (v.components.health ~= nil and v.components.health:IsDead())
+	for i, v in
+		ipairs(TheSim:FindEntities(x, y, z, radius + AOE_RANGE_PADDING, AOE_TARGET_MUSTHAVE_TAGS, AOE_TARGET_CANT_TAGS))
+	do
+		if
+			v ~= inst
+			and v:IsValid()
+			and not v:IsInLimbo()
+			and not (v.components.health ~= nil and v.components.health:IsDead())
 		then
 			local is_existing_target = targets ~= nil and targets[v]
 			if not is_existing_target or knockback_existing_targets then
@@ -225,7 +264,17 @@ local function DoAOEAttack(inst, dist, radius, heavymult, mult, forcelanded, tar
 						end
 					end
 					if should_knockback and mult ~= nil then
-						v:PushEvent("knockback", { knocker = inst, radius = radius + dist, strengthmult = (v.components.inventory ~= nil and v.components.inventory:ArmorHasTag("heavyarmor") or v:HasTag("heavybody")) and heavymult or mult, forcelanded = forcelanded })
+						v:PushEvent(
+							"knockback",
+							{
+								knocker = inst,
+								radius = radius + dist,
+								strengthmult = (v.components.inventory ~= nil and v.components.inventory:ArmorHasTag(
+									"heavyarmor"
+								) or v:HasTag("heavybody")) and heavymult or mult,
+								forcelanded = forcelanded,
+							}
+						)
 					end
 				end
 			end
@@ -242,8 +291,7 @@ local function TryStagger(inst)
 end
 
 local function IsAggro(inst)
-	return inst.components.combat.target ~= nil
-		and not inst.components.combat.target:HasTag("beehive")
+	return inst.components.combat.target ~= nil and not inst.components.combat.target:HasTag("beehive")
 end
 
 --------------------------------------------------------------------------
@@ -361,35 +409,31 @@ local function KillSwipeFX(inst)
 	end
 end
 
-
 local actionhandlers = {
-    ActionHandler(ACTIONS.GOHOME, "taunt"),
-    ActionHandler(ACTIONS.STEAL, "steal"),
-    ActionHandler(ACTIONS.HAMMER, "steal"),
-    ActionHandler(ACTIONS.EAT, "eat_loop"),
-    ActionHandler(ACTIONS.PICKUP, "action"),
-    ActionHandler(ACTIONS.HARVEST, "action"),
-    ActionHandler(ACTIONS.PICK, "action"),
-    ActionHandler(ACTIONS.ATTACK, "attack_action"),
-    ActionHandler(ACTIONS.CHOP, function(inst)
-        return inst:GetBufferedAction().target:HasTag("DIG_workable") and "butt" or "attack_action"
-    end),
-    ActionHandler(ACTIONS.DIG, function(inst)
-        return inst:GetBufferedAction().target:HasTag("CHOP_workable") and "attack_action" or "butt"
-    end),
-    ActionHandler(ACTIONS.MINE, "attack_action"),
-
+	ActionHandler(ACTIONS.GOHOME, "taunt"),
+	ActionHandler(ACTIONS.STEAL, "steal"),
+	ActionHandler(ACTIONS.HAMMER, "steal"),
+	ActionHandler(ACTIONS.EAT, "eat_loop"),
+	ActionHandler(ACTIONS.PICKUP, "action"),
+	ActionHandler(ACTIONS.HARVEST, "action"),
+	ActionHandler(ACTIONS.PICK, "action"),
+	ActionHandler(ACTIONS.ATTACK, "attack_action"),
+	ActionHandler(ACTIONS.CHOP, function(inst)
+		return inst:GetBufferedAction().target:HasTag("DIG_workable") and "butt" or "attack_action"
+	end),
+	ActionHandler(ACTIONS.DIG, function(inst)
+		return inst:GetBufferedAction().target:HasTag("CHOP_workable") and "attack_action" or "butt"
+	end),
+	ActionHandler(ACTIONS.MINE, "attack_action"),
 }
 
-
-local events =
-{
+local events = {
 	CommonHandlers.OnLocomote(true, true),
 	CommonHandlers.OnSleepEx(),
 	CommonHandlers.OnWakeEx(),
 	CommonHandlers.OnFreeze(),
 	CommonHandlers.OnDeath(),
-    CommonHandlers.OnSink(),
+	CommonHandlers.OnSink(),
 	EventHandler("doattack", function(inst, data)
 		if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
 			ChooseAttack(inst, data ~= nil and data.target or nil)
@@ -397,11 +441,15 @@ local events =
 	end),
 	EventHandler("attacked", function(inst, data)
 		--V2C: health check since corpse shares this SG
-		if inst.components.health ~= nil and not inst.components.health:IsDead() and (
-			not inst.sg:HasStateTag("busy") or
-			inst.sg:HasStateTag("caninterrupt") or
-			inst.sg:HasStateTag("frozen")
-		) then
+		if
+			inst.components.health ~= nil
+			and not inst.components.health:IsDead()
+			and (
+				not inst.sg:HasStateTag("busy")
+				or inst.sg:HasStateTag("caninterrupt")
+				or inst.sg:HasStateTag("frozen")
+			)
+		then
 			if inst.sg:HasStateTag("staggered") then
 				inst.sg.statemem.staggered = true
 				inst.sg:GoToState("stagger_hit")
@@ -415,15 +463,15 @@ local events =
 }
 
 local function ShakeIfClose(inst)
-    ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, 1, inst, 40)
+	ShakeAllCameras(CAMERASHAKE.FULL, 0.7, 0.02, 1, inst, 40)
 end
 
 local function ShakeIfClose_Pound(inst)
-    ShakeAllCameras(CAMERASHAKE.VERTICAL, .7, .025, 1.25, inst, 40)
+	ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.7, 0.025, 1.25, inst, 40)
 end
 
 local function ShakeIfClose_Footstep(inst)
-    ShakeAllCameras(CAMERASHAKE.FULL, .35, .02, 1, inst, 40)
+	ShakeAllCameras(CAMERASHAKE.FULL, 0.35, 0.02, 1, inst, 40)
 end
 
 local function DoFootstep(inst)
@@ -439,26 +487,27 @@ local function GoToStandState(inst, state, customtrans, params)
 	if inst:IsStandState(state) then
 		return true
 	end
-	inst.sg:GoToState(string.lower(state), { endstate = inst.sg.currentstate.name, customtrans = customtrans, params = params })
+	inst.sg:GoToState(
+		string.lower(state),
+		{ endstate = inst.sg.currentstate.name, customtrans = customtrans, params = params }
+	)
 end
 
-local IDLE_FLAGS =
-{
-	Aggro =		0x01,
-	Calm =		0x02,
-	NoFaced =	0x04,
+local IDLE_FLAGS = {
+	Aggro = 0x01,
+	Calm = 0x02,
+	NoFaced = 0x04,
 }
 
-local states =
-{
-	State{
+local states = {
+	State({
 		name = "init",
 		onenter = function(inst)
 			inst.sg:GoToState(inst.components.locomotor ~= nil and "idle" or "corpse_idle")
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "bi",
 		tags = { "busy" },
 
@@ -485,17 +534,15 @@ local states =
 				inst.AnimState:PlayAnimation(data.customtrans)
 				inst:SetStandState("bi")
 			else
-				inst.AnimState:PlayAnimation((aggro and "taunt_pre" or "to_bi")..(nofaced and "_nofaced" or ""))
+				inst.AnimState:PlayAnimation((aggro and "taunt_pre" or "to_bi") .. (nofaced and "_nofaced" or ""))
 			end
 
-			inst.sg.statemem.endbusy =
-				data.endstate == "idle" or
-				data.endstate == "walk_start" or
-				data.endstate == "run_start"
+			inst.sg.statemem.endbusy = data.endstate == "idle"
+				or data.endstate == "walk_start"
+				or data.endstate == "run_start"
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(6, DoFootstep),
 			FrameEvent(7, function(inst)
 				inst:SetStandState("bi")
@@ -515,17 +562,16 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState(inst.sg.statemem.endstate, inst.sg.statemem.params)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "quad",
 		tags = { "busy" },
 
@@ -541,25 +587,23 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(7, function(inst)
 				inst:SetStandState("quad")
 				DoFootstep(inst)
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState(inst.sg.statemem.endstate, inst.sg.statemem.params)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "idle",
 		tags = { "idle", "canrotate" },
 
@@ -580,16 +624,19 @@ local states =
 				if aggro == nil then
 					aggro = IsAggro(inst)
 				end
-				inst.AnimState:PlayAnimation((aggro and "standing_idle" or "idle_loop")..(nofaced and "_nofaced" or ""), true)
+				inst.AnimState:PlayAnimation(
+					(aggro and "standing_idle" or "idle_loop") .. (nofaced and "_nofaced" or ""),
+					true
+				)
 			end
 		end,
 
 		onexit = function(inst)
 			inst:SwitchToFourFaced()
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "targetstolen",
 		tags = { "busy", "canrotate" },
 
@@ -600,15 +647,15 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(8, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/taunt") end),
+		timeline = {
+			FrameEvent(8, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/taunt")
+			end),
 			FrameEvent(9, DoFootstep),
 			FrameEvent(33, DoFootstep),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst:ClearBufferedAction()
@@ -616,9 +663,9 @@ local states =
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "hit",
 		tags = { "hit", "busy" },
 
@@ -631,8 +678,7 @@ local states =
 			CommonHandlers.UpdateHitRecoveryDelay(inst)
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(8, function(inst)
 				if not inst.sg.mem.dostagger and inst.sg.statemem.doattack == nil then
 					inst.sg:AddStateTag("caninterrupt")
@@ -648,16 +694,17 @@ local states =
 				end
 			end),
 			FrameEvent(12 + 12, function(inst)
-				if (inst.sg.mem.dostagger and TryStagger(inst)) or
-					(inst.sg.statemem.doattack ~= nil and ChooseAttack(inst, inst.sg.statemem.doattack)) then
+				if
+					(inst.sg.mem.dostagger and TryStagger(inst))
+					or (inst.sg.statemem.doattack ~= nil and ChooseAttack(inst, inst.sg.statemem.doattack))
+				then
 					return
 				end
 				inst.sg:RemoveStateTag("busy")
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("doattack", function(inst, data)
 				if not inst.sg.mem.dostagger then
 					if not inst.sg:HasStateTag("busy") then
@@ -684,9 +731,9 @@ local states =
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "standing_hit",
 		tags = { "hit", "busy" },
 
@@ -697,11 +744,12 @@ local states =
 			CommonHandlers.UpdateHitRecoveryDelay(inst)
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(11, function(inst)
-				if (inst.sg.mem.dostagger and TryStagger(inst)) or
-					(inst.sg.statemem.doattack ~= nil and ChooseAttack(inst, inst.sg.statemem.doattack)) then
+				if
+					(inst.sg.mem.dostagger and TryStagger(inst))
+					or (inst.sg.statemem.doattack ~= nil and ChooseAttack(inst, inst.sg.statemem.doattack))
+				then
 					return
 				end
 				inst.sg.statemem.doattack = nil
@@ -709,8 +757,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("doattack", function(inst, data)
 				if not inst.sg.mem.dostagger then
 					if not inst.sg:HasStateTag("busy") then
@@ -727,9 +774,9 @@ local states =
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "yawn",
 		tags = { "yawn", "busy" },
 
@@ -742,8 +789,7 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(22, function(inst)
 				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/yawn")
 				inst.components.timer:StopTimer("Yawn")
@@ -762,25 +808,27 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
-					inst.sg:GoToState("idle", IDLE_FLAGS.NoFaced + (inst.sg.statemem.aggro and IDLE_FLAGS.Aggro or IDLE_FLAGS.Calm))
+					inst.sg:GoToState(
+						"idle",
+						IDLE_FLAGS.NoFaced + (inst.sg.statemem.aggro and IDLE_FLAGS.Aggro or IDLE_FLAGS.Calm)
+					)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "attack_action",
 		onenter = function(inst)
 			local buffaction = inst:GetBufferedAction()
 			inst.sg:GoToState("attack", buffaction ~= nil and buffaction.target or nil)
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "attack",
 		tags = { "attack", "busy", "weapontoss" },
 
@@ -799,11 +847,14 @@ local states =
 
 		onupdate = UpdateTrackingTarget,
 
-		timeline =
-		{
-			FrameEvent(4, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
+		timeline = {
+			FrameEvent(4, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
 			FrameEvent(10, StopTrackingTarget),
-			FrameEvent(28, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
+			FrameEvent(28, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+			end),
 			FrameEvent(29, function(inst)
 				SpawnSwipeFX(inst, 1)
 			end),
@@ -829,8 +880,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg.statemem.keepfacing = true
@@ -845,9 +895,9 @@ local states =
 				inst:SwitchToFourFaced()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "attack_combo1",
 		tags = { "attack", "busy", "jumping", "weapontoss" },
 
@@ -865,13 +915,20 @@ local states =
 
 		onupdate = UpdateTrackingTarget,
 
-		timeline =
-		{
-			FrameEvent(4, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
+		timeline = {
+			FrameEvent(4, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
 			FrameEvent(10, StopTrackingTarget),
-			FrameEvent(28, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
-			FrameEvent(27, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
-			FrameEvent(28, function(inst) inst.Physics:SetMotorVelOverride(12, 0, 0) end),
+			FrameEvent(28, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+			end),
+			FrameEvent(27, function(inst)
+				inst.Physics:SetMotorVelOverride(6, 0, 0)
+			end),
+			FrameEvent(28, function(inst)
+				inst.Physics:SetMotorVelOverride(12, 0, 0)
+			end),
 			FrameEvent(29, function(inst)
 				SpawnSwipeFX(inst, COMBO_ARC_OFFSET)
 			end),
@@ -888,11 +945,21 @@ local states =
 					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
 				end
 			end),
-			FrameEvent(34, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
-			FrameEvent(35, function(inst) inst.Physics:SetMotorVelOverride(3, 0, 0) end),
-			FrameEvent(36, function(inst) inst.Physics:SetMotorVelOverride(1.5, 0, 0) end),
-			FrameEvent(37, function(inst) inst.Physics:SetMotorVelOverride(0.75, 0, 0) end),
-			FrameEvent(38, function(inst) inst.Physics:SetMotorVelOverride(0.375, 0, 0) end),
+			FrameEvent(34, function(inst)
+				inst.Physics:SetMotorVelOverride(6, 0, 0)
+			end),
+			FrameEvent(35, function(inst)
+				inst.Physics:SetMotorVelOverride(3, 0, 0)
+			end),
+			FrameEvent(36, function(inst)
+				inst.Physics:SetMotorVelOverride(1.5, 0, 0)
+			end),
+			FrameEvent(37, function(inst)
+				inst.Physics:SetMotorVelOverride(0.75, 0, 0)
+			end),
+			FrameEvent(38, function(inst)
+				inst.Physics:SetMotorVelOverride(0.375, 0, 0)
+			end),
 			FrameEvent(39, function(inst)
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
@@ -905,9 +972,7 @@ local states =
 				end
 			end),
 			FrameEvent(47, function(inst)
-				if (inst.sg.mem.dostagger and TryStagger(inst)) or
-					(inst.canbutt and TryButt(inst))
-				then
+				if (inst.sg.mem.dostagger and TryStagger(inst)) or (inst.canbutt and TryButt(inst)) then
 					return
 				end
 				inst.sg:AddStateTag("caninterrupt")
@@ -920,8 +985,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
 					if inst.canbutt and TryButt(inst) then
@@ -942,9 +1006,9 @@ local states =
 				inst:SwitchToFourFaced()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "attack_combo2",
 		tags = { "attack", "busy", "jumping", "weapontoss" },
 
@@ -961,13 +1025,20 @@ local states =
 
 		onupdate = UpdateTrackingTarget,
 
-		timeline =
-		{
-			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
+		timeline = {
+			FrameEvent(0, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
 			FrameEvent(10, StopTrackingTarget),
-			FrameEvent(24, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
-			FrameEvent(23, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
-			FrameEvent(24, function(inst) inst.Physics:SetMotorVelOverride(12, 0, 0) end),
+			FrameEvent(24, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+			end),
+			FrameEvent(23, function(inst)
+				inst.Physics:SetMotorVelOverride(6, 0, 0)
+			end),
+			FrameEvent(24, function(inst)
+				inst.Physics:SetMotorVelOverride(12, 0, 0)
+			end),
 			FrameEvent(25, function(inst)
 				SpawnSwipeFX(inst, COMBO_ARC_OFFSET, true)
 			end),
@@ -984,11 +1055,21 @@ local states =
 					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
 				end
 			end),
-			FrameEvent(30, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
-			FrameEvent(31, function(inst) inst.Physics:SetMotorVelOverride(3, 0, 0) end),
-			FrameEvent(32, function(inst) inst.Physics:SetMotorVelOverride(1.5, 0, 0) end),
-			FrameEvent(33, function(inst) inst.Physics:SetMotorVelOverride(0.75, 0, 0) end),
-			FrameEvent(34, function(inst) inst.Physics:SetMotorVelOverride(0.375, 0, 0) end),
+			FrameEvent(30, function(inst)
+				inst.Physics:SetMotorVelOverride(6, 0, 0)
+			end),
+			FrameEvent(31, function(inst)
+				inst.Physics:SetMotorVelOverride(3, 0, 0)
+			end),
+			FrameEvent(32, function(inst)
+				inst.Physics:SetMotorVelOverride(1.5, 0, 0)
+			end),
+			FrameEvent(33, function(inst)
+				inst.Physics:SetMotorVelOverride(0.75, 0, 0)
+			end),
+			FrameEvent(34, function(inst)
+				inst.Physics:SetMotorVelOverride(0.375, 0, 0)
+			end),
 			FrameEvent(35, function(inst)
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
@@ -1001,9 +1082,7 @@ local states =
 				end
 			end),
 			FrameEvent(43, function(inst)
-				if (inst.sg.mem.dostagger and TryStagger(inst)) or
-					(inst.canbutt and TryButt(inst))
-				then
+				if (inst.sg.mem.dostagger and TryStagger(inst)) or (inst.canbutt and TryButt(inst)) then
 					return
 				end
 				inst.sg:AddStateTag("caninterrupt")
@@ -1016,8 +1095,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
 					if inst.canbutt and TryButt(inst) then
@@ -1037,9 +1115,9 @@ local states =
 				inst:SwitchToFourFaced()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "attack_combo1a",
 		tags = { "attack", "busy", "jumping", "weapontoss" },
 
@@ -1056,13 +1134,20 @@ local states =
 
 		onupdate = UpdateTrackingTarget,
 
-		timeline =
-		{
-			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
+		timeline = {
+			FrameEvent(0, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
 			FrameEvent(10, StopTrackingTarget),
-			FrameEvent(24, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
-			FrameEvent(23, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
-			FrameEvent(24, function(inst) inst.Physics:SetMotorVelOverride(12, 0, 0) end),
+			FrameEvent(24, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+			end),
+			FrameEvent(23, function(inst)
+				inst.Physics:SetMotorVelOverride(6, 0, 0)
+			end),
+			FrameEvent(24, function(inst)
+				inst.Physics:SetMotorVelOverride(12, 0, 0)
+			end),
 			FrameEvent(25, function(inst)
 				SpawnSwipeFX(inst, COMBO_ARC_OFFSET)
 			end),
@@ -1079,11 +1164,21 @@ local states =
 					inst:PushEvent("onmissother", { target = inst.sg.statemem.original_target }) --for ChaseAndAttack
 				end
 			end),
-			FrameEvent(30, function(inst) inst.Physics:SetMotorVelOverride(6, 0, 0) end),
-			FrameEvent(31, function(inst) inst.Physics:SetMotorVelOverride(3, 0, 0) end),
-			FrameEvent(32, function(inst) inst.Physics:SetMotorVelOverride(1.5, 0, 0) end),
-			FrameEvent(33, function(inst) inst.Physics:SetMotorVelOverride(0.75, 0, 0) end),
-			FrameEvent(34, function(inst) inst.Physics:SetMotorVelOverride(0.375, 0, 0) end),
+			FrameEvent(30, function(inst)
+				inst.Physics:SetMotorVelOverride(6, 0, 0)
+			end),
+			FrameEvent(31, function(inst)
+				inst.Physics:SetMotorVelOverride(3, 0, 0)
+			end),
+			FrameEvent(32, function(inst)
+				inst.Physics:SetMotorVelOverride(1.5, 0, 0)
+			end),
+			FrameEvent(33, function(inst)
+				inst.Physics:SetMotorVelOverride(0.75, 0, 0)
+			end),
+			FrameEvent(34, function(inst)
+				inst.Physics:SetMotorVelOverride(0.375, 0, 0)
+			end),
 			FrameEvent(35, function(inst)
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
@@ -1096,9 +1191,7 @@ local states =
 				end
 			end),
 			FrameEvent(43, function(inst)
-				if (inst.sg.mem.dostagger and TryStagger(inst)) or
-					(inst.canbutt and TryButt(inst))
-				then
+				if (inst.sg.mem.dostagger and TryStagger(inst)) or (inst.canbutt and TryButt(inst)) then
 					return
 				end
 				inst.sg:AddStateTag("caninterrupt")
@@ -1111,8 +1204,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
 					if inst.canbutt and TryButt(inst) then
@@ -1132,9 +1224,9 @@ local states =
 				inst:SwitchToFourFaced()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "pound",
 		tags = { "attack", "busy" },
 
@@ -1145,9 +1237,10 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(13, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
+		timeline = {
+			FrameEvent(13, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+			end),
 			FrameEvent(20, function(inst)
 				ShakeIfClose_Pound(inst)
 				inst.components.groundpounder:GroundPound()
@@ -1166,17 +1259,16 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "butt_pre",
 		tags = { "attack", "busy" },
 
@@ -1203,9 +1295,10 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
+		timeline = {
+			FrameEvent(0, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
 			FrameEvent(23, function(inst)
 				local p = inst.sg.statemem.targetpos
 				if p ~= nil then
@@ -1217,7 +1310,11 @@ local states =
 						local rot1 = inst:GetAngleToPoint(x1, y1, z1) + 180
 						local drot = ReduceAngle(rot1 - rot)
 						local left = drot > 0
-						if drot ~= 0 and math.abs(drot) < (left == inst.sg.statemem.left and TRACKING_ARC or TRACKING_ARC / 3) then
+						if
+							drot ~= 0
+							and math.abs(drot)
+								< (left == inst.sg.statemem.left and TRACKING_ARC or TRACKING_ARC / 3)
+						then
 							rot2 = rot + drot / 2
 							p.x, p.y, p.z = x1, y1, z1
 						end
@@ -1233,21 +1330,22 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
-					local data = inst.sg.statemem.targetpos ~= nil and {
-						targetpos = inst.sg.statemem.targetpos,
-						target = inst.sg.statemem.target,
-					} or nil
+					local data = inst.sg.statemem.targetpos ~= nil
+							and {
+								targetpos = inst.sg.statemem.targetpos,
+								target = inst.sg.statemem.target,
+							}
+						or nil
 					inst.sg:GoToState("butt", data)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "running_butt_pre",
 		tags = { "attack", "busy" },
 
@@ -1274,8 +1372,7 @@ local states =
 			inst.AnimState:SetFrame(22)
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(1, function(inst)
 				local p = inst.sg.statemem.targetpos
 				if p ~= nil then
@@ -1287,7 +1384,11 @@ local states =
 						local rot1 = inst:GetAngleToPoint(x1, y1, z1) + 180
 						local drot = ReduceAngle(rot1 - rot)
 						local left = drot > 0
-						if drot ~= 0 and math.abs(drot) < (left == inst.sg.statemem.left and TRACKING_ARC or TRACKING_ARC / 3) then
+						if
+							drot ~= 0
+							and math.abs(drot)
+								< (left == inst.sg.statemem.left and TRACKING_ARC or TRACKING_ARC / 3)
+						then
 							rot2 = rot + drot / 2
 							p.x, p.y, p.z = x1, y1, z1
 						end
@@ -1303,22 +1404,23 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
-					local data = inst.sg.statemem.targetpos ~= nil and {
-						targetpos = inst.sg.statemem.targetpos,
-						target = inst.sg.statemem.target,
-						running = true,
-					} or nil
+					local data = inst.sg.statemem.targetpos ~= nil
+							and {
+								targetpos = inst.sg.statemem.targetpos,
+								target = inst.sg.statemem.target,
+								running = true,
+							}
+						or nil
 					inst.sg:GoToState("butt", data)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "butt",
 		tags = { "attack", "busy", "jumping", "nointerrupt" },
 
@@ -1361,8 +1463,7 @@ local states =
 			inst.Physics:SetMotorVelOverride(-dist / inst.AnimState:GetCurrentAnimationLength(), 0, 0)
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(1, ToggleOffCharacterCollisions),
 			FrameEvent(8, function(inst)
 				local pt = inst:GetPosition()
@@ -1393,12 +1494,9 @@ local states =
 
 				ShakeIfClose_Pound(inst) --override sinkhole shake
 			end),
-
-
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg.statemem.butt = true
@@ -1418,9 +1516,9 @@ local states =
 				inst:ClearBufferedAction()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "butt_pst",
 		tags = { "attack", "busy", "jumping" },
 
@@ -1435,12 +1533,19 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(0, function(inst) inst.Physics:SetMotorVelOverride(-4, 0, 0) end),
-			FrameEvent(1, function(inst) inst.Physics:SetMotorVelOverride(-2, 0, 0) end),
-			FrameEvent(2, function(inst) inst.Physics:SetMotorVelOverride(-1, 0, 0) end),
-			FrameEvent(3, function(inst) inst.Physics:SetMotorVelOverride(-0.5, 0, 0) end),
+		timeline = {
+			FrameEvent(0, function(inst)
+				inst.Physics:SetMotorVelOverride(-4, 0, 0)
+			end),
+			FrameEvent(1, function(inst)
+				inst.Physics:SetMotorVelOverride(-2, 0, 0)
+			end),
+			FrameEvent(2, function(inst)
+				inst.Physics:SetMotorVelOverride(-1, 0, 0)
+			end),
+			FrameEvent(3, function(inst)
+				inst.Physics:SetMotorVelOverride(-0.5, 0, 0)
+			end),
 			FrameEvent(4, function(inst)
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
@@ -1455,12 +1560,14 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("attacked", function(inst, data)
-				if inst.sg.statemem.vulnerable and
-					not inst.components.health:IsDead() and
-					data ~= nil and data.spdamage ~= nil and data.spdamage.planar ~= nil
+				if
+					inst.sg.statemem.vulnerable
+					and not inst.components.health:IsDead()
+					and data ~= nil
+					and data.spdamage ~= nil
+					and data.spdamage.planar ~= nil
 				then
 					inst.sg:GoToState("butt_face_hit")
 				end
@@ -1477,9 +1584,9 @@ local states =
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "butt_face_hit",
 		tags = { "hit", "busy" },
 
@@ -1491,8 +1598,7 @@ local states =
 			inst.sg.statemem.vulnerable = true
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(8, function(inst)
 				if inst.sg.mem.dostagger and TryStagger(inst) then
 					return
@@ -1505,12 +1611,14 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("attacked", function(inst, data)
-				if inst.sg.statemem.vulnerable and
-					not inst.components.health:IsDead() and
-					data ~= nil and data.spdamage ~= nil and data.spdamage.planar ~= nil
+				if
+					inst.sg.statemem.vulnerable
+					and not inst.components.health:IsDead()
+					and data ~= nil
+					and data.spdamage ~= nil
+					and data.spdamage.planar ~= nil
 				then
 					inst.sg.mem.dostagger = true
 					if inst.sg.statemem.canstagger then
@@ -1525,9 +1633,9 @@ local states =
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "death",
 		tags = { "dead", "busy", "noattack" },
 
@@ -1540,10 +1648,13 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(6, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/death") end),
-			FrameEvent(46, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound") end),
+		timeline = {
+			FrameEvent(6, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/death")
+			end),
+			FrameEvent(46, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound")
+			end),
 			FrameEvent(48, function(inst)
 				ShakeIfClose(inst)
 				inst.components.lootdropper:DropLoot(inst:GetPosition())
@@ -1551,17 +1662,16 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("corpse")
 				end
-			end)
+			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "corpse",
 		tags = { "dead", "busy", "noattack" },
 
@@ -1570,11 +1680,13 @@ local states =
 			inst.AnimState:PlayAnimation("corpse")
 		end,
 
-		timeline =
-		{
+		timeline = {
 			--delay 1 frame in case we are loading
 			FrameEvent(1, function(inst)
-				local corpse = not inst:HasTag("lunar_aligned") and TheWorld.components.lunarriftmutationsmanager ~= nil and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "beargercorpse") or nil
+				local corpse = not inst:HasTag("lunar_aligned")
+						and TheWorld.components.lunarriftmutationsmanager ~= nil
+						and TheWorld.components.lunarriftmutationsmanager:TryMutate(inst, "beargercorpse")
+					or nil
 				if corpse == nil then
 					inst:AddTag("NOCLICK")
 					inst.persists = false
@@ -1594,20 +1706,20 @@ local states =
 		},
 
 		ontimeout = ErodeAway,
-	},
+	}),
 
 	--------------------------------------------------------------------------
 	--Used by "beargercorpse"
 
-	State{
+	State({
 		name = "corpse_idle",
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("corpse")
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "corpse_mutate_pre",
 		tags = { "mutating" },
 
@@ -1617,9 +1729,10 @@ local states =
 			inst.SoundEmitter:PlaySound("rifts3/mutated_deerclops/twitching_LP", "loop")
 		end,
 
-		timeline =
-		{
-			FrameEvent(82, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate_pre_cracks_f0") end),
+		timeline = {
+			FrameEvent(82, function(inst)
+				inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate_pre_cracks_f0")
+			end),
 			TimeEvent(3, function(inst)
 				inst.sg:GoToState("corpse_mutate", inst.sg.statemem.mutantprefab)
 			end),
@@ -1628,9 +1741,9 @@ local states =
 		onexit = function(inst)
 			inst.SoundEmitter:KillSound("loop")
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "corpse_mutate",
 		tags = { "mutating" },
 
@@ -1641,19 +1754,23 @@ local states =
 			inst.sg.statemem.mutantprefab = mutantprefab
 		end,
 
-		timeline =
-		{
-			FrameEvent(68, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft") end),
-			FrameEvent(70, function(inst) ShakeAllCameras(CAMERASHAKE.FULL, .35, .02, .5, inst, 30) end),
-			FrameEvent(125, function(inst) inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate") end),
+		timeline = {
+			FrameEvent(68, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft")
+			end),
+			FrameEvent(70, function(inst)
+				ShakeAllCameras(CAMERASHAKE.FULL, 0.35, 0.02, 0.5, inst, 30)
+			end),
+			FrameEvent(125, function(inst)
+				inst.SoundEmitter:PlaySound("rifts3/mutated_bearger/mutate")
+			end),
 			FrameEvent(149, function(inst)
-				inst.AnimState:SetAddColour(.5, .5, .5, 0)
-				inst.AnimState:SetLightOverride(.5)
+				inst.AnimState:SetAddColour(0.5, 0.5, 0.5, 0)
+				inst.AnimState:SetLightOverride(0.5)
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					local rot = inst.Transform:GetRotation()
@@ -1671,11 +1788,11 @@ local states =
 			inst.AnimState:SetAddColour(0, 0, 0, 0)
 			inst.AnimState:SetLightOverride(0)
 		end,
-	},
+	}),
 
 	--------------------------------------------------------------------------
 	--Transitions from corpse_mutate after prefab switch
-	State{
+	State({
 		name = "mutate_pst",
 		tags = { "busy", "noattack", "temp_invincible" },
 
@@ -1697,10 +1814,11 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(25, DoFootstep),
-			FrameEvent(27, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft") end),
+			FrameEvent(27, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft")
+			end),
 			FrameEvent(28, function(inst)
 				inst:SetStandState("quad")
 			end),
@@ -1709,8 +1827,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle", IDLE_FLAGS.NoFaced + IDLE_FLAGS.Aggro)
@@ -1722,11 +1839,11 @@ local states =
 			inst.AnimState:SetAddColour(0, 0, 0, 0)
 			inst.AnimState:SetLightOverride(0)
 		end,
-	},
+	}),
 
 	--------------------------------------------------------------------------
 
-	State{
+	State({
 		name = "action",
 		tags = { "busy" },
 
@@ -1738,33 +1855,33 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(14, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/gulp") end),
+		timeline = {
+			FrameEvent(14, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/gulp")
+			end),
 			FrameEvent(15, function(inst)
 				inst:PerformBufferedAction()
 				inst.sg:AddStateTag("wantstoeat")
 				inst.last_eat_time = GetTime()
-                if inst.brain ~= nil then
-                    inst.brain:ForceUpdate()
-                end
+				if inst.brain ~= nil then
+					inst.brain:ForceUpdate()
+				end
 			end),
 			FrameEvent(39, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("eat_pst")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "eat_loop",
 		tags = { "busy" },
 
@@ -1776,20 +1893,25 @@ local states =
 				else
 					inst.AnimState:PlayAnimation("eat_loop", true)
 				end
-				local timeout = math.random()+.5
+				local timeout = math.random() + 0.5
 				local ba = inst:GetBufferedAction()
 				if ba and ba.target and ba.target:HasTag("honeyed") then
-					timeout = timeout*2
+					timeout = timeout * 2
 				end
 				inst.sg:SetTimeout(timeout)
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(3, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/chew") end),
-			FrameEvent(14, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/chew") end),
-			FrameEvent(23, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/chew") end),
+		timeline = {
+			FrameEvent(3, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/chew")
+			end),
+			FrameEvent(14, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/chew")
+			end),
+			FrameEvent(23, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/chew")
+			end),
 		},
 
 		ontimeout = function(inst)
@@ -1797,9 +1919,9 @@ local states =
 			inst.last_eat_time = GetTime()
 			inst.sg:GoToState("eat_pst")
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "eat_pst",
 		tags = { "busy", "caninterrupt" },
 
@@ -1812,25 +1934,23 @@ local states =
 			inst.AnimState:PlayAnimation("eat_pst")
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(12, function(inst)
 				inst.sg:RemoveStateTag("busy")
 				inst.sg:AddStateTag("canrotate")
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle", IDLE_FLAGS.NoFaced + IDLE_FLAGS.Calm)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "steal",
 		tags = { "busy" },
 
@@ -1841,10 +1961,13 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(4, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
-			FrameEvent(28, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh") end),
+		timeline = {
+			FrameEvent(4, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
+			FrameEvent(28, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+			end),
 			FrameEvent(32, function(inst)
 				inst:PerformBufferedAction()
 			end),
@@ -1859,17 +1982,16 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle", IDLE_FLAGS.Aggro)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "walk_start",
 		tags = { "moving", "canrotate" },
 
@@ -1886,17 +2008,16 @@ local states =
 			end
 		end,
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("walk")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "walk",
 		tags = { "moving", "canrotate" },
 
@@ -1920,8 +2041,7 @@ local states =
 			inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/grrrr")
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(1, function(inst)
 				if inst.sg.statemem.aggro then
 					DoFootstep(inst)
@@ -1945,17 +2065,16 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("walk")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "walk_stop",
 		tags = { "canrotate" },
 
@@ -1967,17 +2086,16 @@ local states =
 			DoFootstep(inst)
 		end,
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle", inst.sg.statemem.aggro and IDLE_FLAGS.Aggro or IDLE_FLAGS.Calm)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "run_start",
 		tags = { "moving", "running", "atk_pre", "canrotate" },
 
@@ -1992,8 +2110,7 @@ local states =
 			end
 		end,
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("run")
@@ -2004,9 +2121,9 @@ local states =
 		onexit = function(inst)
 			inst.components.locomotor.runspeed = TUNING.BEARGER_RUN_SPEED
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "run",
 		tags = { "moving", "running", "canrotate" },
 
@@ -2019,29 +2136,27 @@ local states =
 			inst.AnimState:PlayAnimation("charge_roar_loop")
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(0, function(inst)
 				DoFootstep(inst)
-			--	DestroyStuff(inst, 0, 5)
+				--	DestroyStuff(inst, 0, 5)
 			end),
 			FrameEvent(8, function(inst)
 				DoFootstep(inst)
-			--	DestroyStuff(inst, 0, 5)
+				--	DestroyStuff(inst, 0, 5)
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("run")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "run_stop",
 		tags = { "canrotate" },
 
@@ -2051,17 +2166,16 @@ local states =
 			DoFootstep(inst)
 		end,
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle", IDLE_FLAGS.Aggro)
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "sleep",
 		tags = { "busy", "sleeping", "nowake", "caninterrupt" },
 
@@ -2077,8 +2191,7 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(24, function(inst)
 				if inst.AnimState:IsCurrentAnimation("sleep_pre") then
 					inst.sg:RemoveStateTag("caninterrupt")
@@ -2095,8 +2208,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg.statemem.continuesleeping = true
@@ -2110,9 +2222,9 @@ local states =
 				inst.components.sleeper:WakeUp()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "sleeping",
 		tags = { "busy", "sleeping" },
 
@@ -2121,8 +2233,7 @@ local states =
 			inst.AnimState:PlayAnimation("sleep_loop")
 		end,
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg.statemem.continuesleeping = true
@@ -2136,9 +2247,9 @@ local states =
 				inst.components.sleeper:WakeUp()
 			end
 		end,
-	},
+	}),
 
-	State{
+	State({
 		name = "wake",
 		tags = { "busy", "waking", "nosleep" },
 
@@ -2152,9 +2263,10 @@ local states =
 			inst:SetStandState("quad")
 		end,
 
-		timeline =
-		{
-			FrameEvent(27, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/taunt_short") end),
+		timeline = {
+			FrameEvent(27, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/taunt_short")
+			end),
 			CommonHandlers.OnNoSleepFrameEvent(33, function(inst)
 				if inst.sg.mem.dostagger and TryStagger(inst) then
 					return
@@ -2166,8 +2278,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("stagger", function(inst)
 				if not inst.sg:HasStateTag("nosleep") then
 					TryStagger(inst)
@@ -2182,11 +2293,11 @@ local states =
 				end
 			end),
 		},
-	},
+	}),
 
 	--------------------------------------------------------------------------
 
-	State{
+	State({
 		name = "stagger_pre",
 		tags = { "staggered", "busy", "nosleep" },
 
@@ -2202,8 +2313,7 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
+		timeline = {
 			--from quad
 			FrameEvent(2, function(inst)
 				inst:SetStandState("bi")
@@ -2212,18 +2322,23 @@ local states =
 				inst.sg:GoToState("stagger_pre_timeline_from_frame3")
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "stagger_pre_timeline_from_frame3",
 		tags = { "staggered", "busy", "nosleep" },
 
-		timeline =
-		{
+		timeline = {
 			--already standing (skips 3 frames)
-			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/yawn") end),
-			FrameEvent(33, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack") end),
-			FrameEvent(40, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/yawn", nil, 0.5) end),
+			FrameEvent(0, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/yawn")
+			end),
+			FrameEvent(33, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/attack")
+			end),
+			FrameEvent(40, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/yawn", nil, 0.5)
+			end),
 			FrameEvent(54, function(inst)
 				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_stomp")
 				ShakeIfClose_Footstep(inst)
@@ -2240,17 +2355,16 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState(inst.components.timer:TimerExists("stagger") and "stagger_idle" or "stagger_pst")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "stagger_idle",
 		tags = { "staggered", "busy", "caninterrupt", "nosleep" },
 
@@ -2263,17 +2377,16 @@ local states =
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 		end,
 
-		events =
-		{
+		events = {
 			EventHandler("timerdone", function(inst, data)
 				if data ~= nil and data.name == "stagger" then
 					inst.sg:GoToState("stagger_pst")
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "stagger_hit",
 		tags = { "staggered", "busy", "hit", "nosleep" },
 
@@ -2282,8 +2395,7 @@ local states =
 			inst.AnimState:PlayAnimation("stagger_hit")
 		end,
 
-		timeline =
-		{
+		timeline = {
 			FrameEvent(10, function(inst)
 				if inst.components.timer:TimerExists("stagger") then
 					inst.sg:AddStateTag("caninterrupt")
@@ -2298,8 +2410,7 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("timerdone", function(inst, data)
 				if data ~= nil and data.name == "stagger" and inst.sg.statemem.cangetup then
 					inst.sg:GoToState("stagger_pst", true)
@@ -2315,9 +2426,9 @@ local states =
 				end
 			end),
 		},
-	},
+	}),
 
-	State{
+	State({
 		name = "stagger_pst",
 		tags = { "staggered", "busy", "nosleep" },
 
@@ -2333,9 +2444,10 @@ local states =
 			end
 		end,
 
-		timeline =
-		{
-			FrameEvent(41, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/taunt_short") end),
+		timeline = {
+			FrameEvent(41, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/taunt_short")
+			end),
 			FrameEvent(45, function(inst)
 				inst.sg:RemoveStateTag("staggered")
 				inst.sg:RemoveStateTag("caninterrupt")
@@ -2357,11 +2469,13 @@ local states =
 			end),
 		},
 
-		events =
-		{
+		events = {
 			EventHandler("animqueueover", function(inst)
 				if inst.AnimState:AnimDone() then
-					inst.sg:GoToState("idle", IDLE_FLAGS.NoFaced + (inst.sg.statemem.aggro and IDLE_FLAGS.Aggro or IDLE_FLAGS.Calm))
+					inst.sg:GoToState(
+						"idle",
+						IDLE_FLAGS.NoFaced + (inst.sg.statemem.aggro and IDLE_FLAGS.Aggro or IDLE_FLAGS.Calm)
+					)
 				end
 			end),
 		},
@@ -2369,12 +2483,14 @@ local states =
 		onexit = function(inst)
 			inst:StartButtRecovery()
 		end,
-	},
+	}),
 
 	--------------------------------------------------------------------------
 }
 
-CommonStates.AddFrozenStates(states, function(inst) inst:SetStandState("bi") end)
+CommonStates.AddFrozenStates(states, function(inst)
+	inst:SetStandState("bi")
+end)
 CommonStates.AddSinkAndWashAshoreStates(states)
 
 return StateGraph("kochosei_bearger", states, events, "init", actionhandlers)

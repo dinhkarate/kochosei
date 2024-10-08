@@ -10,50 +10,49 @@ local prefabs = {
 	"ash",
 }
 local function onequip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_body", "swap_miku_usagi_backpack", "usagi")
-    owner.AnimState:OverrideSymbol("swap_body", "swap_miku_usagi_backpack", "swap_body")
+	owner.AnimState:OverrideSymbol("swap_body", "swap_miku_usagi_backpack", "usagi")
+	owner.AnimState:OverrideSymbol("swap_body", "swap_miku_usagi_backpack", "swap_body")
 
-    if inst.components.container then
-        inst.components.container:Open(owner)
-    end
+	if inst.components.container then
+		inst.components.container:Open(owner)
+	end
 
-    local fastpickerAdded = false
-    local expertchefAdded = false
+	local fastpickerAdded = false
+	local expertchefAdded = false
 
-    if not owner:HasTag("fastpicker") and not owner:HasTag("fastpick") then
-        owner:AddTag("fastpicker")
-        owner:AddTag("fastpick")
-        fastpickerAdded = true
-    end
+	if not owner:HasTag("fastpicker") and not owner:HasTag("fastpick") then
+		owner:AddTag("fastpicker")
+		owner:AddTag("fastpick")
+		fastpickerAdded = true
+	end
 
-    if not owner:HasTag("expertchef") then
-        owner:AddTag("expertchef")
-        expertchefAdded = true
-    end
-    owner.fastpickerAdded = fastpickerAdded
-    owner.expertchefAdded = expertchefAdded
+	if not owner:HasTag("expertchef") then
+		owner:AddTag("expertchef")
+		expertchefAdded = true
+	end
+	owner.fastpickerAdded = fastpickerAdded
+	owner.expertchefAdded = expertchefAdded
 end
 
 local function onunequip(inst, owner)
-    local fastpickerAdded = owner.fastpickerAdded
-    local expertchefAdded = owner.expertchefAdded
+	local fastpickerAdded = owner.fastpickerAdded
+	local expertchefAdded = owner.expertchefAdded
 
-    if fastpickerAdded and not owner:HasTag("kochosei") then
-        owner:RemoveTag("fastpick")
-        owner:RemoveTag("fastpicker")
-    end
-    if expertchefAdded and not owner:HasTag("kochosei") then
-        owner:RemoveTag("expertchef")
-    end
+	if fastpickerAdded and not owner:HasTag("kochosei") then
+		owner:RemoveTag("fastpick")
+		owner:RemoveTag("fastpicker")
+	end
+	if expertchefAdded and not owner:HasTag("kochosei") then
+		owner:RemoveTag("expertchef")
+	end
 
-    owner.AnimState:ClearOverrideSymbol("swap_body")
-    owner.AnimState:ClearOverrideSymbol("miku_usagi_backpack")
+	owner.AnimState:ClearOverrideSymbol("swap_body")
+	owner.AnimState:ClearOverrideSymbol("miku_usagi_backpack")
 
-    if inst.components.container then
-        inst.components.container:Close(owner)
-    end
+	if inst.components.container then
+		inst.components.container:Close(owner)
+	end
 end
-
 
 local function fn()
 	local inst = CreateEntity()

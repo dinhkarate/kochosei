@@ -32,7 +32,8 @@ local function SetLightColour(inst, val)
 end
 
 local AREAATTACK_MUST_TAGS = { "_combat" }
-local AREA_EXCLUDE_TAGS = { "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost", "player","kochoseipet" }
+local AREA_EXCLUDE_TAGS =
+	{ "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost", "player", "kochoseipet" }
 local ICESPAWNTIME = 0.25
 
 local function DoSpawnIceSpike(inst, x, z)
@@ -554,8 +555,7 @@ CommonStates.AddCombatStates(states, {
 		TimeEvent(6 * FRAMES, function(inst)
 			SetLightValue(inst, 1.07)
 		end),
-		TimeEvent(32 * FRAMES, function(inst)
-		end),
+		TimeEvent(32 * FRAMES, function(inst) end),
 		TimeEvent(33 * FRAMES, function(inst)
 			SetLightValue(inst, 1.05)
 			SetLightColour(inst, 0.95)

@@ -41,7 +41,9 @@ end
 
 local function OnAttacked(inst, data)
 	if data.attacker ~= nil then
-	if data.attacker:HasTag("kochoseipet") then return end
+		if data.attacker:HasTag("kochoseipet") then
+			return
+		end
 		if data.attacker.components.petleash ~= nil and data.attacker.components.petleash:IsPet(inst) then
 			inst.components.health:Kill()
 		elseif data.attacker.components.combat ~= nil then
@@ -110,7 +112,7 @@ local function m_checkLeaderExisting(inst)
 end
 
 local function OnHitOther(inst, other)
-	if other and other:HasTag("Kochoseipet") then 
+	if other and other:HasTag("Kochoseipet") then
 		inst.components.combat:GiveUp()
 	end
 end
@@ -182,29 +184,30 @@ local function SwitchToFourFaced(inst)
 	end
 end
 local function ClearRecentlyCharged(inst, other)
-    inst.recentlycharged[other] = nil
+	inst.recentlycharged[other] = nil
 end
 
 local function OnDestroyOther(inst, other)
-    if other:IsValid() and
-        other.components.workable ~= nil and
-        other.components.workable:CanBeWorked() and
-        other.components.workable.action ~= ACTIONS.NET and
-        not inst.recentlycharged[other] then
-        SpawnPrefab("collapse_small").Transform:SetPosition(other.Transform:GetWorldPosition())
-        if other.components.lootdropper ~= nil and (other:HasTag("tree") or other:HasTag("boulder")) then
-            other.components.lootdropper:SetLoot({})
-        end
-        other.components.workable:Destroy(inst)
-        if other:IsValid() and other.components.workable ~= nil and other.components.workable:CanBeWorked() then
-            inst.recentlycharged[other] = true
-            inst:DoTaskInTime(3, ClearRecentlyCharged, other)
-        end
-    end
+	if
+		other:IsValid()
+		and other.components.workable ~= nil
+		and other.components.workable:CanBeWorked()
+		and other.components.workable.action ~= ACTIONS.NET
+		and not inst.recentlycharged[other]
+	then
+		SpawnPrefab("collapse_small").Transform:SetPosition(other.Transform:GetWorldPosition())
+		if other.components.lootdropper ~= nil and (other:HasTag("tree") or other:HasTag("boulder")) then
+			other.components.lootdropper:SetLoot({})
+		end
+		other.components.workable:Destroy(inst)
+		if other:IsValid() and other.components.workable ~= nil and other.components.workable:CanBeWorked() then
+			inst.recentlycharged[other] = true
+			inst:DoTaskInTime(3, ClearRecentlyCharged, other)
+		end
+	end
 end
 
-local function OnCollide(inst, other)
-end
+local function OnCollide(inst, other) end
 local function fn()
 	local inst = CreateEntity()
 
@@ -237,8 +240,8 @@ local function fn()
 		return inst
 	end
 
-    inst.recentlycharged = {}
-    inst.Physics:SetCollisionCallback(OnCollide)
+	inst.recentlycharged = {}
+	inst.Physics:SetCollisionCallback(OnCollide)
 	inst.cancombo = true
 	inst.canbutt = true
 	inst.canrunningbutt = false
@@ -317,7 +320,7 @@ local function fn()
 	inst.components.locomotor.walkspeed = TUNING.BEARGER_CALM_WALK_SPEED
 	inst.components.locomotor.runspeed = TUNING.BEARGER_RUN_SPEED
 	inst.components.locomotor:SetShouldRun(true)
-   --	inst:SetStateGraph("SGbearger")
+	--	inst:SetStateGraph("SGbearger")
 	inst:SetStateGraph("SGkochosei_bearger")
 	inst:SetBrain(brain)
 
@@ -335,8 +338,6 @@ local function fn()
 	inst:DoPeriodicTask(1, m_checkLeaderExisting)
 	inst:ListenForEvent("attacked", OnAttacked)
 	inst.components.combat.onhitotherfn = OnHitOther
-
-
 
 	return inst
 end

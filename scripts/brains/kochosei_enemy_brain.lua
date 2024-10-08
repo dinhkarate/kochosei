@@ -16,7 +16,6 @@ local MAX_FOLLOW_DIST = 12
 local START_FACE_DIST = 6
 local KEEP_FACE_DIST = 8
 
-
 local KITING_DIST = 3
 local STOP_KITING_DIST = 5
 
