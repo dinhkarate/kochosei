@@ -38,72 +38,69 @@ local itemt1 = {
 	"kochosei_apple"
 }
 local function tang_sanity(inst)
-	print("tang_sanity")		
+	inst.components.sanity:DoDelta(15)
 	inst.components.talker:Say("tang_sanity")
 end
 
 local function tang_hp(inst)
-	print("tang_hp")
+	inst.components.health:DoDelta(15)
 	inst.components.talker:Say("tang_hp")
 end
 
 local function tang_no(inst)
-	print("tang_no")
+	inst.components.hunger:DoDelta(15)
 	inst.components.talker:Say("tang_no")
 end
 
 local function tang_atk(inst)
-	print("tang_atk")
+	inst.components.combat.externaldamagemultipliers:SetModifier(inst, 2, "buff_damage_tu_magacha") -- Damage multiplier (optional)
 	inst.components.talker:Say("tang_atk")
 end
 
 local function tang_atk_kochosei(inst)
-	print("tang_atk_kochosei")
+	inst.tangst = true
 	inst.components.talker:Say("tang_atk_kochosei")
 end
 
 local function tang_speed(inst)
-	print("tang_speed")
+	inst.components.locomotor:SetExternalSpeedMultiplier(inst, "speed_tu_magacha", 1.25)
 	inst.components.talker:Say("tang_speed")
 end
 
 local function tang_def(inst)
-	print("tang_def")
+	inst.components.health.externalabsorbmodifiers:SetModifier(inst, TUNING.BUFF_PLAYERABSORPTION_MODIFIER)
 	inst.components.talker:Say("tang_def")
 end
 
 local function tang_lam_viec(inst)
-	print("tang_lam_viec")
+    inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+    inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+    inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
 	inst.components.talker:Say("tang_lam_viec")
 end
 
 local function giam_sanity(inst)
-	print("giam_sanity")
+	inst.components.sanity:DoDelta(-15)
 	inst.components.talker:Say("giam_sanity")
 end
 
 local function giam_hp(inst)
-	print("giam_hp")
+	inst.components.health:DoDelta(-15)
 	inst.components.talker:Say("giam_hp")
 end
 
 local function giam_no(inst)
-	print("giam_no")
+	inst.components.hunger:DoDelta(-15)
 	inst.components.talker:Say("giam_no")
 end
 
 local function giam_atk(inst)
-	print("giam_atk")
+	inst.components.combat.externaldamagemultipliers:SetModifier(inst, 0.8, "buff_damage_tu_magacha") -- Damage multiplier (optional)
 	inst.components.talker:Say("giam_atk")
 end
 
-local function giam_def(inst)
-	print("giam_def")
-	inst.components.talker:Say("giam_def")
-end
-
 local function giam_speed(inst)
-	print("giam_speed")
+	inst.components.locomotor:SetExternalSpeedMultiplier(inst, "speed_tu_magacha", 0.9)
 	inst.components.talker:Say("giam_speed")
 end
 
@@ -122,7 +119,6 @@ local stats_char = {
 	giam_hp,
 	giam_no,
 	giam_atk,
-	giam_def,
 	giam_speed,
 }
 
@@ -131,23 +127,6 @@ local function random_stats_chr(inst)
 	local selected_stat = stats_char[math.random(#stats_char)] -- chọn 1 stats ngẫu nhiên trong bảng để buff
 	return selected_stat(inst) 
 end
-
---[[ local stats_char = {
-	tang_sanity,
-	tang_hp,
-	tang_no,
-	tang_atk,
-	tang_atk_kochosei,
-	tang_speed,
-	tang_def,
-	tang_lam_viec,
-	giam_sanity,
-	giam_hp,
-	giam_no,
-	giam_atk,
-	giam_def,
-	giam_speed,
-}  ]]
 
 for k, v in pairs(require("prkochofood")) do
 	table.insert(foodkochosei, v.name)
