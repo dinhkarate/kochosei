@@ -284,23 +284,22 @@ AddPrefabPostInitAny(function(inst)
 		end
 	end
 end)
---]]
+
 
 AddComponentPostInit("skinner", function(self)
 	function self:Kochosei_GetSkinName()
 		return self.skin_name
 	end
 end)
-
---- Cái này là buff đọc từ sách cổ đại ---
-
+--]]
 local function OnHitOther_BuffDamage(inst, data)
 	local target = data.target
 	if target ~= nil and target:IsValid() and target.components.combat and target.components.health and inst.tangst then
 		target.sohit = (target.sohit or 1) + 0.02
-		target.components.combat.externaldamagetakenmultipliers:SetModifier(target, target.sohit, "sidanay")
+		target.components.combat.externaldamagetakenmultipliers:SetModifier(target, target.sohit, "sidanay") -- Tăng dần st mỗi hit
 	end
 end
+
 
 AddPlayerPostInit(function(inst)
 	if not TheWorld.ismastersim then
@@ -309,7 +308,10 @@ AddPlayerPostInit(function(inst)
 	inst.tangst = false
 
 	inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
-	-- inst:ListenForEvent("fishingcollect", onfish)
+	if not inst.components.timer then
+		inst:AddComponent("timer")
+	end
+
 end)
 
 --- Hồi sinh từ bướm ---
@@ -401,22 +403,6 @@ local allclone = {
 	"kochodeerclops",
 	"kocho_bearger",
 }
-local function OnHitOther_Clone(inst, data)
-	local target = data.target
-	if target ~= nil and target.components.health and target.components.combat then
-		if target:HasTag("epic") then
-			inst.components.sttptmau:Satthuong(
-				target,
-				TUNING.MIOHM_SAT_THUONG_PT_MAU,
-				false,
-				false,
-				TUNING.MIOHM_SAT_THUONG_PT_MAU_HOAT_DONG
-			)
-		else
-			inst.components.sttptmau:Satthuong(target, TUNING.MIOHM_SAT_THUONG_PT_MAU, false, false, 1000)
-		end
-	end
-end
 
 for _, v in ipairs(allclone) do
 	AddPrefabPostInit(v, function(inst)
@@ -428,7 +414,6 @@ for _, v in ipairs(allclone) do
 		inst:AddComponent("sttptmau")
 
 		inst.components.health:StartRegen(TUNING.SHADOWWAXWELL_HEALTH_REGEN, TUNING.SHADOWWAXWELL_HEALTH_REGEN_PERIOD)
-		inst:ListenForEvent("onhitother", OnHitOther_Clone)
 		inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
 	end)
 end

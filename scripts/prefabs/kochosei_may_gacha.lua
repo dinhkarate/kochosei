@@ -16,8 +16,34 @@ end
 local foodkochosei = {}
 
 local itemt1 = {
+	"messagebottle",
+	"cursed_monkey_token",
+	"driftwood_log",
+	"coontail",
+	"slurtlehat",
+	"armorsnurtleshell",
+	"malbatross_beak",
+	"beefalowool",
+	"gears",
+	"horrorfuel",
+	"purebrilliance",
+	"shroom_skin",
+	"spidereggsack",
+	"honeycomb",
+	"dreadstone",
+	"lunarplant_husk",
+	"panflute",
+	"horn",
+	"moon_cap",
+	"blue_cap",
+	"red_cap",
+	"green_cap",
+	"moonglass",
+	"moonrocknugget",
+	"canary_poisoned",
 	"twigs",
 	"log",
+	"eel",
 	"rocks",
 	"goldnugget",
 	"nightmarefuel",
@@ -35,76 +61,62 @@ local itemt1 = {
 	"cutgrass",
 	"mosquitosack",
 	"tillweedsalve",
-	"kochosei_apple"
+	"kochosei_apple",
 }
 local function tang_sanity(inst)
 	inst.components.sanity:DoDelta(15)
-	inst.components.talker:Say("tang_sanity")
+	inst.components.talker:Say("Tăng Sanity")
 end
 
 local function tang_hp(inst)
 	inst.components.health:DoDelta(15)
-	inst.components.talker:Say("tang_hp")
+	inst.components.talker:Say("Tăng HP")
 end
 
 local function tang_no(inst)
 	inst.components.hunger:DoDelta(15)
-	inst.components.talker:Say("tang_no")
+	inst.components.talker:Say("Tăng No")
 end
 
 local function tang_atk(inst)
-	inst.components.combat.externaldamagemultipliers:SetModifier(inst, 2, "buff_damage_tu_magacha") -- Damage multiplier (optional)
-	inst.components.talker:Say("tang_atk")
+	inst:AddDebuff("buff_attack", "buff_attack")
+	inst.components.talker:Say("Tăng ATK")
 end
 
 local function tang_atk_kochosei(inst)
 	inst.tangst = true
-	inst.components.talker:Say("tang_atk_kochosei")
+	inst.components.talker:Say("Buff Kochosei")
 end
 
 local function tang_speed(inst)
 	inst.components.locomotor:SetExternalSpeedMultiplier(inst, "speed_tu_magacha", 1.25)
-	inst.components.talker:Say("tang_speed")
+	inst.components.talker:Say("Tăng speed 25%")
 end
 
 local function tang_def(inst)
-	inst.components.health.externalabsorbmodifiers:SetModifier(inst, TUNING.BUFF_PLAYERABSORPTION_MODIFIER)
-	inst.components.talker:Say("tang_def")
+	inst:AddDebuff("buff_playerabsorption", "buff_playerabsorption")
+	inst.components.talker:Say("Tăng Def")
 end
 
 local function tang_lam_viec(inst)
-    inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-    inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-    inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-	inst.components.talker:Say("tang_lam_viec")
+	inst:AddDebuff("buff_workeffectiveness", "buff_workeffectiveness")
+	inst.components.talker:Say("Tăng hiệu suất làm việc")
 end
 
 local function giam_sanity(inst)
-	inst.components.sanity:DoDelta(-15)
-	inst.components.talker:Say("giam_sanity")
+	inst.components.sanity:DoDelta(-35)
+	inst.components.talker:Say("Giảm Sanity")
 end
 
 local function giam_hp(inst)
 	inst.components.health:DoDelta(-15)
-	inst.components.talker:Say("giam_hp")
+	inst.components.talker:Say("Giảm HP")
 end
 
 local function giam_no(inst)
-	inst.components.hunger:DoDelta(-15)
-	inst.components.talker:Say("giam_no")
+	inst.components.hunger:DoDelta(-35)
+	inst.components.talker:Say("Giảm No")
 end
-
-local function giam_atk(inst)
-	inst.components.combat.externaldamagemultipliers:SetModifier(inst, 0.8, "buff_damage_tu_magacha") -- Damage multiplier (optional)
-	inst.components.talker:Say("giam_atk")
-end
-
-local function giam_speed(inst)
-	inst.components.locomotor:SetExternalSpeedMultiplier(inst, "speed_tu_magacha", 0.9)
-	inst.components.talker:Say("giam_speed")
-end
-
-
 
 local stats_char = {
 	tang_sanity,
@@ -118,14 +130,11 @@ local stats_char = {
 	giam_sanity,
 	giam_hp,
 	giam_no,
-	giam_atk,
-	giam_speed,
 }
 
 local function random_stats_chr(inst)
-	print("random_stats_chr")
 	local selected_stat = stats_char[math.random(#stats_char)] -- chọn 1 stats ngẫu nhiên trong bảng để buff
-	return selected_stat(inst) 
+	return selected_stat(inst)
 end
 
 for k, v in pairs(require("prkochofood")) do
@@ -136,7 +145,8 @@ local function Gachatime(inst) -- Tới lúc gacha r
 	if not inst.components.timer then
 		inst:AddComponent("timer")
 	end
-	--[[ 
+	local gifts = {}
+
 	if inst.components.timer:TimerExists("Gacha cooldown") then
 		local timeleft = inst.components.timer:GetTimeLeft("Gacha cooldown")
 		local formatted_timeleft = math.floor(timeleft) -- lấy 3 số đầu
@@ -144,16 +154,18 @@ local function Gachatime(inst) -- Tới lúc gacha r
 		return
 	end
 
- ]]
- 	random_stats_chr(inst)
-	local gifts = {}
+	inst.components.timer:StartTimer("Gacha cooldown", 480) -- 8*6 48 đúng nguyên 1 ngày
+
+	random_stats_chr(inst)
+
 	table.insert(gifts, SpawnPrefab(itemt1[math.random(#itemt1)]))
-	table.insert(gifts, SpawnPrefab(foodkochosei[math.random(#foodkochosei)]))
+	if math.random() <= 0.5 then -- 50% Nhận được đồ ăn
+		table.insert(gifts, SpawnPrefab(foodkochosei[math.random(#foodkochosei)]))
+	end
 
 	for i, v in ipairs(gifts) do
 		v:Remove()
 	end
-	inst.components.timer:StartTimer("Gacha cooldown", 480) -- 8*6 48 đúng nguyên 1 ngày
 
 	local kochosei_gift = SpawnPrefab("kochosei_gift")
 	kochosei_gift.components.unwrappable:WrapItems(gifts)
@@ -182,7 +194,7 @@ local function fn()
 	inst.entity:AddAnimState()
 	inst.entity:AddSoundEmitter()
 	inst.entity:AddNetwork()
-	--MakeInventoryPhysics(inst) -- Nó cần phải bé bé, to quá nó vướng nhà
+	-- MakeInventoryPhysics(inst) -- Nó cần phải bé bé, to quá nó vướng nhà
 	inst:SetPhysicsRadiusOverride(1.5)
 
 	inst.AnimState:SetBank("kochosei_may_gacha")
@@ -205,7 +217,7 @@ local function fn()
     local constructionsite = inst:AddComponent("constructionsite")
     constructionsite:SetConstructionPrefab("construction_container")
     constructionsite:SetOnConstructedFn(function ()
-        
+
     end)
 --]]
 	inst:AddComponent("workable")
