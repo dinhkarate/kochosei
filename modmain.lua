@@ -300,7 +300,11 @@ local function OnHitOther_BuffDamage(inst, data)
 	end
 end
 
-
+local function tat_buff_tangst(inst, data)
+	if data.name == "Gacha cooldown" then
+		inst.tangst = false
+	end
+end
 AddPlayerPostInit(function(inst)
 	if not TheWorld.ismastersim then
 		return inst
@@ -311,7 +315,7 @@ AddPlayerPostInit(function(inst)
 	if not inst.components.timer then
 		inst:AddComponent("timer")
 	end
-
+	inst:ListenForEvent("timerdone", tat_buff_tangst)
 end)
 
 --- Hồi sinh từ bướm ---
@@ -503,7 +507,7 @@ KOCHOSEI_MAY_GACHA.id = "IT GACHA TIME"
 
 KOCHOSEI_MAY_GACHA.fn = function(act)
 	if act.target ~= nil and act.doer ~= nil then
-		if not act.target.components.timer:TimerExists("maygacha") then
+		if act.target.components.timer and not act.target.components.timer:TimerExists("maygacha") then
 			act.target.components.kochoseimaygacha:Gachatime(act.doer) -- Truyền act.doer
 			return true
 		end
@@ -514,11 +518,10 @@ AddAction(KOCHOSEI_MAY_GACHA)
 
 AddComponentAction("SCENE", "kochoseimaygacha", function(inst, doer, actions, right)
 	if right then
-		if inst.prefab == "kochosei_may_gacha" and not inst.components.timer:TimerExists("maygacha") then
-			table.insert(actions, KOCHOSEI_MAY_GACHA)
-		end
+		table.insert(actions, KOCHOSEI_MAY_GACHA)
 	end
 end)
+
 AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
 AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
 

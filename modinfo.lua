@@ -8,7 +8,7 @@ Thank you for using this mod, you can use the config button below and let me kno
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
 
-version = "4.2.7"
+version = "4.2.9"
 
 forumthread = ""
 

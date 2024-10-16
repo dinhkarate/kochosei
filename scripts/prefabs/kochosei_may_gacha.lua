@@ -118,6 +118,16 @@ local function giam_no(inst)
 	inst.components.talker:Say("Giảm No")
 end
 
+local function nhan_full_buff(inst)
+	inst.sg:GoToState("nhan_full_buff")
+	inst.components.hunger:SetPercent(1)
+	inst.components.sanity:SetPercent(1)
+	inst.components.health:SetPercent(1)
+	inst:AddDebuff("buff_attack","buff_attack")
+	inst:AddDebuff("buff_playerabsorption","buff_playerabsorption")
+	inst:AddDebuff("buff_workeffectiveness","buff_workeffectiveness")
+	inst.tangst = true
+end
 local stats_char = {
 	tang_sanity,
 	tang_hp,
@@ -159,10 +169,17 @@ local function Gachatime(inst) -- Tới lúc gacha r
 	random_stats_chr(inst)
 
 	table.insert(gifts, SpawnPrefab(itemt1[math.random(#itemt1)]))
-	if math.random() <= 0.5 then -- 50% Nhận được đồ ăn
+
+	local chance = math.random()
+
+	if chance <= 0.5 then -- 50% nhận được đồ ăn
 		table.insert(gifts, SpawnPrefab(foodkochosei[math.random(#foodkochosei)]))
 	end
-
+	
+	if chance <= 0.1 then -- 10% nhận full buff
+		nhan_full_buff(inst)
+	end
+	
 	for i, v in ipairs(gifts) do
 		v:Remove()
 	end
@@ -234,4 +251,4 @@ STRINGS.NAMES.KOCHOSEI_MAY_GACHA = "Máy gacha hợp pháp"
 STRINGS.RECIPE_DESC.KOCHOSEI_MAY_GACHA = "Bạn ơi đừng nghiện nữa, nhà mình còn gì nữa đâu"
 
 return Prefab("kochosei_may_gacha", fn, assets),
-	MakePlacer("kochosei_may_gacha_placer", "kochosei_may_gacha", "kochosei_may_gacha", "idle", nil, nil, nil)
+	MakePlacer("kochosei_may_gacha_placer", "kochosei_may_gacha", "kochosei_may_gacha", "idle")
