@@ -109,6 +109,9 @@ local listiteminv = {
 	"kochosei_armor_1",
 	"kochosei_armor_2",
 	"kochosei_ribbon",
+	"kochosei_thien_su_ban_phuc_xanh",
+	"kochosei_thien_su_ban_phuc_hong",
+	"kochosei_thien_su_ban_phuc_cam",
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
@@ -181,6 +184,7 @@ PrefabFiles = {
 	"kochosei_tigershark_duke_shadow",
 	"kochosei_card",
 	"kochosei_boss",
+	"kochosei_thien_su_ban_phuc",
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --

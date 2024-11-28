@@ -52,29 +52,42 @@ local function HealFunc2(inst, target, pos)
 		caster.components.talker:Say("I need more sanity!")
 		return
 	else
-		local xu = CreateEntity()
-		xu.entity:AddTransform()
-		xu.Transform:SetPosition(pos.x, 0, pos.z)
-		for k, v in pairs(hua) do
-			xu:DoTaskInTime(math.random() * 0.2, function()
-				local fx = SpawnPrefab("lavaarena_bloom_kocho" .. math.random(6))
-				fx.Transform:SetPosition((pos + v):Get())
-				fx:chixu(Zn + math.random())
-			end)
-		end
-		local playersheal = FindPlayersInRange(pos.x, pos.y, pos.z, Rn)
-		for i, v in ipairs(playersheal) do
-			if v.components.health:IsDead() or v:HasTag("playerghost") then
-				v:PushEvent("respawnfromghost")
-				v.rezsource = hstrongtay
-				caster.components.health:DoDelta(-50, true, "lydochet")
-				inst.components.finiteuses:Use(10)
-			end
-			inst.components.finiteuses:Use(10)
-			v:AddDebuff("kocho_buff_heal", "kocho_buff_heal")
-		end
+local xu = CreateEntity()
+xu.entity:AddTransform()
+xu.Transform:SetPosition(pos.x, 0, pos.z)
 
-		xu:DoTaskInTime(Zn, xu.Remove)
+for k, v in pairs(hua) do
+    xu:DoTaskInTime(math.random() * 0.2, function()
+        local fx = SpawnPrefab("lavaarena_bloom_kocho" .. math.random(6))
+        fx.Transform:SetPosition((pos + v):Get())
+        fx:chixu(Zn + math.random())
+    end)
+end
+
+inst.components.finiteuses:Use(10)
+
+local players = TheSim:FindEntities(pos.x, pos.y, pos.z, Rn, { "playerghost" })
+local playercount = #players
+
+for k, v in ipairs(players) do
+    v:PushEvent("respawnfromghost")
+    v.rezsource = hstrongtay
+end
+
+if playercount >= 1 then
+    caster.components.health:DoDelta(-50, true, "lydochet")
+    inst.components.finiteuses:Use(20)
+end
+
+local playersheal = TheSim:FindEntities(pos.x, pos.y, pos.z, Rn, { "player" })
+
+xu:DoPeriodicTask(0.5, function()
+    for k, v in pairs(playersheal) do
+        v.components.health:DoDelta(TUNING.KOCHO_TAMBOURIN_HEAL)
+    end
+end)
+
+xu:DoTaskInTime(Zn, xu.Remove)
 	end
 end
 

@@ -119,7 +119,7 @@ local function giam_no(inst)
 end
 
 local function nhan_full_buff(inst)
-	inst.sg:GoToState("nhan_full_buff")
+--	inst.sg:GoToState("nhan_full_buff") Chưa làm xong
 	inst.components.hunger:SetPercent(1)
 	inst.components.sanity:SetPercent(1)
 	inst.components.health:SetPercent(1)
