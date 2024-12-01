@@ -1,12 +1,21 @@
-local waterballoon_assets = {
+local kochosei_thiensu_assets = {
 	Asset("ANIM", "anim/swap_thiensu_xanh.zip"),
 	Asset("ANIM", "anim/thiensu_xanh.zip"),
 	Asset("ANIM", "anim/swap_thiensu_hong.zip"),
+	Asset("ANIM", "anim/thiensu_hong.zip"),
 	Asset("ANIM", "anim/swap_thiensu_cam.zip"),
+	Asset("ANIM", "anim/thiensu_cam.zip"),
 }
 
 local function onequip(inst, owner)
-	owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_xanh", "swap_thiensu_xanh")
+	if inst.prefab == "kochosei_thien_su_ban_phuc_xanh" then
+		owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_xanh", "swap_thiensu_xanh")
+	elseif inst.prefab == "kochosei_thien_su_ban_phuc_hong" then
+		owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_hong", "swap_thiensu_hong")
+	else
+		owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_cam", "swap_thiensu_cam")
+	end
+
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
 end
@@ -57,7 +66,7 @@ local function onuseaswatersource(inst)
 end
 
 local PI = math.pi
-local Rn = 6
+local Rn = 6 -- Phạm vi của khu vực hồi máu
 local Zn = 5
 
 -- Precompute the points to avoid repeated calculations
@@ -81,7 +90,9 @@ end
 -- Precompute points to avoid regenerating each time
 local PRE_COMPUTED_POINTS = GenerateCircularPoints()
 
-local function OnHitWater(inst, attacker, target, pos)
+local hstrongtay = STRINGS.NAMES.LYDOHOISINH_THIENSU
+
+local function thiensu_xanh(inst, pos)
 	-- Use inst's position if no pos provided
 	pos = pos or Vector3(inst.Transform:GetWorldPosition())
 
@@ -90,8 +101,14 @@ local function OnHitWater(inst, attacker, target, pos)
 
 	-- Spread water protection
 	inst.components.wateryprotection:SpreadProtection(inst)
-	inst:Remove()
-
+	local playersheal = FindPlayersInRange(pos.x, pos.y, pos.z, Rn)
+	for _, v in ipairs(playersheal) do
+		if v.components.health:IsDead() or v:HasTag("playerghost") then
+			v:PushEvent("respawnfromghost")
+			v.rezsource = hstrongtay
+		end
+		v:AddDebuff("kocho_buff_heal", "kocho_buff_heal")
+	end
 	-- Create effect entity
 	local xu = CreateEntity()
 	xu.entity:AddTransform()
@@ -108,6 +125,25 @@ local function OnHitWater(inst, attacker, target, pos)
 	end
 end
 
+local function thiensu_hong(inst)
+	SpawnPrefab("sporecloud").Transform:SetPosition(inst.Transform:GetWorldPosition())
+end
+local function thiensu_cam(inst)
+	SpawnPrefab("explode_small").Transform:SetPosition(inst.Transform:GetWorldPosition())
+	inst.components.explosive:OnBurnt()
+end
+
+local function OnHitWater(inst, attacker, target, pos)
+	if inst.prefab == "kochosei_thien_su_ban_phuc_xanh" then
+		thiensu_xanh(inst)
+	elseif inst.prefab == "kochosei_thien_su_ban_phuc_hong" then
+		thiensu_hong(inst)
+	else
+		thiensu_cam(inst)
+	end
+	inst:Remove()
+
+end
 local function common_fn(bank, build, anim, tag, isinventoryitem)
 	local inst = CreateEntity()
 
@@ -136,9 +172,12 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 
 	--projectile (from complexprojectile component) added to pristine state for optimization
 	inst:AddTag("projectile")
+	-- From watersource component
+	inst:AddTag("watersource")
 
 	inst.AnimState:SetBank(bank)
 	inst.AnimState:SetBuild(build)
+	--inst.AnimState:SetScale(0.8, 0.8)
 
 	if type(anim) ~= "table" then
 		inst.AnimState:PlayAnimation(anim, true)
@@ -156,6 +195,12 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 		end
 	end
 
+	inst:AddComponent("reticule")
+	inst.components.reticule.targetfn = ReticuleTargetFn
+	inst.components.reticule.ease = true
+
+	MakeInventoryFloatable(inst, "med", 0.05, 0.65)
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
@@ -167,27 +212,6 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 	inst:AddComponent("wateryprotection")
 
 	inst:AddComponent("complexprojectile")
-
-	return inst
-end
-
-local function waterballoon_fn()
-	--weapon (from weapon component) added to pristine state for optimization
-	local inst = common_fn("thiensu_xanh", "thiensu_xanh", "idle", "weapon", true)
-
-	inst:AddComponent("reticule")
-	inst.components.reticule.targetfn = ReticuleTargetFn
-	inst.components.reticule.ease = true
-
-	MakeInventoryFloatable(inst, "med", 0.05, 0.65)
-
-	-- From watersource component
-	inst:AddTag("watersource")
-
-	if not TheWorld.ismastersim then
-		return inst
-	end
-
 	inst.components.complexprojectile:SetHorizontalSpeed(15)
 	inst.components.complexprojectile:SetGravity(-35)
 	inst.components.complexprojectile:SetLaunchOffset(Vector3(0.25, 1, 0))
@@ -201,7 +225,7 @@ local function waterballoon_fn()
 
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(0)
-	inst.components.weapon:SetRange(8, 10)
+	inst.components.weapon:SetRange(12, 12)
 
 	inst:AddComponent("inspectable")
 
@@ -216,10 +240,32 @@ local function waterballoon_fn()
 
 	inst:AddComponent("watersource")
 	inst.components.watersource.onusefn = onuseaswatersource
-	inst.components.watersource.override_fill_uses = 1
+	inst.components.watersource.override_fill_uses = 10
 
 	MakeHauntableLaunch(inst)
-
 	return inst
 end
-return Prefab("kochosei_thien_su_ban_phuc_xanh", waterballoon_fn, waterballoon_assets)
+
+local function thiensu_xanh_fn()
+	local inst = common_fn("thiensu_xanh", "thiensu_xanh", "idle", "weapon", true)
+	return inst
+end
+local function thiensu_hong_fn()
+	local inst = common_fn("thiensu_hong", "thiensu_hong", "idle", "weapon", true)
+	return inst
+end
+local function thiensu_camfn()
+	local inst = common_fn("thiensu_cam", "thiensu_cam", "idle", "weapon", true)
+	inst:AddComponent("explosive")
+	return inst
+end
+
+STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Thiên Sứ Ban Phúc"
+STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Thiên Sứ Ban Lộc"
+STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Thiên Sứ Ban Lửa"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOTAMBOURIN = "I want this!! :D"
+STRINGS.RECIPE_DESC.KOCHOTAMBOURIN = "Healing teammate"
+
+return Prefab("kochosei_thien_su_ban_phuc_xanh", thiensu_xanh_fn, kochosei_thiensu_assets),
+	Prefab("kochosei_thien_su_ban_phuc_hong", thiensu_hong_fn, kochosei_thiensu_assets),
+	Prefab("kochosei_thien_su_ban_phuc_cam", thiensu_camfn, kochosei_thiensu_assets)

@@ -676,6 +676,7 @@ STRINGS.NAMES.KOCHOSEI_GIFT = "Hộp Quà Của Kochosei"
 --------------------------------------
 STRINGS.NAMES.LYDOCHET = "Cast Revive Kochotambourin"
 STRINGS.NAMES.LYDOHOISINH = "Kochotambourin"
+STRINGS.NAMES.LYDOHOISINH_THIENSU = "Thiên Sứ Ban Phúc"
 STRINGS.NAMES.CHETBOICLONE = "Kochosei Enemy"
 
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMY_D = "may cut khoi dia ban cua tao - Dinh bảo thế"

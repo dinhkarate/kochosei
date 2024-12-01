@@ -3,20 +3,25 @@ local assets = {
 	Asset("ANIM", "anim/swap_kochotambourin.zip"),
 	Asset("ANIM", "anim/lavaarena_heal_flowers_fx.zip"),
 }
-local function TurnOn(inst, owner)
-	inst.light = SpawnPrefab("kochotambourin_light")
-	inst.light.entity:AddFollower()
-	inst.light.entity:SetParent(owner.entity)
-end
 
-local function TurnOff(inst, owner)
-	if inst.light ~= nil then
-		inst.light:Remove()
-		inst.light = nil
+local function TurnOn(inst, owner)
+	for i = 0, 12 do
+		local fx = SpawnPrefab("kochotambourin_light")
+		fx.Light:SetRadius(1.1)
+		owner:AddChild(fx)
+		table.insert(inst.lights, fx)
+		fx.Transform:SetPosition(0, 0, 0)
 	end
 end
 
--- Bloomson credit to Abigail  https://steamcommunity.com/sharedfiles/filedetails/?id=2535962194&searchtext=fantasy
+local function TurnOff(inst, owner)
+	for k, v in ipairs(inst.lights) do
+		v:Remove()
+	end
+	inst.lights = {}
+end
+
+--Bloomson credit to Abigail  https://steamcommunity.com/sharedfiles/filedetails/?id=2535962194&searchtext=fantasy
 
 local function SanityCheck(inst, level)
 	level = level or inst.components.sanity.current
@@ -42,43 +47,10 @@ for i = 2, Rn, 2 do
 end
 
 local function HealFunc2(inst, target, pos)
-	local hstrongtay = STRINGS.NAMES.LYDOHOISINH
-	local caster = inst.components.inventoryitem.owner
-	if not caster then
-		caster = target or caster
-	end
-
-	if not SanityCheck(caster) then
-		caster.components.talker:Say("I need more sanity!")
-		return
-	else
-		local xu = CreateEntity()
-		xu.entity:AddTransform()
-		xu.Transform:SetPosition(pos.x, 0, pos.z)
-		for k, v in pairs(hua) do
-			xu:DoTaskInTime(math.random() * 0.2, function()
-				local fx = SpawnPrefab("lavaarena_bloom_kocho" .. math.random(6))
-				fx.Transform:SetPosition((pos + v):Get())
-				fx:chixu(Zn + math.random())
-			end)
-		end
-		local playersheal = FindPlayersInRange(pos.x, pos.y, pos.z, Rn)
-		for _, v in ipairs(playersheal) do
-			if v.components.health:IsDead() or v:HasTag("playerghost") then
-				v:PushEvent("respawnfromghost")
-				v.rezsource = hstrongtay
-				caster.components.health:DoDelta(-50, true, "lydochet")
-				inst.components.finiteuses:Use(10)
-			end
-			inst.components.finiteuses:Use(10)
-			v:AddDebuff("kocho_buff_heal", "kocho_buff_heal")
-		end
-
-		xu:DoTaskInTime(Zn, xu.Remove)
-	end
+	
 end
 
--- Bloomson credit to Abigail  https://steamcommunity.com/sharedfiles/filedetails/?id=2535962194&searchtext=fantasy
+--Bloomson credit to Abigail  https://steamcommunity.com/sharedfiles/filedetails/?id=2535962194&searchtext=fantasy
 
 local function OnEquip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_object", "swap_kochotambourin", "swap_kochotambourin")
@@ -95,9 +67,7 @@ end
 
 local function onhaunt(inst, haunter)
 	if haunter:HasTag("playerghost") then
-		haunter:PushEvent("respawnfromghost", {
-			source = inst,
-		})
+		haunter:PushEvent("respawnfromghost", { source = inst })
 		inst:Remove()
 	end
 end
@@ -109,10 +79,8 @@ local function light_fn()
 	inst.entity:AddNetwork()
 	inst.Light:Enable(true)
 	inst.Light:SetFalloff(0.5)
-	inst.Light:SetIntensity(0.7)
+	inst.Light:SetIntensity(0.6)
 	inst.Light:SetColour(200 / 255, 100 / 255, 200 / 255)
-	inst.Light:SetRadius(5)
-
 	inst.persists = false
 	inst:AddTag("FX")
 	if not TheWorld.ismastersim then
@@ -155,11 +123,7 @@ local function fn()
 
 	inst.entity:SetPristine()
 
-	inst.fxcolour = {
-		0 / 255,
-		255 / 255,
-		0 / 255,
-	}
+	inst.fxcolour = { 0 / 255, 255 / 255, 0 / 255 }
 	inst:AddComponent("spellcaster")
 	inst.components.spellcaster.canpoint = false
 	inst.components.spellcaster.canuseonpoint = true
