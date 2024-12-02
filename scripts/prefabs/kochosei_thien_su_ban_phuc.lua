@@ -124,9 +124,22 @@ local function thiensu_xanh(inst, pos)
 		end)
 	end
 end
+local TARGET_DIST = 16
+local RETARGET_MUST_TAGS = { "_combat" }
+local RETARGET_CANT_TAGS = { "prey", "smallcreature", "INLIMBO" }
+local function RetargetFn(inst)
+	local range = inst:GetPhysicsRadius(0) + 8
+	return FindEntity(inst, TARGET_DIST, function(guy)
+		return inst.components.combat:CanTarget(guy)
+			and (guy.components.combat:TargetIs(inst) or guy:IsNear(inst, range))
+	end, RETARGET_MUST_TAGS, RETARGET_CANT_TAGS)
+end
 
 local function thiensu_hong(inst)
 	SpawnPrefab("sporecloud").Transform:SetPosition(inst.Transform:GetWorldPosition())
+	local dungnham = SpawnPrefab("lavae")
+	dungnham.Transform:SetPosition(inst.Transform:GetWorldPosition())
+	dungnham.components.combat:SetRetargetFunction(1, RetargetFn)
 end
 local function thiensu_cam(inst)
 	SpawnPrefab("explode_small").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -142,7 +155,6 @@ local function OnHitWater(inst, attacker, target, pos)
 		thiensu_cam(inst)
 	end
 	inst:Remove()
-
 end
 local function common_fn(bank, build, anim, tag, isinventoryitem)
 	local inst = CreateEntity()
