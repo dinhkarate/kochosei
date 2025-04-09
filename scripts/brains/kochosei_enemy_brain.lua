@@ -16,7 +16,6 @@ local MAX_FOLLOW_DIST = 12
 local START_FACE_DIST = 6
 local KEEP_FACE_DIST = 8
 
-
 local KITING_DIST = 3
 local STOP_KITING_DIST = 5
 
@@ -121,7 +120,7 @@ function kochosei_enemy_brain:OnStart()
 								notags = { "INLIMBO" },
 							}, KITING_DIST, STOP_KITING_DIST)
 						),
-						ChaseAndAttack(self.inst),
+						ChaseAndAttack(self.inst, 10),
 					}, 0.25)
 				),
 			}, 0.25)

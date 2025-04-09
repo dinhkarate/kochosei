@@ -12,15 +12,6 @@ local prefabs_healblooms = {
 
 local NUM_BLOOM_VARIATIONS = 6
 
-local function OnSave(inst, data)
-	data.variation = inst.variation
-end
-
-local function OnLoad(inst, data)
-	if data ~= nil and data.variation ~= nil then
-		inst.variation = data.variation
-	end
-end
 
 local function MakeBloom(name, variation, prefabs)
 	local function fn()

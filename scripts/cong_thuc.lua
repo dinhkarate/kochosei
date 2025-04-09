@@ -2,16 +2,15 @@ local Ingredient = GLOBAL.Ingredient
 local TECH = GLOBAL.TECH
 
 local kochosei_tab = {
-    name = "kochosei_tab",
-    atlas = "images/inventoryimages/kochosei_inv.xml",
-    image = "kochosei_tab_icon.tex"
+	name = "kochosei_tab",
+	atlas = "images/inventoryimages/kochosei_inv.xml",
+	image = "kochosei_tab_icon.tex",
 }
 
 -- Adding custom filters
 AddRecipeFilter(kochosei_tab)
 
-STRINGS.UI.CRAFTING_FILTERS.KOCHOSEI_TAB ="Cái con cò gì thế này?"
-
+STRINGS.UI.CRAFTING_FILTERS.KOCHOSEI_TAB = "Cái con cò gì thế này?"
 
 AddCharacterRecipe(
 	"miohm",
@@ -82,10 +81,8 @@ AddCharacterRecipe(
 	{ "CHARACTER" }
 )
 
-
 ------------------------------------ Cái này sẽ chạy khi không có modded api-----------------------------
 -- Thế ko có modded api thì coi như tịt ngòi ? Verify đã thay đổi, không còn dùng 3 item craft riêng biệt nữa mà dùng sora api
-
 
 ------------------------------------------------------------------------------------------------------------
 AddCharacterRecipe("kochosei_house", { Ingredient("log", 40) }, TECH.SCIENCE_ONE, {
@@ -118,8 +115,16 @@ AddCharacterRecipe("kochosei_building_redlantern", { Ingredient("log", 10) }, TE
 	placer = "kochosei_building_redlantern_placer",
 	min_spacing = 1,
 }, { "CHARACTER" })
---Con cò mio
-------------------------------
+
+AddCharacterRecipe("kochosei_may_gacha", { Ingredient("log", 10) }, TECH.SCIENCE_ONE, {
+	atlas = "images/inventoryimages/kochosei_inv.xml",
+	image = "kochosei_may_gacha.tex",
+	builder_tag = "kochosei",
+	placer = "kochosei_may_gacha_placer",
+	min_spacing = 1,
+}, { "CHARACTER" })
+
+----------------------Con cò mio------------------------------
 
 AddCharacterRecipe(
 	"kocho_lotus",
@@ -130,13 +135,55 @@ AddCharacterRecipe(
 	{ "CHARACTER" }
 )
 
+AddCharacterRecipe(
+	"kochosei_thien_su_ban_phuc_xanh",
+	{ Ingredient("reviver", 3), Ingredient("spidergland", 20) },
+	TECH.ANCIENT_TWO,
+	{
+		numtogive = 10,
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_thien_su_ban_phuc_xanh.tex",
+		builder_tag = "kochosei",
+	},
+
+	{ "CHARACTER" }
+)
+
+AddCharacterRecipe(
+	"kochosei_thien_su_ban_phuc_hong",
+	{ Ingredient("spoiled_food", 10), Ingredient("lavae_egg", 1) },
+	TECH.ANCIENT_TWO,
+	{
+		numtogive = 50,
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_thien_su_ban_phuc_hong.tex",
+		builder_tag = "kochosei",
+	},
+
+	{ "CHARACTER" }
+)
+
+AddCharacterRecipe(
+	"kochosei_thien_su_ban_phuc_cam",
+	{ Ingredient("gunpowder", 10) },
+	TECH.ANCIENT_TWO,
+	{
+		numtogive = 10,
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_thien_su_ban_phuc_cam.tex",
+		builder_tag = "kochosei",
+	},
+
+	{ "CHARACTER" }
+)
+
 -------------------------------------- DST ITEM ----------------------------------------------------------------------
 
 AddRecipe2(
 	"kocho_butterfly",
 	{ Ingredient("petals", 2) },
 	TECH.NONE,
-	{ builder_tag = "kochosei", product = "butterfly", },
+	{ builder_tag = "kochosei", product = "butterfly" },
 	{ "KOCHOSEI_TAB" }
 )
 
@@ -362,19 +409,12 @@ AddRecipe2(
 	{ "KOCHOSEI_TAB" }
 )
 
-AddRecipe2(
-	"kochosei_harvest_book",
-	{Ingredient(CHARACTER_INGREDIENT.SANITY, 150)},
-	TECH.NONE,
-	{ 	
-		builder_tag = "kochosei", 
-		product = "kochosei_harvest_book", 
-		atlas = "images/inventoryimages/kochosei_inv.xml",
-		image = "kochosei_ancient_books.tex",
-		builder_tag = "kochosei", 
-	},
-	{ "KOCHOSEI_TAB" }
-)
+AddRecipe2("kochosei_harvest_book", { Ingredient(CHARACTER_INGREDIENT.SANITY, 150) }, TECH.NONE, {
+	builder_tag = "kochosei",
+	product = "kochosei_harvest_book",
+	atlas = "images/inventoryimages/kochosei_inv.xml",
+	image = "kochosei_ancient_books.tex",
+}, { "KOCHOSEI_TAB" })
 
 --kitcoon craft
 AddRecipe2(
@@ -385,27 +425,26 @@ AddRecipe2(
 	{ "KOCHOSEI_TAB" }
 )
 
--- Bán mình cho MCW, đừng cản t 
+-- Bán mình cho MCW, đừng cản t
 -- Gomen, Amanai. Ore wa ima, omae no tame ni okottenai. Daremo nikunjainai. Ima wa tada tada kono sekai ga kokochi ii.
 -- 🫸 🔴🔵🫷, Kyoshiki, "Murasaki" 🤌🫴🟣
-if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA ~= 1 then
+if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA == 1 then
 	AddRecipe2(
 		"lucky_hammer_mcw",
 		{ Ingredient("goldnugget", 50), Ingredient("log", 20), Ingredient("yellowgem", 5) },
 		TECH.NONE,
-		{ builder_tag = "mcw", product = "lucky_hammer"},
+		{ builder_tag = "mcw", product = "lucky_hammer" },
 		{ "KOCHOSEI_TAB" }
 	)
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-AddRecipe2(
-	"kochosei_duke_crown",
-	{ Ingredient("yellowgem", 1) },
-	TECH.NONE,
-	{ builder_tag = nil, product = "kochosei_duke_crown" , atlas = "images/inventoryimages/kochosei_duke_crown.xml", image = "kochosei_duke_crown.tex"},
-	{ "KOCHOSEI_TAB" }
-)
+AddRecipe2("kochosei_duke_crown", { Ingredient("yellowgem", 1) }, TECH.NONE, {
+	builder_tag = nil,
+	product = "kochosei_duke_crown",
+	atlas = "images/inventoryimages/kochosei_duke_crown.xml",
+	image = "kochosei_duke_crown.tex",
+}, { "KOCHOSEI_TAB" })
 
 AddCharacterRecipe(
 	"kochosei_lantern",
@@ -430,20 +469,13 @@ AddCharacterRecipe(
 	{ "CHARACTER" }
 )
 
-AddCharacterRecipe(
-	"cay_hoa_sang",
-	{ Ingredient("plantmeat", 2), Ingredient("petals", 2) },
-	TECH.SCIENCE_TWO,
-	{
-		atlas = "images/inventoryimages/kochosei_inv.xml",
-		image = "cay_hoa_sang.tex",
-		builder_tag = "kochosei",
-		placer = "cay_hoa_sang_placer",
-		min_spacing = 1,
-	},
-
-	{ "CHARACTER" }
-)
+AddCharacterRecipe("cay_hoa_sang", { Ingredient("plantmeat", 2), Ingredient("petals", 2) }, TECH.SCIENCE_TWO, {
+	atlas = "images/inventoryimages/kochosei_inv.xml",
+	image = "cay_hoa_sang.tex",
+	builder_tag = "kochosei",
+	placer = "cay_hoa_sang_placer",
+	min_spacing = 1,
+}, { "CHARACTER" })
 
 AddCharacterRecipe(
 	"kochosei_streetlight1_right",
@@ -474,8 +506,6 @@ AddCharacterRecipe(
 
 	{ "CHARACTER" }
 )
-
-
 
 AddCharacterRecipe(
 	"kocho_miku_cos",
@@ -555,7 +585,7 @@ AddCharacterRecipe(
 
 AddCharacterRecipe(
 	"kochosei_ancient_books",
-	{Ingredient("papyrus", 10), Ingredient("featherpencil", 2), Ingredient("thulecite", 4) },
+	{ Ingredient("papyrus", 10), Ingredient("featherpencil", 2), Ingredient("thulecite", 4) },
 
 	TECH.NONE,
 	{
@@ -566,8 +596,6 @@ AddCharacterRecipe(
 
 	{ "CHARACTER" }
 )
-
-
 
 --FOOD craft
 AddCharacterRecipe(

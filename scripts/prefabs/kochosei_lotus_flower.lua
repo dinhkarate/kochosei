@@ -13,7 +13,7 @@ local function fn()
 
 	MakeInventoryPhysics(inst)
 	MakeHauntableLaunch(inst)
-    MakeInventoryFloatable(inst, "small", 0.1, 1.12)
+	MakeInventoryFloatable(inst, "small", 0.1, 1.12)
 	inst.AnimState:SetBank("kocho_lotus")
 	inst.AnimState:SetBuild("kocho_lotus")
 	inst.AnimState:PlayAnimation("idle")
@@ -77,9 +77,9 @@ local function fncooked()
 
 	inst:AddTag("cattoy")
 	inst:AddTag("billfood")
-	
+
 	inst:AddTag("smalloceancreature") -- Này để bỏ vào thùng, chứ t cũng không muốn add đâu
-	
+
 	inst:AddTag("hoasen") -- Này để bỏ vào thùng, chứ t cũng không muốn add đâu
 
 	inst.entity:SetPristine()
@@ -124,5 +124,4 @@ local function fncooked()
 end
 STRINGS.NAMES.KOCHO_LOTUS_FLOWER_COOKED = "Bông Sen Nướng"
 STRINGS.NAMES.KOCHO_LOTUS_FLOWER = "Bông Sen"
-return Prefab("kocho_lotus_flower", fn, assets),
-	Prefab("kocho_lotus_flower_cooked", fncooked, assets)
+return Prefab("kocho_lotus_flower", fn, assets), Prefab("kocho_lotus_flower_cooked", fncooked, assets)

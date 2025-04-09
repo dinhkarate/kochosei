@@ -3,7 +3,6 @@ local assets = {
 	Asset("ANIM", "anim/bienbao_dat.zip"),
 }
 
-
 local prefabs = {
 	"propsignshatterfx",
 }

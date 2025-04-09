@@ -6,7 +6,6 @@ local assets = {
 	Asset("IMAGE", "images/inventoryimages/elysia_scmn_pell.tex"),
 }
 
-
 local IDLE_SOUND_VOLUME = 0.5
 
 --------------------------------------------------------------------------
@@ -165,7 +164,6 @@ local SPELLS = {
 			inst.components.spellbook:SetSpellName(STRINGS.SPELLS.KOCHOSEI_ELYSIA_1)
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(WorkerSpellFn)
-				
 			end
 		end,
 		execute = StartAOETargeting,
@@ -180,7 +178,6 @@ local SPELLS = {
 			inst.components.spellbook:SetSpellName(STRINGS.SPELLS.KOCHOSEI_ELYSIA_2)
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(ProtectorSpellFn)
-			
 			end
 		end,
 		execute = StartAOETargeting,
@@ -195,7 +192,6 @@ local SPELLS = {
 			inst.components.spellbook:SetSpellName(STRINGS.SPELLS.KOCHOSEI_ELYSIA_3)
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(TrapSpellFn)
-				
 			end
 		end,
 		execute = StartAOETargeting,
@@ -210,7 +206,6 @@ local SPELLS = {
 			inst.components.spellbook:SetSpellName(STRINGS.SPELLS.KOCHOSEI_ELYSIA_4)
 			if TheWorld.ismastersim then
 				inst.components.aoespell:SetSpellFn(PillarsSpellFn)
-			
 			end
 		end,
 		execute = StartAOETargeting,
@@ -218,7 +213,7 @@ local SPELLS = {
 		normal = "elysia_4.tex",
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,
-	}
+	},
 }
 
 local function OnOpenSpellBook(inst)

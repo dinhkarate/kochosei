@@ -23,7 +23,7 @@ local RETARGET_CANT_TAGS = {
 	"INLIMBO",
 	"player",
 	"structure",
-	"Kochoseipet"
+	"Kochoseipet",
 }
 local function RetargetFn(inst)
 	local range = inst:GetPhysicsRadius(0) + 8
@@ -40,7 +40,7 @@ end
 local function OnHitOther(inst, data)
 	local other = data.target
 	if other ~= nil then
-		if other:HasTag("Kochoseipet") then 
+		if other:HasTag("Kochoseipet") then
 			inst.components.combat:GiveUp()
 		end
 		if not (other.components.health ~= nil and other.components.health:IsDead()) then
@@ -60,10 +60,6 @@ local function OnHitOther(inst, data)
 		end
 	end
 end
-
-
-
-
 
 local function oncollapse(inst, other)
 	if other:IsValid() and other.components.workable ~= nil and other.components.workable:CanBeWorked() then

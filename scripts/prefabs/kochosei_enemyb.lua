@@ -118,7 +118,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 		inst:AddTag("balo_vali")
 
 		inst:SetPrefabNameOverride("kochosei_enemy")
-        inst.AnimState:Hide("ARM_carry")
+		inst.AnimState:Hide("ARM_carry")
 
 		inst.entity:SetPristine()
 
@@ -163,7 +163,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
 		inst:ListenForEvent("death", m_killPet)
 
-	--	inst:DoPeriodicTask(1, m_checkLeaderExisting)
+		--	inst:DoPeriodicTask(1, m_checkLeaderExisting)
 
 		inst.LinkToPlayer = linktoplayer
 		if master_postinit ~= nil then

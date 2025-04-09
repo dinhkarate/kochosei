@@ -165,38 +165,41 @@ local function common()
 	return inst
 end
 
-local function canhit(inst,owner,target)
-	return target and target:IsValid() 
-		and target.components.combat and target.components.health  
-		and target ~= owner and not target:HasTag("tadalin") 
+local function canhit(inst, owner, target)
+	return target
+		and target:IsValid()
+		and target.components.combat
+		and target.components.health
+		and target ~= owner
+		and not target:HasTag("tadalin")
 		and (target:HasTag("player") or target.components.combat.target == owner)
-end 
+end
 
 local function onthrown(inst)
 	local speed = inst.components.ly_projectile.speed
-	
-	if speed > 15 then 
+
+	if speed > 15 then
 		inst.AnimState:PlayAnimation("run_loop")
-		inst.AnimState:PushAnimation("run_loop",true)
+		inst.AnimState:PushAnimation("run_loop", true)
 	else
 		inst.AnimState:PlayAnimation("run_loop")
-		inst.AnimState:PushAnimation("run_loop",true)
-	end 
-	
-	inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/catcoon/attack")
-end 
+		inst.AnimState:PushAnimation("run_loop", true)
+	end
 
-local function onhit(inst,owner,target)
+	inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/catcoon/attack")
+end
+
+local function onhit(inst, owner, target)
 	inst.components.health:Kill()
-	
+
 	local fx = SpawnPrefab("impact")
 	fx.Transform:SetPosition(inst:GetPosition():Get())
 	--fx:FacePoint(owner.Transform:GetWorldPosition())
-end 
+end
 
 local function onmiss(inst)
 	inst.components.health:Kill()
-end 
+end
 
 local function fnd()
 	local inst = common()
@@ -215,7 +218,7 @@ local function fn_shadow()
 
 	inst:AddComponent("ly_projectile")
 	inst.components.ly_projectile.damage = 20
-	inst.components.ly_projectile:SetRange(math.ra+ndom()*10 + 20)
+	inst.components.ly_projectile:SetRange(math.ra + ndom() * 10 + 20)
 	inst.components.ly_projectile:SetSpeed(15)
 	inst.components.ly_projectile:SetCanHit(canhit)
 	inst.components.ly_projectile:SetOnThrownFn(onthrown)

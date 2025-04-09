@@ -1,23 +1,11 @@
-local Assets = {
-    Asset("ANIM", "anim/kocho_miku_cos.zip"),
-    Asset("ANIM", "anim/kocho_miku_back.zip"),
-    Asset("ANIM", "anim/kochosei_fuji_tree.zip"),
-    Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
-    Asset("ATLAS", "minimap/kochosei_apple_tree.xml")
-}
+local Assets = {Asset("ANIM", "anim/kocho_miku_cos.zip"), Asset("ANIM", "anim/kocho_miku_back.zip"),
+                Asset("ANIM", "anim/kochosei_fuji_tree.zip"), Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
+                Asset("ATLAS", "minimap/kochosei_apple_tree.xml")}
 
-local prefabs = {
-    "globalmapicon"
-}
+local prefabs = {"globalmapicon"}
 local RANGE_CUA_CAY_THAN_KY = 15
 
-local small_ram_products = {
-    "twigs",
-    "cutgrass",
-    "petals",
-    "oceantree_leaf_fx_fall",
-    "oceantree_leaf_fx_fall"
-}
+local small_ram_products = {"twigs", "cutgrass", "petals", "oceantree_leaf_fx_fall", "oceantree_leaf_fx_fall"}
 
 local DROP_ITEMS_DIST_MIN = 8
 local DROP_ITEMS_DIST_VARIANCE = 12
@@ -79,20 +67,8 @@ local function fnback()
     return inst
 end
 
-local KHONG_TAG = {
-    "player",
-    "FX",
-    "playerghost",
-    "NOCLICK",
-    "DECOR",
-    "INLIMBO",
-    "epic"
-}
-local CAN_TAG = {
-    "shadowcreature",
-    "monster",
-    "frog"
-}
+local KHONG_TAG = {"player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic"}
+local CAN_TAG = {"shadowcreature", "monster", "frog"}
 local function checkfl(inst)
     local follower = inst.components.follower
     if follower ~= nil then
@@ -145,20 +121,9 @@ local function OnInit(inst)
     inst.icon:TrackEntity(inst)
 end
 
-local FIREFLY_MUST = {
-    "firefly"
-}
-local FIREFLY_CANT = {
-    "FX",
-    "NOBLOCK",
-    "NOCLICK",
-    "DECOR",
-    "flying",
-    "boat",
-    "walkingplank",
-    "_inventoryitem",
-    "structure"
-}
+local FIREFLY_MUST = {"firefly"}
+local FIREFLY_CANT = {"FX", "NOBLOCK", "NOCLICK", "DECOR", "flying", "boat", "walkingplank", "_inventoryitem",
+                      "structure"}
 local function OnPhaseChanged(inst, phase)
     if phase == "day" then
         local x, y, z = inst.Transform:GetWorldPosition()
@@ -322,7 +287,6 @@ local WATER_RADIUS = 3.8
 local NO_DEPLOY_RADIUS = WATER_RADIUS + 0.1
 
 local function GetFish(inst)
-
     return "kochosei_gift"
 end
 
@@ -375,7 +339,7 @@ local function oc_cmndao()
     inst.components.fishable.maxfish = 999
     inst.components.fishable.fishleft = 999
     inst.components.fishable:SetRespawnTime(TUNING.OASISLAKE_FISH_RESPAWN_TIME)
---inst.components.fishable:SetGetFishFn(GetFish)
+    -- inst.components.fishable:SetGetFishFn(GetFish)
     inst.components.fishable:AddFish("kochosei_gift")
 
     inst:AddComponent("hauntable")
@@ -398,8 +362,10 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHO_MIKU_BACK = "o((>ω< ))o"
 STRINGS.RECIPE_DESC.KOCHO_MIKU_BACK = "Are you too lazy and don't want to work?"
 
 STRINGS.NAMES.KOCHOSEI_FUJI_TREE = "Cây Đ Gì Thần Kỳ v~"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE = "Cây đã thi công xong, xin lỗi đã làm phiền, mong quý vị thông cảm ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE =
+    "Cây đã thi công xong, xin lỗi đã làm phiền, mong quý vị thông cảm ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
 STRINGS.NAMES.KOCHOSEI_OC_CMNDAO = "Cái Gì Đó...Giống Như Ốc Đảo"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Có ếch ở dưới hồ không nhỉ?"
 
-return Prefab("kocho_miku_cos", fn, Assets), Prefab("kocho_miku_back", fnback, Assets), Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs)
+return Prefab("kocho_miku_cos", fn, Assets), Prefab("kocho_miku_back", fnback, Assets),
+    Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs)

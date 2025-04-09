@@ -1,5 +1,4 @@
-local assets =
-{
+local assets = {
 	Asset("ANIM", "anim/book_maxwell.zip"),
 	Asset("INV_IMAGE", "waxwelljournal_open"),
 
@@ -7,8 +6,7 @@ local assets =
 	Asset("IMAGE", "images/spell_icons.tex"),
 }
 
-local prefabs =
-{
+local prefabs = {
 	"shadow_pillar_spell",
 	"reticuleaoe",
 	"reticuleaoeping",
@@ -26,7 +24,7 @@ local prefabs =
 	"reticuleaoesummontarget_1d2",
 }
 
-local IDLE_SOUND_VOLUME = .5
+local IDLE_SOUND_VOLUME = 0.5
 
 --------------------------------------------------------------------------
 
@@ -79,10 +77,10 @@ local function FindSpawnPoints(doer, pos, num, radius)
 		attempts = 3
 		theta = doer:GetAngleToPoint(pos) * DEGREES
 		if num == 2 then
-			theta = theta + PI * (math.random() < .5 and .5 or -.5)
+			theta = theta + PI * (math.random() < 0.5 and 0.5 or -0.5)
 		else
 			theta = theta + PI
-			if math.random() < .5 then
+			if math.random() < 0.5 then
 				delta = -delta
 			end
 		end
@@ -116,11 +114,7 @@ local function TrySpawnMinions(prefab, doer, pos)
 					if #spawnpts > 1 and i <= 3 then
 						--restart "spawn" state with specified time multiplier
 						pet.sg.statemem.spawn = true
-						pet.sg:GoToState("spawn",
-							(i == 1 and 1) or
-							(i == 2 and .8) or
-							.87 + math.random() * .06
-						)
+						pet.sg:GoToState("spawn", (i == 1 and 1) or (i == 2 and 0.8) or 0.87 + math.random() * 0.06)
 					end
 				end
 			end
@@ -131,7 +125,10 @@ local function TrySpawnMinions(prefab, doer, pos)
 end
 
 local function _CheckMaxSanity(sanity, minionprefab)
-	return sanity ~= nil and sanity:GetPenaltyPercent() + (TUNING.SHADOWWAXWELL_SANITY_PENALTY[string.upper(minionprefab)] or 0) * NUM_MINIONS_PER_SPAWN <= TUNING.MAXIMUM_SANITY_PENALTY
+	return sanity ~= nil
+		and sanity:GetPenaltyPercent()
+				+ (TUNING.SHADOWWAXWELL_SANITY_PENALTY[string.upper(minionprefab)] or 0) * NUM_MINIONS_PER_SPAWN
+			<= TUNING.MAXIMUM_SANITY_PENALTY
 end
 
 local function CheckMaxSanity(doer, minionprefab)
@@ -221,7 +218,7 @@ local function ReticuleTargetAllowWaterFn()
 	local pos = Vector3()
 	--Cast range is 8, leave room for error
 	--4 is the aoe range
-	for r = 7, 0, -.25 do
+	for r = 7, 0, -0.25 do
 		pos.x, pos.y, pos.z = player.entity:LocalToWorldSpace(r, 0, 0)
 		if ground:IsPassableAtPoint(pos.x, 0, pos.z, true) and not ground:IsGroundTargetBlocked(pos) then
 			return pos
@@ -237,12 +234,11 @@ local function StartAOETargeting(inst)
 	end
 end
 
-local ICON_SCALE = .6
+local ICON_SCALE = 0.6
 local ICON_RADIUS = 50
 local SPELLBOOK_RADIUS = 100
 local SPELLBOOK_FOCUS_RADIUS = SPELLBOOK_RADIUS + 2
-local SPELLS =
-{
+local SPELLS = {
 	{
 		label = STRINGS.SPELLS.SHADOW_WORKER,
 		onselect = function(inst)
@@ -360,10 +356,7 @@ local function OnCloseSpellBook(inst)
 end
 
 local function GetStatus(inst, viewer)
-	return inst.components.fueled:IsEmpty()
-		and inst.components.spellbook:CanBeUsedBy(viewer)
-		and "NEEDSFUEL"
-		or nil
+	return inst.components.fueled:IsEmpty() and inst.components.spellbook:CanBeUsedBy(viewer) and "NEEDSFUEL" or nil
 end
 
 --------------------------------------------------------------------------
@@ -510,7 +503,7 @@ local function UpdateFloatFar(inst)
 	if IsPlayerInRange(inst, 8) then
 		--switch to faster task period
 		inst._floattask:Cancel()
-		inst._floattask = inst:DoPeriodicTask(.1, UpdateFloatNear, .5, UpdateFloatFar)
+		inst._floattask = inst:DoPeriodicTask(0.1, UpdateFloatNear, 0.5, UpdateFloatFar)
 	end
 end
 
@@ -523,8 +516,11 @@ local function OnEntitySleep(inst)
 end
 
 local function OnEntityWake(inst)
-	if inst._floattask == nil and not (inst.components.inventoryitem:IsHeld() or inst.components.fueled:IsEmpty() or inst:IsAsleep()) then
-		inst._floattask = inst:DoPeriodicTask(.1, UpdateFloatNear, 0, UpdateFloatFar)
+	if
+		inst._floattask == nil
+		and not (inst.components.inventoryitem:IsHeld() or inst.components.fueled:IsEmpty() or inst:IsAsleep())
+	then
+		inst._floattask = inst:DoPeriodicTask(0.1, UpdateFloatNear, 0, UpdateFloatFar)
 	end
 end
 
@@ -644,8 +640,8 @@ local function fn()
 	inst:AddComponent("aoetargeting")
 	inst.components.aoetargeting:SetAllowWater(true)
 	inst.components.aoetargeting.reticule.targetfn = ReticuleTargetAllowWaterFn
-	inst.components.aoetargeting.reticule.validcolour = { 1, .75, 0, 1 }
-	inst.components.aoetargeting.reticule.invalidcolour = { .5, 0, 0, 1 }
+	inst.components.aoetargeting.reticule.validcolour = { 1, 0.75, 0, 1 }
+	inst.components.aoetargeting.reticule.invalidcolour = { 0.5, 0, 0, 1 }
 	inst.components.aoetargeting.reticule.ease = true
 	inst.components.aoetargeting.reticule.mouseenabled = true
 	inst.components.aoetargeting.reticule.twinstickmode = 1
@@ -702,7 +698,6 @@ local function fn()
 
 	return inst
 end
-
 
 STRINGS.NAMES.KOCHOBOOK = "Kochobook"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOBOOK = "Woaaah, i want it!! XD"

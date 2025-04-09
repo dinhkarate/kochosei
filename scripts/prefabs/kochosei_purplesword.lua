@@ -31,12 +31,12 @@ local function fn()
 
 	inst:AddTag("kochoseiweapon")
 	inst:AddTag("purplesword")
-	
+
 	if not TheWorld.ismastersim then
 		return inst
 	end
 	inst:AddTag("kochoseiweapon")
-	
+
 	inst.entity:SetPristine()
 
 	inst:AddComponent("tool")
@@ -48,7 +48,7 @@ local function fn()
 		inst.components.finiteuses:SetUses(TUNING.KOCHO_SWORD_DURABILITY)
 		inst.components.finiteuses:SetOnFinished(inst.Remove)
 	end
-	
+
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(TUNING.KOCHO_SWORD_DAMAGE)
 
@@ -64,8 +64,7 @@ local function fn()
 	inst:AddComponent("inventoryitem")
 
 	inst:AddComponent("cuocdoiquabatcongdi")
-    inst.components.cuocdoiquabatcongdi:Vukhi()
-
+	inst.components.cuocdoiquabatcongdi:Vukhi()
 
 	MakeHauntableLaunch(inst)
 

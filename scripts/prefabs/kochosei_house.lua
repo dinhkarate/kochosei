@@ -220,13 +220,12 @@ local function onload(inst, data)
 	end
 end
 local function onburnt(inst)
-    inst.SoundEmitter:KillSound("kochosei_streetlight1_musicbox/play")
+	inst.SoundEmitter:KillSound("kochosei_streetlight1_musicbox/play")
 	inst.AnimState:PlayAnimation("burnt")
-    inst:AddTag("burnt")
+	inst:AddTag("burnt")
 	inst:RemoveComponent("machine")
 	inst:RemoveComponent("sleepingbag")
 	inst:RemoveComponent("sanityaura")
-
 end
 local function common_fn(bank, build, icon, tag, onbuiltfn)
 	local inst = CreateEntity()
@@ -292,7 +291,7 @@ local function common_fn(bank, build, icon, tag, onbuiltfn)
 
 	MakeSnowCovered(inst)
 	inst:ListenForEvent("onbuilt", onbuiltfn)
-    inst:ListenForEvent("onburnt", onburnt)
+	inst:ListenForEvent("onburnt", onburnt)
 	MakeLargeBurnable(inst, nil, nil, true)
 	inst.components.burnable:SetOnIgniteFn(onignite)
 	inst.components.burnable:SetOnBurntFn(onburnt)

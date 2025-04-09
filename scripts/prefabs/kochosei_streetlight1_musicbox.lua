@@ -5,7 +5,9 @@ local assets = {
 
 local SCALE = 1.25
 
-local PLANT_TAGS = { "tendable_farmplant" }
+local PLANT_TAGS = {
+	"tendable_farmplant",
+}
 local function TendToPlantsAOE(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
 	for _, v in pairs(TheSim:FindEntities(x, y, z, 30, nil, nil, PLANT_TAGS)) do
@@ -54,14 +56,14 @@ local function CanInteract(inst)
 end
 
 local function OnFuelEmpty(inst)
-	--TurnOff(inst)
+	-- TurnOff(inst)
 	inst.components.machine:TurnOff()
 end
 
 local function OnAddFuel(inst)
 	inst.SoundEmitter:PlaySound("dontstarve_DLC001/common/machine_fuel")
 	if inst.on == false and TheWorld.state.phase == "night" then
-		--TurnOn(inst)
+		-- TurnOn(inst)
 		inst.components.machine:TurnOn()
 	end
 	local fuel_value = TUNING.CAMPFIRE_FUEL_MAX * 7
@@ -98,8 +100,8 @@ end
 
 local function fn()
 	local inst = CreateEntity()
-	--local shadow = inst.entity:AddDynamicShadow()
-	--local sound = inst.entity:AddSoundEmitter()
+	-- local shadow = inst.entity:AddDynamicShadow()
+	-- local sound = inst.entity:AddSoundEmitter()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddSoundEmitter()
@@ -118,7 +120,7 @@ local function fn()
 
 	-- MakeObstaclePhysics(inst, 1)
 
-	--inst.MiniMapEntity:SetIcon("portal_dst.png")
+	-- inst.MiniMapEntity:SetIcon("portal_dst.png")
 	MakeObstaclePhysics(inst, 0.05)
 
 	inst.AnimState:SetBank("kochosei_streetlight1_musicbox")
