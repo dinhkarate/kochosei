@@ -476,6 +476,7 @@ end
 local function lai_nhai(inst)
     local durability = tonumber(TUNING.KOCHO_HAT1_DURABILITY)
     local laydoben
+
     if durability then
         laydoben = durability + (TUNING.KOCHOSEI_CHECKWIFI * 2)
     else
@@ -487,6 +488,7 @@ local function lai_nhai(inst)
             "Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " ..
                 TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " ..
                 TUNING.KOCHO_HAT1_ABSORPTION * 100 .. "% damage" .. " có " .. laydoben .. " điểm độ bền", 10)
+
     end
     if inst.lai_nhai_ve_stats ~= nil then
         inst.lai_nhai_ve_stats:Cancel()
