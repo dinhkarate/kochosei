@@ -33,13 +33,15 @@ TUNING.KOCHOSEI_CHECKWIFI = 0 -- Wifi mà, không phải waifu, nó là 0 vì n�
 local modsToLoad = KnownModIndex:GetModsToLoad()
 for _, v in ipairs(modsToLoad) do
 	local Mod = KnownModIndex:GetModInfo(v)
-	if Mod.name:find("%[API%] Modded Skins") then
-		TUNING.KOCHOSEI_CHECKMOD = 1
-		print("Mod found:", v, Mod.name)
-	end
-	if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
-		TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
-		print("Mod found:", v, Mod.name)
+	if Mod and Mod.name then -- Bằng 1 cách thần kỳ nào đó mà nó gây ra lỗi 
+		if Mod.name:find("%[API%] Modded Skins") then
+			TUNING.KOCHOSEI_CHECKMOD = 1
+			print("Mod found:", v, Mod.name)
+		end
+		if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
+			TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
+			print("Mod found:", v, Mod.name)
+		end
 	end
 end
 
@@ -768,39 +770,3 @@ if KeybindLib ~= nil then
 		end,
 	})
 end
-
-local function GetUpvalue(func, name)
-	local debug = GLOBAL.debug
-	local i = 1
-	while true do
-		local n, v = debug.getupvalue(func, i)
-		if not n then
-			return nil, nil
-		end
-		if n == name then
-			return v, i
-		end
-		i = i + 1
-	end
-end
-
-local function SetUpvalue(func, ind, value)
-	local debug = GLOBAL.debug
-	debug.setupvalue(func, ind, value)
-end
-
-AddPrefabPostInit("cay_hoa_sang", function(inst)
-	if not TheWorld.ismastersim then
-		return inst
-	end
-	inst:RemoveTag("hostile")
-	local fn = inst.components.combat.targetfn
-	local TARGET_MUST_TAGS, TARGET_MUST_TAGS_index = GetUpvalue(fn, "TARGET_MUST_TAGS")
-	if TARGET_MUST_TAGS and TARGET_MUST_TAGS_index then
-		TARGET_MUST_TAGS = {
-			"_combat",
-			"monster",
-		}
-		SetUpvalue(fn, TARGET_MUST_TAGS_index, TARGET_MUST_TAGS)
-	end
-end)

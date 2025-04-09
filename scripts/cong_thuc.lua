@@ -135,6 +135,48 @@ AddCharacterRecipe(
 	{ "CHARACTER" }
 )
 
+AddCharacterRecipe(
+	"kochosei_thien_su_ban_phuc_xanh",
+	{ Ingredient("reviver", 3), Ingredient("spidergland", 20) },
+	TECH.ANCIENT_TWO,
+	{
+		numtogive = 10,
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_thien_su_ban_phuc_xanh.tex",
+		builder_tag = "kochosei",
+	},
+
+	{ "CHARACTER" }
+)
+
+AddCharacterRecipe(
+	"kochosei_thien_su_ban_phuc_hong",
+	{ Ingredient("spoiled_food", 10), Ingredient("lavae_egg", 1) },
+	TECH.ANCIENT_TWO,
+	{
+		numtogive = 50,
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_thien_su_ban_phuc_hong.tex",
+		builder_tag = "kochosei",
+	},
+
+	{ "CHARACTER" }
+)
+
+AddCharacterRecipe(
+	"kochosei_thien_su_ban_phuc_cam",
+	{ Ingredient("gunpowder", 10) },
+	TECH.ANCIENT_TWO,
+	{
+		numtogive = 10,
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_thien_su_ban_phuc_cam.tex",
+		builder_tag = "kochosei",
+	},
+
+	{ "CHARACTER" }
+)
+
 -------------------------------------- DST ITEM ----------------------------------------------------------------------
 
 AddRecipe2(
@@ -397,18 +439,12 @@ if GLOBAL.TUNING.KOCHOSEI_CHECKMOD_KYOUKA == 1 then
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-AddRecipe2(
-	"kochosei_duke_crown",
-	{ Ingredient("yellowgem", 1) },
-	TECH.NONE,
-	{
-		builder_tag = nil,
-		product = "kochosei_duke_crown",
-		atlas = "images/inventoryimages/kochosei_duke_crown.xml",
-		image = "kochosei_duke_crown.tex",
-	},
-	{ "KOCHOSEI_TAB" }
-)
+AddRecipe2("kochosei_duke_crown", { Ingredient("yellowgem", 1) }, TECH.NONE, {
+	builder_tag = nil,
+	product = "kochosei_duke_crown",
+	atlas = "images/inventoryimages/kochosei_duke_crown.xml",
+	image = "kochosei_duke_crown.tex",
+}, { "KOCHOSEI_TAB" })
 
 AddCharacterRecipe(
 	"kochosei_lantern",

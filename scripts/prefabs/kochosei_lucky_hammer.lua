@@ -254,6 +254,7 @@ end
 
 local function can_cast_fn(doer, target, pos)
 	local prefab_to_skin = target.prefab
+
 	if PREFAB_SKINS[prefab_to_skin] ~= nil then
 		for _, item_type in pairs(PREFAB_SKINS[prefab_to_skin]) do
 			if TheInventory:CheckClientOwnership(doer.userid, item_type) then
@@ -271,6 +272,10 @@ local function can_cast_fn(doer, target, pos)
 		end
 	end
 
+	if prefab_to_skin == "kochosei_enemy" or prefab_to_skin == "kochosei_enemyb" then
+		return true
+	end
+
 	return false
 end
 
@@ -280,7 +285,6 @@ local function spellCB(tool, target, pos, caster)
 		return
 	end
 	hieuung(target)
-
 	if target and (target == caster or target.prefab == "kochosei_enemy" or target.prefab == "kochosei_enemyb") then
 		doiskin(target)
 		-- print(target.prefab.AnimState:GetBuild()) --hàm getbuild có tồn tại, có thể sử dụng để lưu current_build.

@@ -156,7 +156,7 @@ local function OnHitWater(inst, attacker, target, pos)
 	end
 	inst:Remove()
 end
-local function common_fn(bank, build, anim, tag, isinventoryitem)
+local function common_fn(bank, build)
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
@@ -164,23 +164,8 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 	inst.entity:AddSoundEmitter()
 	inst.entity:AddNetwork()
 
-	if isinventoryitem then
-		MakeInventoryPhysics(inst)
-	else
-		inst.entity:AddPhysics()
-		inst.Physics:SetMass(1)
-		inst.Physics:SetFriction(0)
-		inst.Physics:SetDamping(0)
-		inst.Physics:SetCollisionGroup(COLLISION.CHARACTERS)
-		inst.Physics:ClearCollisionMask()
-		inst.Physics:CollidesWith(COLLISION.GROUND)
-		inst.Physics:SetCapsule(0.2, 0.2)
-		inst.Physics:SetDontRemoveOnSleep(true) -- so the object can land and put out the fire, also an optimization due to how this moves through the world
-	end
-
-	if tag ~= nil then
-		inst:AddTag(tag)
-	end
+	MakeInventoryPhysics(inst)
+	inst:AddTag("weapon")
 
 	--projectile (from complexprojectile component) added to pristine state for optimization
 	inst:AddTag("projectile")
@@ -191,21 +176,7 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 	inst.AnimState:SetBuild(build)
 	--inst.AnimState:SetScale(0.8, 0.8)
 
-	if type(anim) ~= "table" then
-		inst.AnimState:PlayAnimation(anim, true)
-	elseif #anim == 1 then
-		inst.AnimState:PlayAnimation(anim[1], true)
-	else
-		for i, a in ipairs(anim) do
-			if i == 1 then
-				inst.AnimState:PlayAnimation(a, false)
-			elseif i ~= #anim then
-				inst.AnimState:PushAnimation(a, false)
-			else
-				inst.AnimState:PushAnimation(a, true)
-			end
-		end
-	end
+	inst.AnimState:PlayAnimation("idle", true)
 
 	inst:AddComponent("reticule")
 	inst.components.reticule.targetfn = ReticuleTargetFn
@@ -237,7 +208,7 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(0)
-	inst.components.weapon:SetRange(12, 12)
+	inst.components.weapon:SetRange(8, 14)
 
 	inst:AddComponent("inspectable")
 
@@ -259,15 +230,15 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
 end
 
 local function thiensu_xanh_fn()
-	local inst = common_fn("thiensu_xanh", "thiensu_xanh", "idle", "weapon", true)
+	local inst = common_fn("thiensu_xanh", "thiensu_xanh")
 	return inst
 end
 local function thiensu_hong_fn()
-	local inst = common_fn("thiensu_hong", "thiensu_hong", "idle", "weapon", true)
+	local inst = common_fn("thiensu_hong", "thiensu_hong")
 	return inst
 end
 local function thiensu_camfn()
-	local inst = common_fn("thiensu_cam", "thiensu_cam", "idle", "weapon", true)
+	local inst = common_fn("thiensu_cam", "thiensu_cam")
 	inst:AddComponent("explosive")
 	return inst
 end
@@ -275,8 +246,13 @@ end
 STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Thiên Sứ Ban Phúc"
 STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Thiên Sứ Ban Lộc"
 STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Thiên Sứ Ban Lửa"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOTAMBOURIN = "I want this!! :D"
-STRINGS.RECIPE_DESC.KOCHOTAMBOURIN = "Healing teammate"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Hàng nhái kém chất lượng"
+STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Hàng nhái kém chất lượng"
+STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Hàng nhái kém chất lượng"
+STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
+
 
 return Prefab("kochosei_thien_su_ban_phuc_xanh", thiensu_xanh_fn, kochosei_thiensu_assets),
 	Prefab("kochosei_thien_su_ban_phuc_hong", thiensu_hong_fn, kochosei_thiensu_assets),

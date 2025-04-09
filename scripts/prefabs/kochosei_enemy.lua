@@ -54,6 +54,19 @@ local function HandleEquippable(inst, item)
 	end
 end
 -- Full of chatgpt skill :)
+local builds = {
+	"kochosei_snowmiku_skin1",
+	"kochosei",
+	"kochosei_skin_shinku_full",
+	"kochosei_skin_shinku_notfull",
+}
+local current_build = 1
+
+local function doiskin(inst)
+	current_build = (current_build % 4) + 1
+	inst.AnimState:SetBuild(builds[current_build])
+end
+
 local function HandleKochoMikuCos(inst)
 	doiskin(inst)
 end

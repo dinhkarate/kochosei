@@ -120,7 +120,7 @@ function kochosei_enemy_brain:OnStart()
 								notags = { "INLIMBO" },
 							}, KITING_DIST, STOP_KITING_DIST)
 						),
-						ChaseAndAttack(self.inst),
+						ChaseAndAttack(self.inst, 10),
 					}, 0.25)
 				),
 			}, 0.25)

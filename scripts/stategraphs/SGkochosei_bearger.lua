@@ -419,10 +419,10 @@ local actionhandlers = {
 	ActionHandler(ACTIONS.PICK, "action"),
 	ActionHandler(ACTIONS.ATTACK, "attack_action"),
 	ActionHandler(ACTIONS.CHOP, function(inst)
-		return inst:GetBufferedAction().target:HasTag("DIG_workable") and "butt" or "attack_action"
+		return inst:GetBufferedAction().target:HasTag("CHOP_workable") and "attack_action"
 	end),
 	ActionHandler(ACTIONS.DIG, function(inst)
-		return inst:GetBufferedAction().target:HasTag("CHOP_workable") and "attack_action" or "butt"
+		return inst:GetBufferedAction().target:HasTag("DIG_workable") and  "butt"
 	end),
 	ActionHandler(ACTIONS.MINE, "attack_action"),
 }
