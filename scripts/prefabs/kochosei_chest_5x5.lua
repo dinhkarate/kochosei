@@ -57,9 +57,9 @@ end
 
 local function onbuilt(inst)
 	if inst.prefab == "kochosei_fridge_5x5" then
-    inst.SoundEmitter:PlaySound("dontstarve/common/icebox_craft")
+		inst.SoundEmitter:PlaySound("dontstarve/common/icebox_craft")
 	else
-	inst.SoundEmitter:PlaySound("dontstarve/common/chest_craft")
+		inst.SoundEmitter:PlaySound("dontstarve/common/chest_craft")
 	end
 end
 local function commonchest(name, anim)
@@ -113,7 +113,7 @@ local function commonchest(name, anim)
 	if TUNING.SMART_SIGN_DRAW_ENABLE then
 		SMART_SIGN_DRAW(inst)
 	end
-	    inst:ListenForEvent("onbuilt", onbuilt)
+	inst:ListenForEvent("onbuilt", onbuilt)
 
 	return inst
 end
@@ -128,14 +128,18 @@ local function fnfr()
 
 	inst:AddTag("fridge")
 	inst.SoundEmitter:PlaySound("dontstarve/common/ice_box_LP", "idlesound")
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	inst:AddComponent("preserver")
+	inst.components.preserver:SetPerishRateMultiplier(TUNING.MIKU_USAGI_BACKPACK)
 	return inst
 end
 STRINGS.NAMES.KOCHOSEI_CHEST_5X5 = "Rương Đ Gì Sida V~"
 STRINGS.NAMES.KOCHOSEI_FRIDGE_5X5 = "Tủ Lạnh 1* Tiết Kiệm Năng Lượng"
 
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FRIDGE_5X5 = "Tủ Lạnh 1* Tiết Kiệm Năng Lượng"
-STRINGS.RECIPE_DESC.KOCHOSEI_FRIDGE_5X5 =
-	"Tủ lạnh promã"
+STRINGS.RECIPE_DESC.KOCHOSEI_FRIDGE_5X5 = "Tủ lạnh promã"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_CHEST_5X5 = "Rương Đ Gì Sida V~"
 STRINGS.RECIPE_DESC.KOCHOSEI_CHEST_5X5 =
 	"Chứa được nhiều đồ hơn rương 3x3, còn lại không có gì đặc biệt"
