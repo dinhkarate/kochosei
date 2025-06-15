@@ -453,7 +453,7 @@ configuration_options = {
 	Title("Miku Usagi backpack"),
 	{
 		name = "miku_usagi_backpack",
-		label = "18) Miku Usagi backpack refresh",
+		label = "18) Miku Usagi backpack & Icebox Miku refresh",
 		hover = "Bigger is fresher",
 		options = {
 			{ description = "Nothing", data = 1 },
