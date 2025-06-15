@@ -22,46 +22,9 @@ local function TurnOff(inst, owner)
 	end
 end
 
-local function HealFunc3(inst, target, pos)
-	inst.SoundEmitter:PlaySound("dontstarve/common/together/moonbase/beam_stop_fail")
-
-	local caster = inst.components.inventoryitem.owner
-	local check = caster.components.sanity.current
-	if not caster then
-		caster = target or caster
-	end
-	if not caster:HasTag("kochosei") then
-		caster.components.talker:Say("Maybe Kochosei knows how to use this")
-		return
-	end
-
-	if caster.components.petleash ~= nil and caster.components.petleash:IsFull() then
-		caster.components.talker:Say("Toooooooooo many clone")
-		return
-	end
-
-	if check <= TUNING.KOCHOSEI_SLAVE_COST then
-		caster.components.talker:Say("Not enough sanity")
-	else
-		-- local puff = SpawnPrefab("collapse_small")
-		local xu = CreateEntity()
-		xu.entity:AddTransform()
-		xu.Transform:SetPosition(pos.x, 0, pos.z)
-		caster.components.sanity:DoDelta(-TUNING.KOCHOSEI_SLAVE_COST)
-		local pos = xu:GetPosition()
-		--   caster.components.petleash:SpawnPetAt(pos.x, 0, pos.z, "dinhcutenhathematroi")
-		--SpawnPrefab("dinhcutenhathematroi").Transform:SetPosition(pos.x,0,pos.z)
-		local stalker = caster.components.petleash:SpawnPetAt(pos.x, 0, pos.z, "dinhcutenhathematroi")
-		local rot = inst.Transform:GetRotation()
-		if stalker ~= nil then
-			stalker.Transform:SetPosition(pos.x, 0, pos.z)
-			stalker._playerlink = caster
-			stalker.Transform:SetRotation(rot)
-			stalker.sg:GoToState("resurrect")
-		end
-	end
+local function Spawnclone(inst, target, pos, prefabclone)
+	inst.components.spawnclonekochosei:Spawclone(inst, target, pos, "dinhcutenhathematroi")
 end
-
 local function OnEquip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_object", "swap_demonlord", "swap_demonlord")
 	owner.AnimState:Show("ARM_carry")
@@ -126,7 +89,7 @@ local function fn()
 	inst:AddComponent("spellcaster")
 	inst.components.spellcaster.canpoint = false
 	inst.components.spellcaster.canuseonpoint = true
-	inst.components.spellcaster:SetSpellFn(HealFunc3)
+	inst.components.spellcaster:SetSpellFn(Spawnclone)
 
 	if type(TUNING.DEMONLORD_DURABILITY) == "number" then
 		inst:AddComponent("finiteuses")
@@ -150,6 +113,8 @@ local function fn()
 	inst.components.equippable.dapperness = 0.033
 
 	inst:AddComponent("inventoryitem")
+
+	inst:AddComponent("spawnclonekochosei")
 
 	return inst
 end

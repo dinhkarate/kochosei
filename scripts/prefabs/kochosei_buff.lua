@@ -33,18 +33,6 @@ local function AttachCommon(inst, target)
 	OnDeathEvent(inst, target)
 end
 
-local function OnAttached(inst, target)
-	AttachCommon(inst, target)
-	inst.bufftask = inst:DoTaskInTime(60, StopBuff)
-
-	if target and target:IsValid() and target.components.combat then
-		local mult = TUNING.WOLFGANG_COACH_BUFF
-		target.components.combat.externaldamagemultipliers:SetModifier(inst, mult, "buff_atk_kochosei")
-		local fx = SpawnPrefab("wolfgang_coach_buff_fx")
-		inst.bufffx = fx
-		fx.entity:SetParent(target.entity)
-	end
-end
 
 local PLANTS_RANGE = 1
 local MAX_PLANTS = 18
@@ -94,7 +82,21 @@ local function PlantTick(inst)
 	end
 end
 
-local function OnDetached(inst, target)
+local function Ely_2_TangST(inst, target)
+	AttachCommon(inst, target)
+	inst.bufftask = inst:DoTaskInTime(60, StopBuff)
+
+	if target and target:IsValid() and target.components.combat then
+		local mult = TUNING.WOLFGANG_COACH_BUFF
+		target.components.combat.externaldamagemultipliers:SetModifier(inst, mult, "buff_atk_kochosei")
+		local fx = SpawnPrefab("wolfgang_coach_buff_fx")
+		inst.bufffx = fx
+		fx.entity:SetParent(target.entity)
+	end
+end
+
+
+local function D_Ely_2_TangST(inst, target)
 	if target and target:IsValid() and target.components.combat then
 		target.components.combat.externaldamagemultipliers:RemoveModifier(inst, "buff_atk_kochosei")
 	end
@@ -105,7 +107,7 @@ local function OnDetached(inst, target)
 	inst:Remove()
 end
 
-local function OnAttached_3(inst, target)
+local function Ely_3_HoiNao_TangSpeed(inst, target)
 	AttachCommon(inst, target)
 	inst.bufftask_3 = inst:DoTaskInTime(60, StopBuff)
 
@@ -116,7 +118,7 @@ local function OnAttached_3(inst, target)
 	end
 end
 
-local function OnDetached_3(inst, target)
+local function D_Ely_3_HoiNao_TangSpeed(inst, target)
 	if target and target:IsValid() and target.components.combat then
 		if target.no_hoa_di ~= nil then
 			target.no_hoa_di:Cancel()
@@ -127,13 +129,13 @@ local function OnDetached_3(inst, target)
 	inst:Remove()
 end
 
-local function OnAttached_4(inst, target)
+local function Ely_4_Buff_CucPham(inst, target)
 	AttachCommon(inst, target)
 	target.tangst = true
 	inst.bufftask_4 = inst:DoTaskInTime(60, StopBuff)
 end
 
-local function OnDetached_4(inst, target)
+local function D_Ely_4_Buff_CucPham(inst, target)
 	if target and target:IsValid() then
 		local hat = target.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
 		if hat and hat.prefab == "kochosei_hatfl" then
@@ -143,7 +145,7 @@ local function OnDetached_4(inst, target)
 	inst:Remove()
 end
 
-local function OnAttached_5(inst, target)
+local function Buff_Food_Tom(inst, target)
 	AttachCommon(inst, target)
 	inst.bufftask_5 = inst:DoTaskInTime(120, StopBuff)
 	target.AnimState:SetScale(2.5, 2.5)
@@ -156,7 +158,7 @@ local function OnAttached_5(inst, target)
 	end
 end
 
-local function OnDetached_5(inst, target)
+local function D_Buff_Food_Tom(inst, target)
 	if target and target:IsValid() then
 		target.AnimState:SetScale(1, 1)
 		target.components.health:SetMaxHealth(TUNING.KOCHOSEI_HEALTH)
@@ -170,7 +172,7 @@ local function OnDetached_5(inst, target)
 	inst:Remove()
 end
 
-local function OnAttached_heal(inst, target)
+local function Buff_heal(inst, target)
 	AttachCommon(inst, target)
 	inst.bufftask_heal = inst:DoTaskInTime(5, StopBuff)
 	if target.components.health then
@@ -178,7 +180,7 @@ local function OnAttached_heal(inst, target)
 	end
 end
 
-local function OnDetached_heal(inst, target)
+local function D_Buff_heal(inst, target)
 	if target and target:IsValid() then
 		target.components.health:RemoveRegenSource(target, "heal_from_kochosei")
 	end
@@ -210,17 +212,17 @@ local function create_elysia_buff(onAttached, onDetached)
 end
 
 return Prefab("elysia_2_buff", function()
-	return create_elysia_buff(OnAttached, OnDetached)
+	return create_elysia_buff(Ely_2_TangST, D_Ely_2_TangST)
 end, nil, buff_prefabs),
 	Prefab("elysia_3_buff", function()
-		return create_elysia_buff(OnAttached_3, OnDetached_3)
-	end, nil, buff_prefabs),
+		return create_elysia_buff(Ely_3_HoiNao_TangSpeed, D_Ely_3_HoiNao_TangSpeed)
+	end, nil),
 	Prefab("elysia_4_buff", function()
-		return create_elysia_buff(OnAttached_4, OnDetached_4)
-	end, nil, buff_prefabs),
+		return create_elysia_buff(Ely_4_Buff_CucPham, D_Ely_4_Buff_CucPham)
+	end, nil),
 	Prefab("elysia_5_buff", function()
-		return create_elysia_buff(OnAttached_5, OnDetached_5)
-	end, nil, buff_prefabs),
+		return create_elysia_buff(Buff_Food_Tom, D_Buff_Food_Tom)
+	end, nil),
 	Prefab("kocho_buff_heal", function()
-		return create_elysia_buff(OnAttached_heal, OnDetached_heal)
-	end, nil, buff_prefabs)
+		return create_elysia_buff(Buff_heal, D_Buff_heal)
+	end, nil)

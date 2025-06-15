@@ -1,3 +1,50 @@
+--[[
+Cảnh báo: Bãi rác phía trước đã lâu không có người dọn dẹp.
+Warning: The dump ahead has not been cleaned for a long time.                                                                                       
+                                           ÅÅggggÅ                                                  
+                                      ÅgÞ‡3333333333g                                               
+                                   ÅÅÅÅÅÅÅgggÅ633333GÅ                                              
+                                              ggÅ633ÅÅÅÅÅÅÅÅÅÅÅÅ                                    
+                                       ÅgÅÅü3ü333Çg3333333333333333gÅÅÅ                             
+                                   ÅÅg3333333333333333333333333333333333Åg                          
+                                ÅgÇ333333333333333333333333666663333333‡‡‡‡ÅÅ                       
+                              ÅÅ33333333333333333333333333333333ü63333‡‡‡‡‡‡lGÅ                     
+                            ÅÅ33333333333333333333333333333333333336‡33‡‡‡‡‡‡‡‡gÅ                   
+                           Å33333‡33333333333333333333333333333‡33‡l33‡33‡‡‡‡‡333gÅ                 
+                          Å3333‡‡‡l3333333333333333333333336‡‡‡‡‡‡33‡33‡33l‡3333333ÅÅ               
+                        ÅÅ333‡‡‡‡‡‡‡3333333‡333333333333‡‡‡l63‡‡l‡‡33‡‡3333333333333‡Å              
+                       ÅG3333l‡‡l‡‡l‡‡33‡‡‡‡‡33333‡33‡3‡‡‡‡‡‡63‡ll‡‡‡3Ç333333333333333gÅ            
+                      Åg3333333‡‡‡33333333l‡33333ül33‡3‡‡‡‡‡‡lÇ‡‡l‡33333Ç333333333333336Å           
+                     ÅÅ33333333‡‡333333333‡33333GG3333333333336ü333333333Çü33333333333333Å          
+                     g3333333336333333333333333GÇG3333333333333G3333333333üÇ3333333633333‡g         
+                   gÅ‡3333333633333333333333333GÅg3333333333333gÇ33333333333Þ3333333Çü3333GÅ        
+                  g633333333ü33333333333333333GÅ‹üÇ33üü33333333Å‹Å3ü336333333Þ3333333Å63333Å        
+              ÅÅÅü33‡3333333633333333333333333g`‹`Å333333333333Å`‹ÅG36ü3333333G333333ggÅ333Å        
+              ÅG‡‡3‡33363333333333333333333333Å‹‹‹`Åü3333333333g``ÞÞgÅÇ666ü36333G6333Å  Å33g        
+                ÅÅÅgÅ633333Þ33333333333333333ü6‹‹ÞÞÞg666ü333333ÞüÞ‹üüüüü3ÅÅgÞÇÞGG6333Å   Å‡Å        
+               *    Å333333Þ333333333333333336GÞÞÞüüüÅ33ü33333ü3G6üü6‹6ü‹‹ÞÅÅ33333333ÅÅ  güÅ        
+               **   g333333Þ333333333333G3336ÇGl‹üü6üüÅ‡3333333ÅG‡‹¯``üü‹`‹Ågü333333ÇÇÅ  ÅÅ         
+              ***** Å333333Þ333333333333636666güü6```6*`g33G3333Å3‹*‡‡‡‹3¯¯g6Å333333Å3Þg            
+             *****  g333333Þ3333333333333G6ü66Å`üül`¯ü‹‹‹‹¯ÅÅÅgg6`‹‹‹‹‹¯¯¯‹ÅÇÅ33333Å333ÇÅ           
+                 *  g‡ü3336üÇ333333333333üÅ336Ål‡‡‡‡¯‹‹‹‹‹‹‹ÇÅÞ3‹Å*‹‹‹‹‹‹‹ÅÇÇÅ333ÅÇÅgÅÅÅg           
+               **   ÅÞ333363G333333333333ü6Å36üÅ¯¯¯‹‹‹‹‹‹‹‹Åü‹‹‹‹‹Å‹‹‹‹‹*G3*ÞgÅÅ6g3g                
+                **   Å3333633G333633333333Å3‡ÅGüÅÅGGÅÅ3`‹`*Þüü6`‹‹‡Åg6ÇgGÇ*Ç*6Ç6Å‡3Å                
+               *  *   Å‡33Ç333GG3üü3333333g6ÇÅü`‹‹```l``üÅÅ*¯*‡*‹‹Å6ÇÇÇÇÇÅ‡Ç*ÇÇÇÅ3gÅ                
+                 **    ÅÞ3ÞÅ33333ÞgG3333333ÅÅ```Þ``‹```‹ÇÅ¯*3``‹33ÅÅÅÅÅÅ ÅÅÅüG6Å33g                 
+                         ÅÅÅÅ333333üüÞgÅÞÇÞÅÅg¯¯Å`````‹`*ü*‹‡‹```g            Åü3Å                  
+                             ÅÅG333336Å  *** Å6`Å‹``¯¯¯¯Þ````````Å           gGgÅ                   
+                                  ÅÅgÅÅÅ       ÅÅÞ`````¯Þ```‹``‹GÅ                                  
+                                           ÅÅ3¯¯‹ÇG``¯¯¯ÇÇ6‡66‡‹Åg                                  
+                                       ÅgÅÅÅgÅGÇ3Þ6Þ`‹¯Gg‹‹‹‹`g6Çg                                  
+                                     Å‹`g‹`¯¯¯¯6gÅ‹‹‡ü`g¯¯¯¯Å¯ÇüÅ*g                                 
+                      ÅÅ ÅÅÅÅÅggÅÅÅlÇ``Å````‹‹```Å*ÅÅgÅÅ¯¯ügÅ`6ÅÞÅÅÅ                                
+                   ÅGll‡ÇgÅ````‹`‹Å6¯‹``lÅÅg‡‹```‹````````¯Å*‹ÅüÅG`Å                                
+                 ÅGlllÅ*GÞÞÅÅ6‹```3ÅÅÅ¯``````````````‹*ü¯````‹6ü66‡`gü‡ll                           
+                ÅGll*glGÞÞÇÞgÅ```Åll*lÅÞÞÞÅÅ*ÇÞ‡¯¯¯¯¯‹Å`‹`````l*gG‹``ÅÇ‡Å‡llllll                    
+                ÅllÅ‡gÞÞÞÞÞÞÞÞÇÅglllGlÞÞÞÞÞÞÞÅ``‹¯¯``Å‡`````‹g‹Å‡g`````6‹Ållllllll                  
+                 ÅÅÅÅÅÅgÅÅggÅÅÅÅÅllÞ*ÅÞÞÞÞÞÞÞÅ‹````¯`¯¯¯GÅgÅÅÇlÅgü33ü6ÞÅglllllll                    
+                                ÅÅÞgÅÅÅÅÅÅÅÅgÅgÅÅÅÅÅÅ6llllllllllllllllllll                         
+]]
 GLOBAL.setmetatable(env, {
 	__index = function(t, k)
 		return GLOBAL.rawget(GLOBAL, k)
@@ -6,12 +53,8 @@ GLOBAL.setmetatable(env, {
 GLOBAL.Kochoseiapi = env
 local cooking = require("cooking")
 local ingredients = cooking.ingredients
-local cookpot = {
-	"cookpot",
-}
-local spicer = {
-	"portablespicer",
-}
+local cookpot = { "cookpot" }
+local spicer = { "portablespicer" }
 local listmodneedcheck = {
 	"2578692071",
 	"1638724235",
@@ -28,12 +71,11 @@ TUNING.KOCHOSEI_CHECKWIFI_CONFIG = GetModConfigData("kochosei_va_waifu") -- Này
 TUNING.KOCHOSEI_CHECKMOD = nil
 TUNING.KOCHOSEI_CHECKMOD_KYOUKA = nil
 TUNING.KOCHOSEI_CHECKWIFI = 0 -- Wifi mà, không phải waifu, nó là 0 vì nó nên như thế )
--- ?
 
 local modsToLoad = KnownModIndex:GetModsToLoad()
 for _, v in ipairs(modsToLoad) do
 	local Mod = KnownModIndex:GetModInfo(v)
-	if Mod and Mod.name then -- Bằng 1 cách thần kỳ nào đó mà nó gây ra lỗi 
+	if Mod and Mod.name then -- Bằng 1 cách thần kỳ nào đó mà nó gây ra lỗi
 		if Mod.name:find("%[API%] Modded Skins") then
 			TUNING.KOCHOSEI_CHECKMOD = 1
 			print("Mod found:", v, Mod.name)
@@ -55,6 +97,15 @@ if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
 		end
 	end
 end
+
+function themgiap(inst)
+	if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
+		GLOBAL.dobenvohan = false
+	end
+
+	print(TUNING.KOCHO_HAT1_DURABILITY)
+end
+
 ---- API skin cũ không dùng nữa nhưng vẫn để đó, biết đâu sau lại cần
 --[[ 
 local PREFAB_SKINS = PREFAB_SKINS
@@ -114,6 +165,9 @@ local listiteminv = {
 	"kochosei_thien_su_ban_phuc_xanh",
 	"kochosei_thien_su_ban_phuc_hong",
 	"kochosei_thien_su_ban_phuc_cam",
+	"doro_xamchiemtraidat",
+	"kochosei_chest_5x5",
+	"kochosei_fridge_5x5"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
@@ -173,11 +227,8 @@ PrefabFiles = {
 	"kochosei_f_cmn_x",
 	"kochosei_cay_hoa_sang",
 	"kochosei_gift",
-	"kochosei_may_gacha",
-	--
-	"kochosei_harvest_book",
-
-	--
+	"kochosei_may_gacha", --
+	"kochosei_harvest_book", --
 	"kochosei_altar",
 	"kochosei_duke",
 	"kochosei_tornado",
@@ -187,48 +238,21 @@ PrefabFiles = {
 	"kochosei_card",
 	"kochosei_boss",
 	"kochosei_thien_su_ban_phuc",
+		"kochosei_chest_5x5"
+
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
 
-local keytonamngua = GetModConfigData("keykocho")
-
 local function namngua(inst)
 	if inst.prefab ~= "kochosei" then
+		if inst.components.talker then
+			inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
+		end
 		return
 	end
-
-	if inst.sg:HasStateTag("knockout") then
-		inst.sg.statemem.cometo = nil
-	elseif
-		not (
-			inst.sg:HasStateTag("sleeping")
-			or inst.sg:HasStateTag("bedroll")
-			or inst.sg:HasStateTag("tent")
-			or inst.sg:HasStateTag("waking")
-			or inst.sg:HasStateTag("drowning")
-		)
-	then
-		if inst.sg:HasStateTag("jumping") then
-			inst.sg.statemem.queued_post_land_state = "knockout"
-		else
-			inst:PushEvent("yawn", {
-				grogginess = 4,
-				knockoutduration = 99999999999,
-			})
-		end
-	end
-
-	if inst.sg:HasStateTag("sleeping") then
-		if inst.sleepingbag ~= nil then
-			inst.sleepingbag.components.sleepingbag:DoWakeUp()
-			inst.sleepingbag = nil
-		else
-			inst.sg.statemem.iswaking = true
-			inst.sg:GoToState("wakeup")
-		end
-	end
+	inst:PushEvent("namngua")
 end
 
 AddModRPCHandler("namnguaRPC", "namngua", namngua)
@@ -236,7 +260,15 @@ AddModRPCHandler("namnguaRPC", "namngua", namngua)
 local function SendnamnguaRPC()
 	SendModRPCToServer(GetModRPC("namnguaRPC", "namngua"), inst)
 end
-TheInput:AddKeyDownHandler(keytonamngua, SendnamnguaRPC) -- Không rõ là cái gì nữa
+modimport("scripts/keybind")
+
+local skillnamngua = nil
+function KeyBind(_, key)
+	if skillnamngua then
+		skillnamngua:Remove()
+	end -- disable old binding
+	skillnamngua = key and GLOBAL.TheInput:AddKeyDownHandler(key, SendnamnguaRPC) or nil -- new binding or delete
+end
 
 modimport("scripts/value_dhkg_a") -- TUNING- Value đ hiểu kiểu gì ạ
 
@@ -266,38 +298,12 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
 end
 --]]
 modimport("scripts/cong_thuc")
+modimport("scripts/accmntion")
 
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
 	modimport("scripts/api_skins_soraaaaa") -- Không thấy modded nên dùng api đáng lẽ api cũ cơ
 end
 
----- Tùy chỉnh item cho phép give clone ----
---[[
-AddPrefabPostInitAny(function(inst)
-	if not TheWorld.ismastersim then
-		return inst
-	end
-	if
-		(inst.components.equippable and inst.components.inventoryitem)
-		or inst.components.armor
-		or inst.components.weapon
-		or inst.prefab == "dragon_scales"
-		or inst.prefab == "bearger_fur"
-		or inst:HasTag("light") and not inst.components.tradeable
-	then
-		if not inst.components.tradeable then
-			inst:AddComponent("tradable")
-		end
-	end
-end)
-
-
-AddComponentPostInit("skinner", function(self)
-	function self:Kochosei_GetSkinName()
-		return self.skin_name
-	end
-end)
---]]
 local function OnHitOther_BuffDamage(inst, data)
 	local target = data.target
 	if target ~= nil and target:IsValid() and target.components.combat and target.components.health and inst.tangst then
@@ -355,23 +361,6 @@ local function spawntom(inst, data)
 	end
 end
 
---          inst.components.container:GiveItem(SpawnPrefab("wobster_sheller_land"))
---	        for _, item in ipairs(inst.components.container:ReferenceAllItems()) do
-
---[[
-	local old_close = inst.components.container.onclosefn
-	inst.components.container.onclosefn = function(inst, data)
-		if old_close then
-			old_close(inst, data)
-		end
-		local findtem = inst.components.container:HasItemWithTag("hoasen", 1)
-		if findtem and not inst.components.timer:TimerExists("Spawn_Tom")
-		then
-			inst.components.timer:StartTimer("Spawn_Tom", 60)
-		end
-	end
-	--]]
-
 AddPrefabPostInit("fish_box", function(inst)
 	if not TheWorld.ismastersim then
 		return inst
@@ -387,6 +376,29 @@ AddPrefabPostInit("alterguardian_phase3", function(inst)
 	end
 	inst.components.lootdropper:AddChanceLoot("kochosei_hatfl", 1)
 end)
+AddPrefabPostInit("deerclops", function(inst)
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
+end)
+
+AddBrainPostInit("butterflybrain", function(brain) --print(brain) if u need to debug
+    local runaway
+    for i,node in ipairs(brain.bt.root.children) do
+        if node.name == "RunAway" then
+            runaway = node
+            break
+        end
+    end
+    if not runaway then
+        print("[butterflybrain] Couldn't find the 'RunAway' behaviour in this brain!")
+        return
+    else
+        runaway.hunternotags = runaway.hunternotags or {}
+        table.insert(runaway.hunternotags, "kochosei")
+    end
+end)
 
 --[[
 AddGamePostInit(function()
@@ -398,21 +410,68 @@ end)
 -- Boss Drop nơ siêu cấp--
 --------Wick đó----------
 
-AddPrefabPostInit("kochosei_hatfl", function(inst)
-	if not TheWorld.ismastersim then
-		return inst
+AddComponentPostInit("farmtiller", function(self)
+	local _oldtill = self.Till
+	self.Till = function(self, pt, doer, ...)
+		if self.inst.prefab == "doro_xamchiemtraidat" then
+			if TheWorld.Map:CanTillSoilAtPoint(pt.x, 0, pt.z, false) then
+				TheWorld.Map:CollapseSoilAtPoint(pt.x, 0, pt.z)
+				SpawnPrefab("farm_soil").Transform:SetPosition(pt:Get())
+				local spacing = 1.3 -- Khoảng cách giữa các farm_soil
+
+				for i = -1, 1 do
+					for j = -1, 1 do
+						local x = pt.x + i * spacing
+						local z = pt.z + j * spacing
+
+						-- Dọn sạch đất cũ nếu có
+						TheWorld.Map:CollapseSoilAtPoint(x, 0, z)
+						-- Tạo farm_soil mới tại vị trí
+						SpawnPrefab("farm_soil").Transform:SetPosition(x, 0, z)
+					end
+				end
+				if doer ~= nil then
+					doer:PushEvent("tilling")
+				end
+				return true
+			end
+			return false
+		else
+			return _oldtill(self, pt, doer, ...)
+		end
 	end
-	inst:AddComponent("planardefense")
-	inst.components.planardefense:SetBaseDefense(TUNING.ARMOR_LUNARPLANT_PLANAR_DEF)
 end)
 
-local allclone = {
-	"kochosei_enemy",
-	"kochodragonfly",
-	"dinhcutenhathematroi",
-	"kochodeerclops",
-	"kocho_bearger",
-}
+AddComponentPostInit("fishingrod", function(self)
+	local function DoNibble(inst)
+		local fishingrod = inst.components.fishingrod
+		if fishingrod and fishingrod.fisherman then
+			inst:PushEvent("fishingnibble")
+			fishingrod.fisherman:PushEvent("fishingnibble")
+			fishingrod.fishtask = nil
+		end
+	end
+	local oldWaitForFish = self.WaitForFish
+	function self:WaitForFish(...)
+		if self.target and self.target.components.fishable then
+			if self.fisherman and self.fisherman:HasTag("kochosei") then
+				local fishleft = self.target.components.fishable:GetFishPercent()
+				local nibbletime = nil
+				if fishleft > 0 then
+					nibbletime = (self.minwaittime + (1.0 - fishleft) * (self.maxwaittime - self.minwaittime)) * 0.5 -- -50% thời gian câu cá
+				end
+				self:CancelFishTask()
+				if nibbletime then
+					self.fishtask = self.inst:DoTaskInTime(nibbletime, DoNibble)
+				end
+			else
+				oldWaitForFish(self, ...)
+			end
+		end
+	end
+end)
+
+local allclone = { "kochosei_enemy", "kochodragonfly", "dinhcutenhathematroi", "kochodeerclops", "kocho_bearger" }
 
 for _, v in ipairs(allclone) do
 	AddPrefabPostInit(v, function(inst)
@@ -432,14 +491,9 @@ AddStategraphPostInit("wilson", function(sg)
 	local _old_funnyidle_onenter = sg.states.funnyidle.onenter
 	sg.states.funnyidle.onenter = function(inst)
 		_old_funnyidle_onenter(inst)
-		if inst:HasTag("kochosei") and inst.kochostop >= 120 and inst.sg.currentstate.name ~= "emote" then
+		if inst:HasTag("kochosei") and (inst.kochostop or 0) >= 120 and inst.sg.currentstate.name ~= "emote" then -- Thêm or 0 vì ai đó có thể dùng tag kochosei
 			inst.sg:GoToState("emote", {
-				anim = {
-					{
-						"emote_pre_sit2",
-						"emote_loop_sit2",
-					},
-				},
+				anim = { { "emote_pre_sit2", "emote_loop_sit2" } },
 				loop = true,
 				fx = false,
 				mounted = true,
@@ -449,93 +503,6 @@ AddStategraphPostInit("wilson", function(sg)
 		end
 	end
 end)
-
-local NHAC_THA_T_RA = GLOBAL.Action({
-	distance = 1,
-})
-NHAC_THA_T_RA.str = "Thả t ra để t cắn nó"
-NHAC_THA_T_RA.id = "NHAC CON CO"
-
-NHAC_THA_T_RA.fn = function(act)
-	if act.target.components.follower and act.target.components.follower.leader == act.doer then
-		act.doer.components.leader:RemoveFollower(act.target)
-		-- act.target.components.follower:StopFollowing()
-		act.target:AddTag("clone_tha_xich")
-		if act.target.components.kochoseienemy then
-			act.target.components.kochoseienemy:Setbrain() -- Sorry nhé, trình không đủ tích hợp 2 brain làm một, t làm kiểu 2 brain luôn
-			act.target.components.kochoseienemy:Setlocation()
-		end
-	end
-	return true
-end
-local NHAC_BAT_LAI = GLOBAL.Action({
-	distance = 1,
-})
-NHAC_BAT_LAI.str = "Bắt Lại"
-NHAC_BAT_LAI.id = "NHAC CON CO Mio"
-
-NHAC_BAT_LAI.fn = function(act)
-	if
-		act.target.components.follower
-		and act.target.components.follower.leader == nil
-		and act.doer:HasTag("kochosei")
-	then
-		act.target.components.follower:SetLeader(act.doer)
-		act.target.components.kochoseienemy:Setbackbrain()
-		act.target:RemoveTag("clone_tha_xich")
-	end
-	return true
-end
-
-AddAction(NHAC_THA_T_RA)
-AddAction(NHAC_BAT_LAI)
-
-AddComponentAction("SCENE", "kochoseienemy", function(inst, doer, actions, right)
-	if right then
-		if inst:HasTag("clone_tha_xich") then
-			table.insert(actions, NHAC_BAT_LAI)
-		end
-	end
-end)
-AddComponentAction("SCENE", "follower", function(inst, doer, actions, right)
-	if right then
-		if inst:HasTag("kochosei_enemy") and not inst:HasTag("clone_tha_xich") and not inst:HasTag("balo_vali") then
-			table.insert(actions, NHAC_THA_T_RA)
-		end
-	end
-end)
-
-local KOCHOSEI_MAY_GACHA = GLOBAL.Action({
-	distance = 1,
-})
-KOCHOSEI_MAY_GACHA.str = "Làm tí bạn, sợ gì"
-KOCHOSEI_MAY_GACHA.id = "IT GACHA TIME"
-
-KOCHOSEI_MAY_GACHA.fn = function(act)
-	if act.target ~= nil and act.doer ~= nil then
-		if act.target.components.timer and not act.target.components.timer:TimerExists("maygacha") then
-			act.target.components.kochoseimaygacha:Gachatime(act.doer) -- Truyền act.doer
-			return true
-		end
-	end
-end
-
-AddAction(KOCHOSEI_MAY_GACHA)
-
-AddComponentAction("SCENE", "kochoseimaygacha", function(inst, doer, actions, right)
-	if right then
-		table.insert(actions, KOCHOSEI_MAY_GACHA)
-	end
-end)
-
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
-AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
-
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_THA_T_RA, "dolongaction"))
-AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_THA_T_RA, "dolongaction"))
-
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA, "dolongaction"))
-AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA, "dolongaction"))
 
 -------- T đã muốn xử lý cái này từ lâu nhưng đủ trình----------
 -- https://forums.kleientertainment.com/forums/topic/69732-dont-use-addingredientvalues-in-mods/#comment-806510
@@ -611,37 +578,23 @@ function InsertIngredientValues(names, tags, cancook, candry, keepoldvalues) -- 
 end
 
 -- Thêm giá trị cho các món---
-InsertIngredientValues({
-	"foliage",
-	"kocho_lotus_flower_cooked",
-	"kocho_lotus_flower",
-}, {
+InsertIngredientValues({ "foliage", "kocho_lotus_flower_cooked", "kocho_lotus_flower" }, {
 	veggie = 0.5,
 	rau = 1,
 })
 
-InsertIngredientValues({
-	"kochosei_apple_cooked",
-	"kochosei_apple",
-}, {
+InsertIngredientValues({ "kochosei_apple_cooked", "kochosei_apple" }, {
 	fruit = 1,
 	apple = 1,
 })
 
-InsertIngredientValues({
-	"wobster_sheller_land",
-}, {
+InsertIngredientValues({ "wobster_sheller_land" }, {
 	tom = 1,
 })
-InsertIngredientValues({
-	"onion",
-}, {
+InsertIngredientValues({ "onion" }, {
 	onion = 1,
 })
-InsertIngredientValues({
-	"goatmilk",
-	"butter",
-}, {
+InsertIngredientValues({ "goatmilk", "butter" }, {
 	bo = 1,
 })
 -----------------------------------------------------------------------------------------------
@@ -756,17 +709,3 @@ AddStategraphActionHandler("wilson_client",GLOBAL.ActionHandler(GLOBAL.ACTIONS.T
             return inst:HasTag("kochosei") and "tillconcomio" or  "till_start"   end))
 				
 --]]
-local modname = GLOBAL.KnownModIndex:GetModActualName(modinfo.name)
-if KeybindLib ~= nil then
-	KeybindLib:RegisterKeybind({
-		-- See Notes and Caveats for the requirements of these fields
-		id = "kochosei_namngua",
-		name = "Kocho nằm ngửa",
-		description = "Set phím để Kocho nằm ngửa",
-		default_mapping = "LCtrl + H",
-		modid = modname,
-		callback = function()
-			SendnamnguaRPC()
-		end,
-	})
-end

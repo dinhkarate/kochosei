@@ -68,7 +68,6 @@ local function onbecameghost(inst)
 end
 
 local function onload(inst)
-    inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
     inst:ListenForEvent("ms_becameghost", onbecameghost)
     if inst:HasTag("playerghost") then
         onbecameghost(inst)
@@ -326,19 +325,16 @@ local MAPREVEAL_SCALE = 128
 local MAPREVEAL_STEPS = 4
 
 local function GetKochoMap(inst)
-    local x, y, z = inst.Transform:GetWorldPosition()
     local stone = TheSim:FindFirstEntityWithTag("kochosei_fuji_tree")
     if stone ~= nil then
-        x, y, z = stone.Transform:GetWorldPosition()
-    else
-        return
-    end
-
-    for x2 = x - MAPREVEAL_SCALE, x + MAPREVEAL_SCALE, MAPREVEAL_STEPS do
-        for z2 = z - MAPREVEAL_SCALE, z + MAPREVEAL_SCALE, MAPREVEAL_STEPS do
-            if IsForestBiomeAtPoint(x2, 0, z2) then
-                inst.player_classified.MapExplorer:RevealArea(x2, 0, z2)
+        local x, y, z = stone.Transform:GetWorldPosition()
+        for x2 = x - MAPREVEAL_SCALE, x + MAPREVEAL_SCALE, MAPREVEAL_STEPS do
+            for z2 = z - MAPREVEAL_SCALE, z + MAPREVEAL_SCALE, MAPREVEAL_STEPS do
+                if IsForestBiomeAtPoint(x2, 0, z2) then
+                    inst.player_classified.MapExplorer:RevealArea(x2, 0, z2)
+                end
             end
+
         end
     end
 end
@@ -349,25 +345,6 @@ local function OnNewSpawn(inst)
     -- inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
     -- Dinh: Bỏ luôn đi
 end
-
---[[---------------------------------Level Miomhm---------------------
-local function IsValidVictim(victim)
-    return victim ~= nil
-               and not (victim:HasTag("prey") or victim:HasTag("veggie") or victim:HasTag("structure") or victim:HasTag("wall")
-                   or victim:HasTag("companion")) and victim.components.health ~= nil and victim.components.combat ~= nil
-end
-local function onkilledmiohm(inst, data)
-    local victim = data.victim
-    if IsValidVictim(victim) then
-        local weapon = inst.components.combat:GetWeapon()
-        if weapon and weapon:HasTag("miohm") then
-            weapon.levelmiohm = weapon.levelmiohm + TUNING.KOCHOSEI_PER_KILL
-            weapon:applyupgrades()
-        end
-    end
-end
----------------------------------Level Miomhm---------------------
---]]
 
 local ghosttalklist = wlist({
     ghosttalk1 = 1,
@@ -383,7 +360,6 @@ local function ontalk(inst, data)
 end
 
 -----------------------------------------------------------------------------
-local waitMin, waitMax
 
 local function OnEquipCustom(inst, data)
     local checkskin = inst.AnimState:GetBuild()
@@ -396,15 +372,6 @@ local function OnEquipCustom(inst, data)
             inst:RemoveTag("scarytoprey")
         end
     end
-    if data.item:HasTag("fishingrod") then
-        local fishingrod = data.item.components.fishingrod
-        if fishingrod then
-            waitMin, waitMax = data.item.components.fishingrod.minwaittime, data.item.components.fishingrod.maxwaittime
-            if waitMin and waitMax then
-                fishingrod:SetWaitTimes(waitMin * 0.5, waitMax * 0.5)
-            end
-        end
-    end
 end
 
 local function OnUnequipCustom(inst, data)
@@ -412,12 +379,6 @@ local function OnUnequipCustom(inst, data)
         if data.item:HasTag("kochosei_hat") then
             if not inst:HasTag("scarytoprey") then
                 inst:AddTag("scarytoprey")
-            end
-        end
-        if data.item:HasTag("fishingrod") then
-            local fishingrod = data.item.components.fishingrod
-            if fishingrod and waitMin and waitMax then
-                fishingrod:SetWaitTimes(waitMin, waitMax)
             end
         end
     end
@@ -494,6 +455,33 @@ local function lai_nhai(inst)
     end
 end
 
+local function namngua(inst)
+
+    if inst.sg:HasStateTag("knockout") then
+        inst.sg.statemem.cometo = nil
+    elseif not (inst.sg:HasStateTag("sleeping") or inst.sg:HasStateTag("bedroll") or inst.sg:HasStateTag("tent") or
+        inst.sg:HasStateTag("waking") or inst.sg:HasStateTag("drowning")) then
+        if inst.sg:HasStateTag("jumping") then
+            inst.sg.statemem.queued_post_land_state = "knockout"
+        else
+            inst:PushEvent("yawn", {
+                grogginess = 4,
+                knockoutduration = 1 / 0
+            })
+        end
+    end
+
+    if inst.sg:HasStateTag("sleeping") then
+        if inst.sleepingbag ~= nil then
+            inst.sleepingbag.components.sleepingbag:DoWakeUp()
+            inst.sleepingbag = nil
+        else
+            inst.sg.statemem.iswaking = true
+            inst.sg:GoToState("wakeup")
+        end
+    end
+
+end
 local master_postinit = function(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
     inst.OnNewSpawn = OnNewSpawn
@@ -523,10 +511,6 @@ local master_postinit = function(inst)
     inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
     inst.components.eater.PrefersToEat = anvaochetnguoiay
     inst.customidleanim = "idle_wilson"
-    inst.OnLoad = onload
-
-    inst:AddComponent("locomotor")
-    inst.components.locomotor:SetExternalSpeedMultiplier(inst, "kochosei_speed_mod", 1.25)
 
     inst:AddComponent("kochoseimain") -- Giết ếch, giết df, giết bướm, nó lỗi thì xóa dòng này
 
@@ -544,7 +528,7 @@ local master_postinit = function(inst)
     inst:ListenForEvent("healthdelta", phandamge)
     inst:ListenForEvent("picksomething", onpick)
     inst:ListenForEvent("onhitother", OnHitOther)
-
+    inst:ListenForEvent("namngua", namngua)
     inst.wlist = wlist
     ---------------------------Kén ăn------------------
     local inedibles = {}
@@ -557,6 +541,7 @@ local master_postinit = function(inst)
         end
         return old_CanEat(self, food_inst)
     end
+    inst.OnLoad = onload
 end
 -- Không dùng khi có modded được phát hiện--
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeCharacterSkin ~= nil then -- Kiểm tra để chắc chắn sau này API có bị lỗi cũng không kéo theo thứ gì đó

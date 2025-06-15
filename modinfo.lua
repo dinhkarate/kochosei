@@ -2,13 +2,14 @@
 name = "Kochosei in Onmyoji"
 description = [[
 Cảm ơn bạn đã ghé qua, bạn có thể dùng nút cấu hình phía dưới, nếu có bất kì vấn đề gì với Kochosei nhắn cho bọn mình biết nhé.
+Key để Kocho lật ngửa bạn có thể set từ trong game Setting > Controls > Kochosei Key To Sleep
 
 Thank you for using this mod, you can use the config button below and let me know if there is any problem with Kochosei.
-	
+If you want to change the key for Kocho to sleep, you can set it in the game Setting > Controls > Kochosei Key To Sleep
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
 
-version = "4.3.1"
+version = "4.3.3"
 
 forumthread = ""
 
@@ -41,6 +42,34 @@ icon = "modicon.tex"
 -- The mod's tags displayed on the server list
 server_filter_tags = { "character", "kochosei", "onmyoji" }
 string = string or ""
+
+local keyboard = { -- from STRINGS.UI.CONTROLSSCREEN.INPUTS[1] of strings.lua, need to match constants.lua too.
+  { 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Print', 'ScrolLock', 'Pause' },
+  { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
+  { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M' },
+  { 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' },
+  { 'Escape', 'Tab', 'CapsLock', 'LShift', 'LCtrl', 'LSuper', 'LAlt' },
+  { 'Space', 'RAlt', 'RSuper', 'RCtrl', 'RShift', 'Enter', 'Backspace' },
+  { 'BackQuote', 'Minus', 'Equals', 'LeftBracket', 'RightBracket' },
+  { 'Backslash', 'Semicolon', 'Quote', 'Period', 'Slash' }, -- punctuation
+  { 'Up', 'Down', 'Left', 'Right', 'Insert', 'Delete', 'Home', 'End', 'PageUp', 'PageDown' }, -- navigation
+}
+local numpad = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Period', 'Divide', 'Multiply', 'Minus', 'Plus' }
+local key_disabled = { description = 'Disabled', data = 'KEY_DISABLED' }
+keys = { key_disabled }
+for i = 1, #keyboard do
+  for j = 1, #keyboard[i] do
+    local key = keyboard[i][j]
+    keys[#keys + 1] = { description = key, data = 'KEY_' .. key:upper() }
+  end
+  keys[#keys + 1] = key_disabled
+end
+for i = 1, #numpad do
+  local key = numpad[i]
+  keys[#keys + 1] = { description = 'Numpad ' .. key, data = 'KEY_KP_' .. key:upper() }
+end
+
+
 local function Title(title)
 	return {
 		name = title,
@@ -346,16 +375,10 @@ configuration_options = {
 	},
 	{
 		name = "keykocho",
-		label = "A) Key to sleep",
-		options = {
-			{ description = "INS", data = 277 },
-			{ description = "HOME", data = 278 },
-			{ description = "Page Up", data = 280 },
-			{ description = "Page Dn", data = 281 },
-			{ description = "Del", data = 127 },
-			{ description = "End", data = 279 },
-		},
-		default = 279,
+		label = "Kochosei Key To Sleep",
+		options = keys, -- all keys
+		default = 'KEY_End', -- default key
+
 	},
 	{
 		name = "turnoffmusic",
