@@ -5,6 +5,8 @@ local kochosei_thiensu_assets = {
 	Asset("ANIM", "anim/thiensu_hong.zip"),
 	Asset("ANIM", "anim/swap_thiensu_cam.zip"),
 	Asset("ANIM", "anim/thiensu_cam.zip"),
+	Asset("ANIM", "anim/doro_xamchiemtraidat.zip"),
+	Asset("ANIM", "anim/swap_doro_xamchiemtraidat.zip"),
 }
 
 local function onequip(inst, owner)
@@ -12,8 +14,10 @@ local function onequip(inst, owner)
 		owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_xanh", "swap_thiensu_xanh")
 	elseif inst.prefab == "kochosei_thien_su_ban_phuc_hong" then
 		owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_hong", "swap_thiensu_hong")
-	else
+	elseif inst.prefab == "kochosei_thien_su_ban_phuc_cam" then
 		owner.AnimState:OverrideSymbol("swap_object", "swap_thiensu_cam", "swap_thiensu_cam")
+	else
+		owner.AnimState:OverrideSymbol("swap_object", "swap_doro_xamchiemtraidat", "swap_doro_xamchiemtraidat")
 	end
 
 	owner.AnimState:Show("ARM_carry")
@@ -146,16 +150,41 @@ local function thiensu_cam(inst)
 	inst.components.explosive:OnBurnt()
 end
 
+local function doro_xamchiemtraidat(inst, attacker, target, pos)
+	inst:AddTag("NOCLICK")
+	inst:AddTag("NOBLOCK")
+	pos = pos or Vector3(inst.Transform:GetWorldPosition())
+	local center = Vector3(pos.x, 0, pos.z) -- Tọa độ trung tâm, bạn có thể thay đổi tùy ý
+	local spacing = 1.3 -- Khoảng cách giữa các farm_soil
+	for i = -1, 1 do
+		for j = -1, 1 do
+			local x = center.x + i * spacing
+			local z = center.z + j * spacing
+		--	if TheWorld.Map:CanTillSoilAtPoint(x, 0, z, true) then -- true để bỏ qua mọi địa hình
+				-- Dọn sạch đất cũ nếu có
+				TheWorld.Map:CollapseSoilAtPoint(x, 0, z)
+				-- Tạo farm_soil mới tại vị trí
+				SpawnPrefab("farm_soil").Transform:SetPosition(x, 0, z)
+		--	end
+		end
+	end
+	attacker.components.talker:Say("Điên à, ném ra đất làm gì?")
+end
+
+
 local function OnHitWater(inst, attacker, target, pos)
 	if inst.prefab == "kochosei_thien_su_ban_phuc_xanh" then
 		thiensu_xanh(inst)
 	elseif inst.prefab == "kochosei_thien_su_ban_phuc_hong" then
 		thiensu_hong(inst)
-	else
+	elseif inst.prefab == "kochosei_thiensu_ban_phuc_cam" then
 		thiensu_cam(inst)
+	elseif inst.prefab == "doro_xamchiemtraidat" then
+		doro_xamchiemtraidat(inst, attacker, target, pos)
 	end
 	inst:Remove()
 end
+
 local function common_fn(bank, build)
 	local inst = CreateEntity()
 
@@ -239,21 +268,35 @@ local function thiensu_hong_fn()
 end
 local function thiensu_camfn()
 	local inst = common_fn("thiensu_cam", "thiensu_cam")
+	if not TheWorld.ismastersim then
+		return inst
+	end
 	inst:AddComponent("explosive")
+	return inst
+end
+local function doro_xamchiemtraidat_fn()
+	local inst = common_fn("doro_xamchiemtraidat", "doro_xamchiemtraidat")
 	return inst
 end
 
 STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Thiên Sứ Ban Phúc"
 STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Thiên Sứ Ban Lộc"
 STRINGS.NAMES.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Thiên Sứ Ban Lửa"
+STRINGS.NAMES.DORO_XAMCHIEMTRAIDAT = "Doro Xâm Chiếm Trái Đất"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Hàng nhái kém chất lượng"
-STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH = "Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
+STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_XANH =
+	"Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Hàng nhái kém chất lượng"
-STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG = "Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
+STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_HONG =
+	"Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Hàng nhái kém chất lượng"
-STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM = "Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
-
+STRINGS.RECIPE_DESC.KOCHOSEI_THIEN_SU_BAN_PHUC_CAM =
+	"Không phải chúng ta đã thề sẽ quét sạch mod và đám author ra khỏi dst sao?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.DORO_XAMCHIEMTRAIDAT = "Hàng nhái kém chất lượng"
+STRINGS.RECIPE_DESC.DORO_XAMCHIEMTRAIDAT =
+	"Chế xong rồi ném ra đất?"
 
 return Prefab("kochosei_thien_su_ban_phuc_xanh", thiensu_xanh_fn, kochosei_thiensu_assets),
 	Prefab("kochosei_thien_su_ban_phuc_hong", thiensu_hong_fn, kochosei_thiensu_assets),
-	Prefab("kochosei_thien_su_ban_phuc_cam", thiensu_camfn, kochosei_thiensu_assets)
+	Prefab("kochosei_thien_su_ban_phuc_cam", thiensu_camfn, kochosei_thiensu_assets),
+	Prefab("doro_xamchiemtraidat", doro_xamchiemtraidat_fn, kochosei_thiensu_assets)

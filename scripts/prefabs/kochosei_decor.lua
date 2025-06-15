@@ -5,7 +5,7 @@ local Assets = {Asset("ANIM", "anim/kocho_miku_cos.zip"), Asset("ANIM", "anim/ko
 local prefabs = {"globalmapicon"}
 local RANGE_CUA_CAY_THAN_KY = 15
 
-local small_ram_products = {"twigs", "cutgrass", "petals", "oceantree_leaf_fx_fall", "oceantree_leaf_fx_fall"}
+local small_ram_products = {"twigs", "cutgrass", "petals", "oceantree_leaf_fx_fall", "oceantree_leaf_fx_fall", "frog"}
 
 local DROP_ITEMS_DIST_MIN = 8
 local DROP_ITEMS_DIST_VARIANCE = 12
@@ -100,11 +100,9 @@ local function lam_kho_item(inst)
     local players = FindPlayersInRange(x, y, z, RANGE_CUA_CAY_THAN_KY, true)
 
     for _, player in pairs(players) do
-        if not player:HasTag("moistureimmunity") then
+        if player.components.debuffable and not player.components.debuffable:HasDebuff("Buff_Cay_Than_Ky") then
             player:AddDebuff("Buff_Cay_Than_Ky", "buff_moistureimmunity")
-        end
-        if player.components.temperature then
-            player.components.temperature:SetTemperature(TUNING.BOOK_TEMPERATURE_AMOUNT)
+            print("Buff_Cay_Than_Ky")
         end
         local items = player.components.inventory:ReferenceAllItems()
         for _, item in ipairs(items) do
@@ -124,6 +122,26 @@ end
 local FIREFLY_MUST = {"firefly"}
 local FIREFLY_CANT = {"FX", "NOBLOCK", "NOCLICK", "DECOR", "flying", "boat", "walkingplank", "_inventoryitem",
                       "structure"}
+local function tudienbien_tuchuyenhoa(inst)
+    local season = TheWorld.state.season
+
+    if season == "winter" then
+        inst.components.heater:SetThermics(true, false)
+        inst.components.heater.heat = 80
+
+    elseif season == "spring" then
+        inst.components.heater:SetThermics(true, false)
+        inst.components.heater.heat = 80
+
+    elseif season == "summer" then
+        inst.components.heater:SetThermics(false, true)
+        inst.components.heater.heat = -30
+
+    else
+        inst.components.heater:SetThermics(false, false)
+    end
+end
+
 local function OnPhaseChanged(inst, phase)
     if phase == "day" then
         local x, y, z = inst.Transform:GetWorldPosition()
@@ -185,6 +203,9 @@ local function DropLightningItems(inst, items)
                 inst._lightning_drop_task:Cancel()
                 inst._lightning_drop_task = nil
             end
+            if item.prefab == "frog" then
+                item.sg:GoToState("fall")
+            end
         end)
     end
 end
@@ -237,13 +258,14 @@ local function cay_kocho()
     inst.AnimState:PlayAnimation("idle")
     inst.AnimState:SetScale(1.5, 1.5)
     inst:AddTag("shelter")
+    inst:AddTag("shadecanopy")
+
     if not TheWorld.ismastersim then
         return inst
     end
 
     inst:DoTaskInTime(5, OnInit)
     inst:AddTag("flower")
-
     inst:AddTag("kochosei_fuji_tree")
     inst:AddTag("shelter")
     inst.entity:SetPristine()
@@ -251,6 +273,8 @@ local function cay_kocho()
     inst:ListenForEvent("phasechanged", function(src, phase)
         OnPhaseChanged(inst, phase)
     end, TheWorld)
+
+    inst:WatchWorldState("season", tudienbien_tuchuyenhoa)
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aura = TUNING.SANITYAURA_SMALL
@@ -280,6 +304,11 @@ local function cay_kocho()
     inst.components.wateryprotection.witherprotectiontime = TUNING.FIRESUPPRESSOR_PROTECTION_TIME
     inst.components.wateryprotection.addcoldness = TUNING.FIRESUPPRESSOR_ADD_COLDNESS
     inst.components.wateryprotection:AddIgnoreTag("player")
+
+    inst:AddComponent("heater")
+    inst.components.heater.heat = 80
+    tudienbien_tuchuyenhoa(inst)
+
     return inst
 end
 

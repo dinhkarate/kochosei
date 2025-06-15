@@ -51,7 +51,7 @@ local function InjectContainerWidgetMountButton()
 		self.Open = function(self, container, doer, ...)
 			self:Close()
 			local widget = container.replica.container:GetWidget()
-			if widget.button_info ~= nil then
+			if widget and widget.button_info ~= nil then
 				if doer ~= nil and doer.components.playeractionpicker ~= nil then
 					doer.components.playeractionpicker:RegisterContainer(container)
 				end

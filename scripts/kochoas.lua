@@ -1,6 +1,4 @@
-Assets = {
-
-	-- Kochosei Altar --
+Assets = { -- Kochosei Altar --
 	Asset("IMAGE", "images/ui/hect_slot.tex"),
 	Asset("ATLAS", "images/ui/hect_slot.xml"),
 	Asset("ANIM", "anim/kochosei_ui_boss.zip"),
@@ -26,14 +24,18 @@ Assets = {
 	Asset("ATLAS", "images/selectscreen_portraits/kochosei.xml"),
 	Asset("IMAGE", "images/selectscreen_portraits/kochosei_silho.tex"),
 	Asset("ATLAS", "images/selectscreen_portraits/kochosei_silho.xml"),
+
 	Asset("IMAGE", "bigportraits/kochosei.tex"),
 	Asset("ATLAS", "bigportraits/kochosei.xml"),
 	Asset("IMAGE", "bigportraits/kochosei_none.tex"),
 	Asset("ATLAS", "bigportraits/kochosei_none.xml"),
 	Asset("IMAGE", "bigportraits/kochosei_snowmiku_skin1.tex"),
 	Asset("ATLAS", "bigportraits/kochosei_snowmiku_skin1.xml"),
-	Asset("IMAGE", "bigportraits/ms_kochosei_snowmiku_skin1.tex"),
-	Asset("ATLAS", "bigportraits/ms_kochosei_snowmiku_skin1.xml"),
+	Asset("IMAGE", "bigportraits/kochosei_skin_shinku_full.tex"),
+	Asset("ATLAS", "bigportraits/kochosei_skin_shinku_full.xml"),
+	Asset("IMAGE", "bigportraits/kochosei_skin_shinku_notfull.tex"),
+	Asset("ATLAS", "bigportraits/kochosei_skin_shinku_notfull.xml"),
+	
 	Asset("IMAGE", "images/map_icons/kochosei.tex"),
 	Asset("ATLAS", "images/map_icons/kochosei.xml"),
 	Asset("IMAGE", "images/avatars/avatar_kochosei.tex"),
@@ -43,11 +45,9 @@ Assets = {
 	Asset("IMAGE", "images/avatars/self_inspect_kochosei.tex"),
 	Asset("ATLAS", "images/avatars/self_inspect_kochosei.xml"),
 	Asset("IMAGE", "images/names_gold_kochosei.tex"),
-	Asset("ATLAS", "images/names_gold_kochosei.xml"),
-	-- I have a pen and I have a pineapple Uhhhh pineapple pen --
+	Asset("ATLAS", "images/names_gold_kochosei.xml"), -- I have a pen and I have a pineapple Uhhhh pineapple pen --
 	-- Apple pen, Pineapple pen --
 	-- Pineapple, Apple pen --
-
 	Asset("ATLAS", "minimap/kochosei_apple_tree_stump.xml"),
 	Asset("IMAGE", "minimap/kochosei_apple_tree_stump.tex"),
 
@@ -55,9 +55,7 @@ Assets = {
 	Asset("IMAGE", "minimap/kochosei_apple_tree_burnt.tex"),
 
 	Asset("ATLAS", "minimap/kochosei_apple_tree.xml"),
-	Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
-
-	-- TAB kochosei
+	Asset("IMAGE", "minimap/kochosei_apple_tree.tex"), -- TAB kochosei
 	Asset("ATLAS", "images/hud/kochoseitab.xml"),
 	Asset("IMAGE", "images/hud/kochoseitab.tex"),
 
@@ -67,9 +65,12 @@ Assets = {
 	Asset("SOUNDPACKAGE", "sound/kochosei_streetlight1_musicbox.fev"),
 	Asset("SOUND", "sound/kochosei_streetlight1_musicbox.fsb"),
 	Asset("ANIM", "anim/miku_usagi_backpack_2x4.zip"),
+	Asset("ANIM", "anim/kochosei_chest_5x5_ui.zip"),
+		Asset("ANIM", "anim/kochosei_chest_5x5.zip")
+	
 }
 
---RemapSoundEvent("dontstarve/characters/kochosei/talk_LP", "kochosei_voice/sound/talk_LP")
+-- RemapSoundEvent("dontstarve/characters/kochosei/talk_LP", "kochosei_voice/sound/talk_LP")
 RemapSoundEvent("dontstarve/characters/kochosei/ghost_LP", "kochosei_voice/sound/ghost_LP")
 RemapSoundEvent("dontstarve/characters/kochosei/hurt", "kochosei_voice/characters/hurt")
 RemapSoundEvent("dontstarve/characters/kochosei/death_voice", "kochosei_voice/sound/death_voice")

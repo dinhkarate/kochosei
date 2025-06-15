@@ -187,14 +187,6 @@ local function D_Buff_heal(inst, target)
 	inst:Remove()
 end
 
-local function Buff_Tang_Nhiet(inst,target)
-	AttachCommon(inst, target)
-end
-
-local function D_Buff_Tang_Nhiet(inst)
-	inst:Remove()
-end
-
 local function common()
 	local inst = CreateEntity()
 
@@ -233,8 +225,4 @@ end, nil, buff_prefabs),
 	end, nil),
 	Prefab("kocho_buff_heal", function()
 		return create_elysia_buff(Buff_heal, D_Buff_heal)
-	end, nil),
-	Prefab("kocho_buff_tangnhiet", function()
-		return create_elysia_buff(Buff_Tang_Nhiet, D_Buff_Tang_Nhiet)
 	end, nil)
-

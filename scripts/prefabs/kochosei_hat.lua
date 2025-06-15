@@ -6,30 +6,26 @@ local assets = {
 	Asset("ANIM", "anim/ms_kochosei_hat2.zip"),
 	Asset("ANIM", "anim/ms_kochosei_hat3.zip"),
 	Asset("ANIM", "anim/kochosei_hatfl_skin.zip"),
-	Asset("ANIM", "anim/kochosei_ribbon.zip"),
-
-	--   Asset("ANIM", "anim/kochosei_hatfl_skin_drop.zip")
+	Asset("ANIM", "anim/kochosei_ribbon.zip"), --   Asset("ANIM", "anim/kochosei_hatfl_skin_drop.zip")
 }
---[[
-local function Onequip(inst, owner)
-    if inst.prefab == "kochosei_hat1" then
-        owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or "kochosei_hat1", "swap_hat")
-    end
-    if inst.prefab == "kochosei_hat2" then
-        owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or "kochosei_hat2", "swap_hat")
-    end
-    if inst.prefab == "kochosei_hat3" then
-        owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or "kochosei_hat3", "swap_hat")
-    end
-    if inst.prefab == "kochosei_hatfl" then
-        owner.AnimState:OverrideSymbol("swap_hat", inst.skinname or "kochosei_hatfl", "swap_hat")
-    end
-    owner.AnimState:Show("HAT")
-    owner.AnimState:Show("HAIR_HAT")
-    owner.AnimState:Hide("HAIR_NOHAT")
-    owner.AnimState:Hide("HAIR")
+local dobenvohan = true
+
+local function Themgiap(inst)
+	if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
+		dobenvohan = false
+	end
+	if dobenvohan then
+		inst.components.armor:InitIndestructible(TUNING.KOCHO_HAT1_ABSORPTION)
+		inst.components.armor.condition = 100
+		inst:AddTag("hide_percentage")
+	else
+		inst.components.armor:InitCondition(
+			TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2),
+			TUNING.KOCHO_HAT1_ABSORPTION
+		)
+	end
+
 end
---]]
 
 local hatMappings = {
 	kochosei_hatfl = "kochosei_hatfl",
@@ -105,17 +101,7 @@ local function commonfn()
 	inst:AddComponent("inspectable")
 
 	inst:AddComponent("armor")
-	if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
-		inst.components.armor:InitCondition(
-			TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2),
-			TUNING.KOCHO_HAT1_ABSORPTION
-		)
-	else
-		inst.components.armor:InitIndestructible(TUNING.KOCHO_HAT1_ABSORPTION)
-		inst.components.armor.condition = 100
-	end
-	--  inst:AddComponent("cuocdoiquabatcongdi")
-	--  inst.components.cuocdoiquabatcongdi:Hatitem()
+	Themgiap(inst)
 
 	inst:AddComponent("tradable")
 
@@ -136,58 +122,23 @@ local function commonfn()
 end
 
 local function commonfn_ribbon()
-	local inst = CreateEntity()
-
-	inst.entity:AddTransform()
-	inst.entity:AddAnimState()
-	inst.entity:AddNetwork()
-
-	MakeInventoryPhysics(inst)
+	local inst = commonfn()
 	inst.AnimState:SetBank("kochosei_hat2")
 	inst.AnimState:SetBuild("kochosei_hat2")
-	inst.AnimState:PlayAnimation("anim")
-	inst:AddTag("waterproofer")
-	inst:AddTag("kochosei_hat")
-	inst:AddTag("bramble_resistant")
 
-	MakeInventoryFloatable(inst, "small", 0.1, 1.12)
-	inst:AddTag("bramble_resistant")
-	inst.entity:SetPristine()
+	return inst
+end
 
-	if not TheWorld.ismastersim then
+local function kochosei_hatfl()
+	local inst = commonfn()
+	inst:AddTag("gestaltprotection")
+	inst.AnimState:SetBank("kochosei_hatfl")
+	inst.AnimState:SetBuild("kochosei_hatfl")
+		if not TheWorld.ismastersim then
 		return inst
 	end
-	inst:AddTag("bramble_resistant")
-	inst:AddComponent("inspectable")
-
-	inst:AddComponent("armor")
-	if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
-		inst.components.armor:InitCondition(
-			TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2),
-			TUNING.KOCHO_HAT1_ABSORPTION
-		)
-	else
-		inst.components.armor:InitIndestructible(TUNING.KOCHO_HAT1_ABSORPTION)
-		inst.components.armor.condition = 100
-	end
-	--  inst:AddComponent("cuocdoiquabatcongdi")
-	--  inst.components.cuocdoiquabatcongdi:Hatitem()
-
-	inst:AddComponent("tradable")
-
-	inst:AddComponent("inventoryitem")
-
-	inst:AddComponent("equippable")
-	inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
-	inst.components.equippable:SetOnEquip(OnEquip)
-	inst.components.equippable:SetOnUnequip(OnUnequip)
-	inst.components.equippable.dapperness = 0.15
-
-	inst:AddComponent("waterproofer")
-	inst.components.waterproofer:SetEffectiveness(0.3)
-
-	MakeHauntableLaunch(inst)
-
+	inst:AddComponent("planardefense")
+	inst.components.planardefense:SetBaseDefense(TUNING.ARMOR_LUNARPLANT_PLANAR_DEF)
 	return inst
 end
 
@@ -224,25 +175,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
 	})
 end
 
-local function kochosei_hatfl()
-	local inst = commonfn()
-	inst:AddTag("gestaltprotection")
-	inst.AnimState:SetBank("kochosei_hatfl")
-	inst.AnimState:SetBuild("kochosei_hatfl")
-	return inst
-end
-
 -- Không có anim. không dùng
---[[
-Kochoseiapi.MakeItemSkin("kochosei_hatfl", "kochosei_hatfl_skin", {
-    name="kochosei_hatfl_skin",
-    atlas="images/inventoryimages/kochosei_inv.xml",
-    image="kochosei_hatfl_skin",
-    build="kochosei_hatfl_skin",
-    bank="kochosei_hatfl_skin",
-    basebuild="kochosei_hatfl",
-    basebank="kochosei_hatfl"
-})
 
 STRINGS.NAMES.KOCHOSEI_HAT1 = "Kochosei Hat"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_HAT1 = "Its butterfly right? :>"

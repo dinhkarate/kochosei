@@ -257,7 +257,7 @@ local function common_fn(bank, build, icon, tag, onbuiltfn)
 	inst.AnimState:SetBuild("kochosei_house")
 	inst.AnimState:PlayAnimation("idle", true)
 
-	inst.Transform:SetScale(SCALE, SCALE, SCALE)
+	 inst.AnimState:SetScale(SCALE, SCALE, SCALE)
 
 	inst.MiniMapEntity:SetIcon(icon)
 

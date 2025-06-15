@@ -11,6 +11,41 @@ local kochosei_tab = {
 AddRecipeFilter(kochosei_tab)
 
 STRINGS.UI.CRAFTING_FILTERS.KOCHOSEI_TAB = "Cái con cò gì thế này?"
+AddCharacterRecipe(
+	"kochosei_fridge_5x5",
+	{ Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1) },
+	TECH.SCIENCE_TWO,
+	{
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_fridge_5x5.tex",
+		builder_tag = "kochosei",
+		placer = "kochosei_fridge_5x5_placer",
+		min_spacing = 1,
+	},
+
+	{ "CHARACTER" }
+)
+AddCharacterRecipe(
+	"kochosei_chest_5x5",
+	{ Ingredient("boards", 3), Ingredient("rope", 3), Ingredient("petals", 2) },
+	TECH.SCIENCE_ONE,
+	{
+		atlas = "images/inventoryimages/kochosei_inv.xml",
+		image = "kochosei_chest_5x5.tex",
+		builder_tag = "kochosei",
+		placer = "kochosei_chest_5x5_placer",
+		min_spacing = 1,
+	},
+
+	{ "CHARACTER" }
+)
+AddCharacterRecipe(
+	"doro_xamchiemtraidat",
+	{ Ingredient("twigs", 2) },
+	TECH.NONE,
+	{ atlas = "images/inventoryimages/kochosei_inv.xml", image = "doro_xamchiemtraidat.tex", builder_tag = "kochosei" },
+	{ "CHARACTER" }
+)
 
 AddCharacterRecipe(
 	"miohm",
@@ -163,19 +198,12 @@ AddCharacterRecipe(
 	{ "CHARACTER" }
 )
 
-AddCharacterRecipe(
-	"kochosei_thien_su_ban_phuc_cam",
-	{ Ingredient("gunpowder", 10) },
-	TECH.ANCIENT_TWO,
-	{
-		numtogive = 10,
-		atlas = "images/inventoryimages/kochosei_inv.xml",
-		image = "kochosei_thien_su_ban_phuc_cam.tex",
-		builder_tag = "kochosei",
-	},
-
-	{ "CHARACTER" }
-)
+AddCharacterRecipe("kochosei_thien_su_ban_phuc_cam", { Ingredient("gunpowder", 10) }, TECH.ANCIENT_TWO, {
+	numtogive = 10,
+	atlas = "images/inventoryimages/kochosei_inv.xml",
+	image = "kochosei_thien_su_ban_phuc_cam.tex",
+	builder_tag = "kochosei",
+}, { "CHARACTER" })
 
 -------------------------------------- DST ITEM ----------------------------------------------------------------------
 
@@ -563,8 +591,8 @@ AddCharacterRecipe(
 	"kochosei_armor_1",
 	{
 		Ingredient("flowerhat", 1),
-		Ingredient("moonglass", 25),
-		Ingredient("hivehat", 1),
+		Ingredient("moonglass", 20),
+		Ingredient("thulecite", 1),
 	},
 
 	TECH.NONE,

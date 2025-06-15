@@ -139,6 +139,7 @@ local function commonfn()
 	MakeInventoryFloatable(inst, "small", 0.1, 1.12)
 	inst:AddTag("bramble_resistant")
 	inst.entity:SetPristine()
+	inst:AddTag("hide_percentage")
 
 	if not TheWorld.ismastersim then
 		return inst
