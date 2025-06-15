@@ -136,14 +136,23 @@ local MIOHM_CANT_TAGS = {
 local function SetTemperatureToOwner(owner)
 	if owner and owner.components.temperature then
 		local current = owner.components.temperature:GetCurrent()
-		if current and current <= 1 then
-			owner.components.temperature:DoDelta(5)
+		if current and current <= 3 then
+			owner.components.temperature:SetTemperature(3)
 		end
 	end
 end
 
 local function checklight(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
+
+	-- Kiểm tra và thiết lập nhiệt độ cho người chơi trong phạm vi 4
+	local playersheal = TheSim:FindEntities(x, y, z, 5, { "player" }, MIOHM_CANT_TAGS)
+	for i, v in ipairs(playersheal) do
+		local owner2 = inst.components.inventoryitem.owner
+		if owner2 == nil then
+			SetTemperatureToOwner(v)
+		end
+	end
 
 	if inst.components.equippable:IsEquipped() then
 		local owner = inst.components.inventoryitem.owner
@@ -243,9 +252,6 @@ local function fn()
 	inst.components.spellcaster.canpoint = false
 	inst.components.spellcaster.canuseonpoint = true
 	inst.components.spellcaster:SetSpellFn(HealFunc3)
-
-	inst:AddComponent("heater")
-	inst.components.heater.heat = 25
 
 	MakeHauntableLaunch(inst)
 

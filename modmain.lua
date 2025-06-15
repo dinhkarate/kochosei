@@ -387,12 +387,6 @@ AddPrefabPostInit("alterguardian_phase3", function(inst)
 	end
 	inst.components.lootdropper:AddChanceLoot("kochosei_hatfl", 1)
 end)
-AddPrefabPostInit("deerclops", function(inst)
-	if not TheWorld.ismastersim then
-		return inst
-	end
-	inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
-end)
 
 --[[
 AddGamePostInit(function()
@@ -438,7 +432,7 @@ AddStategraphPostInit("wilson", function(sg)
 	local _old_funnyidle_onenter = sg.states.funnyidle.onenter
 	sg.states.funnyidle.onenter = function(inst)
 		_old_funnyidle_onenter(inst)
-		if inst:HasTag("kochosei") and (inst.kochostop or 0) >= 120 and inst.sg.currentstate.name ~= "emote" then -- Thêm or 0 vì ai đó có thể dùng tag kochosei 
+		if inst:HasTag("kochosei") and inst.kochostop >= 120 and inst.sg.currentstate.name ~= "emote" then
 			inst.sg:GoToState("emote", {
 				anim = {
 					{
