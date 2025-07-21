@@ -37,17 +37,13 @@ local function make(code, description, check_des_boolean, alter_description, fil
 		inst:AddComponent("inspectable")
 		inst:AddComponent("inventoryitem")
 		inst.components.inventoryitem.keepondeath = true
-		inst.components.inventoryitem.atlasname = "images/inventoryimages/kochosei_duke_crown.xml"
-		inst.components.inventoryitem.imagename = "kochosei_duke_crown"
 
 		inst:AddComponent("equippable")
 		inst.components.equippable.equipslot = EQUIPSLOTS.MEDAL or EQUIPSLOTS.NECK or EQUIPSLOTS.BODY
 
 		return inst
 	end, {
-		Asset("ANIM", "anim/" .. fileanim .. ".zip"),
-		Asset("ATLAS", "images/inventoryimages/" .. fileanim .. ".xml"),
-	})
+		Asset("ANIM", "anim/" .. fileanim .. ".zip"),	})
 end
 
 return make(

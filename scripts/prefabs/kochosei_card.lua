@@ -32,8 +32,6 @@ local function make(code, description, check_des_boolean, alter_description, fil
 
 		inst:AddComponent("inspectable")
 		inst:AddComponent("inventoryitem")
-		inst.components.inventoryitem.atlasname = "images/inventoryimages/kochosei_card.xml"
-		inst.components.inventoryitem.imagename = "kochosei_card"
 
 		inst.AnimState:SetBank("kochosei_card")
 		inst.AnimState:SetBuild("kochosei_card")
@@ -138,10 +136,7 @@ local function make(code, description, check_des_boolean, alter_description, fil
 			end
 		end)
 		return inst
-	end, {
-		Asset("ANIM", "anim/kochosei_card.zip"),
-		Asset("ATLAS", "images/inventoryimages/kochosei_card.xml"),
-	})
+	end, {})
 end
 
 local blank = ""

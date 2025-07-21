@@ -2,10 +2,6 @@ Assets = { -- Kochosei Altar --
 	Asset("IMAGE", "images/ui/hect_slot.tex"),
 	Asset("ATLAS", "images/ui/hect_slot.xml"),
 	Asset("ANIM", "anim/kochosei_ui_boss.zip"),
-	Asset("ATLAS", "images/inventoryimages/kochosei_duke_crown.xml"),
-	Asset("IMAGE", "images/inventoryimages/kochosei_duke_crown.tex"),
-	Asset("ATLAS", "images/inventoryimages/kochosei_card.xml"),
-	Asset("IMAGE", "images/inventoryimages/kochosei_card.tex"),
 
 	-- Kochosei Altar --
 	--------------------------------------------------------------------------------
@@ -13,8 +9,6 @@ Assets = { -- Kochosei Altar --
 	Asset("ATLAS", "images/cb_kochofood.xml"),
 	Asset("ATLAS", "images/inventoryimages/kochofood.xml"),
 	Asset("ATLAS", "images/inventoryimages/kochosei_inv.xml"),
-	Asset("ATLAS", "images/inventoryimages/kochosei_purplebattleaxe_icon.xml"),
-	Asset("IMAGE", "images/inventoryimages/kochosei_purplebattleaxe_icon.tex"),
 	--------------------------------------------------------------------------------
 
 	--------------------------------------------------------------------------------
