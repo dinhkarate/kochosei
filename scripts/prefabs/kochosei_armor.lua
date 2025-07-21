@@ -157,7 +157,7 @@ local function commonfn()
 	inst:AddComponent("inventoryitem")
 
 	inst:AddComponent("equippable")
-	inst.components.equippable.equipslot =  EQUIPSLOTS.BODY
+	inst.components.equippable.equipslot = EQUIPSLOTS.BODY
 	inst.components.equippable:SetOnEquip(OnEquip)
 	inst.components.equippable:SetOnUnequip(OnUnequip)
 	inst.components.equippable:SetOnEquipToModel(onequiptomodel)

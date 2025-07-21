@@ -134,41 +134,57 @@ local kochofood = {
 }
 
 local listiteminv = {
-	"miohm",
-	"kocho_lotus_flower",
-	"kocho_lotus",
-	"kocho_lotus_flower_cooked",
-	"kochosei_purplemagic",
-	"miku_usagi_backpack",
-	"kocho_purplesword",
-	"kocho_miku_cos",
-	"kocho_miku_back",
-	"kochosei_umbrella",
-	"kochosei_demonlord",
-	"kochosei_hat1",
-	"kochosei_hat2",
-	"kochosei_hat3",
-	"ms_kochosei_hat2",
-	"ms_kochosei_hat3",
-	"kochotambourin",
-	"kochosei_lantern",
-	"kochosei_apple",
-	"kochosei_apple_cooked",
-	"kochobook",
-	"kochosei_hatfl",
-	"lucky_hammer",
-	"kochosei_ancient_books",
-	"kochosei_christmast_torch1",
-	"kochosei_armor_1",
-	"kochosei_armor_2",
-	"kochosei_ribbon",
-	"kochosei_thien_su_ban_phuc_xanh",
-	"kochosei_thien_su_ban_phuc_hong",
-	"kochosei_thien_su_ban_phuc_cam",
-	"doro_xamchiemtraidat",
-	"kochosei_chest_5x5",
-	"kochosei_fridge_5x5"
+    "cay_hoa_sang",
+    "doro_xamchiemtraidat",
+    "kocho_lotus",
+    "kocho_lotus_flower",
+    "kocho_lotus_flower_cooked",
+    "kocho_miku_back",
+    "kocho_miku_cos",
+    "kocho_purplesword",
+    "kochosei_ancient_books",
+    "kochosei_apple",
+    "kochosei_apple_cooked",
+    "kochosei_armor_1",
+    "kochosei_armor_2",
+    "kochosei_building_redlantern",
+    "kochosei_chest_5x5",
+    "kochosei_christmast_torch1",
+    "kochosei_demonlord",
+    "kochosei_fridge_5x5",
+    "kochosei_hat1",
+    "kochosei_hat2",
+    "kochosei_hat3",
+    "kochosei_hatfl",
+    "kochosei_hatfl_skin",
+    "kochosei_house",
+    "kochosei_lantern",
+    "kochosei_may_gacha",
+    "kochosei_purplemagic",
+    "kochosei_ribbon",
+    "kochosei_streetlight1_left",
+    "kochosei_streetlight1_musicbox",
+    "kochosei_streetlight1_right",
+    "kochosei_tab_icon",
+    "kochosei_thien_su_ban_phuc_cam",
+    "kochosei_thien_su_ban_phuc_hong",
+    "kochosei_thien_su_ban_phuc_xanh",
+    "kochosei_torigate",
+    "kochosei_umbrella",
+    "kochosei_wishlamp",
+    "kochotambourin",
+    "lucky_hammer",
+    "miku_usagi_backpack",
+    "miohm",
+    "ms_kochosei_hat2",
+    "ms_kochosei_hat3",
+	"kochosei_card_health",
+	"kochosei_card_attack",
+	"kochosei_card_defend",
+	"kochosei_duke_crown",
+	"kochosei_harvest_book"
 }
+
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
 -- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
@@ -238,8 +254,7 @@ PrefabFiles = {
 	"kochosei_card",
 	"kochosei_boss",
 	"kochosei_thien_su_ban_phuc",
-		"kochosei_chest_5x5"
-
+	"kochosei_chest_5x5",
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -383,21 +398,21 @@ AddPrefabPostInit("deerclops", function(inst)
 	inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
 end)
 
-AddBrainPostInit("butterflybrain", function(brain) --print(brain) if u need to debug
-    local runaway
-    for i,node in ipairs(brain.bt.root.children) do
-        if node.name == "RunAway" then
-            runaway = node
-            break
-        end
-    end
-    if not runaway then
-        print("[butterflybrain] Couldn't find the 'RunAway' behaviour in this brain!")
-        return
-    else
-        runaway.hunternotags = runaway.hunternotags or {}
-        table.insert(runaway.hunternotags, "kochosei")
-    end
+AddBrainPostInit("butterflybrain", function(brain) -- print(brain) if u need to debug
+	local runaway
+	for i, node in ipairs(brain.bt.root.children) do
+		if node.name == "RunAway" then
+			runaway = node
+			break
+		end
+	end
+	if not runaway then
+		print("[butterflybrain] Couldn't find the 'RunAway' behaviour in this brain!")
+		return
+	else
+		runaway.hunternotags = runaway.hunternotags or {}
+		table.insert(runaway.hunternotags, "kochosei")
+	end
 end)
 
 --[[
@@ -443,31 +458,27 @@ AddComponentPostInit("farmtiller", function(self)
 end)
 
 AddComponentPostInit("fishingrod", function(self)
-	local function DoNibble(inst)
-		local fishingrod = inst.components.fishingrod
-		if fishingrod and fishingrod.fisherman then
-			inst:PushEvent("fishingnibble")
-			fishingrod.fisherman:PushEvent("fishingnibble")
-			fishingrod.fishtask = nil
-		end
-	end
 	local oldWaitForFish = self.WaitForFish
+
 	function self:WaitForFish(...)
-		if self.target and self.target.components.fishable then
-			if self.fisherman and self.fisherman:HasTag("kochosei") then
-				local fishleft = self.target.components.fishable:GetFishPercent()
-				local nibbletime = nil
-				if fishleft > 0 then
-					nibbletime = (self.minwaittime + (1.0 - fishleft) * (self.maxwaittime - self.minwaittime)) * 0.5 -- -50% thời gian câu cá
-				end
+		if self.target and self.target.components.fishable and self.fisherman and self.fisherman:HasTag("kochosei") then
+			-- Tạm tính lại nibbletime riêng
+			local fishleft = self.target.components.fishable:GetFishPercent()
+			if fishleft > 0 then
+				local nibbletime = (self.minwaittime + (1.0 - fishleft) * (self.maxwaittime - self.minwaittime)) * 0.5
+
 				self:CancelFishTask()
-				if nibbletime then
-					self.fishtask = self.inst:DoTaskInTime(nibbletime, DoNibble)
-				end
-			else
-				oldWaitForFish(self, ...)
+				self.fishtask = self.inst:DoTaskInTime(nibbletime, function(inst)
+					inst:PushEvent("fishingnibble")
+					self.fisherman:PushEvent("fishingnibble")
+					self.fishtask = nil
+				end)
+				return
 			end
 		end
+
+		-- Nếu không thuộc điều kiện thì gọi gốc
+		oldWaitForFish(self, ...)
 	end
 end)
 
@@ -685,13 +696,6 @@ ACTIONS.HAUNT.fn = function(act)
 		return oldHAUNTT(act)
 	end
 end
-
-
-AddComponentPostInit("fishingrod", function(self)
-	function self:GetWaitTimes()
-		return self.minwaittime, self.maxwaittime
-	end
-end)
 
 
 AddStategraphState("wilson",GLOBAL.State{

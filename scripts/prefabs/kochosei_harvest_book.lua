@@ -108,7 +108,7 @@ local function MakeBook(def)
 		return inst
 	end
 
-	return Prefab("common/inventory/kochosei_harvest_book", fn, assets)
+	return Prefab("kochosei_harvest_book", fn, assets)
 end
 
 STRINGS.NAMES.KOCHOSEI_HARVEST_BOOK = "Kochosei Harvest Book"

@@ -27,19 +27,57 @@ local function SanityCheck(inst, level)
 	return false
 end
 
-local Rn = 6
-local Zn = 5
-local hua = {}
-table.insert(hua, Point())
-for i = 2, Rn, 2 do
-	local z = 2 * PI * i
-	local jg = 2 + (z % 2) / (z / 2)
-	for j = jg, z, jg do
-		local hu = j / i
-		local po = Vector3(math.cos(hu) * i, 0, math.sin(hu) * i)
-		table.insert(hua, po)
+local PI = math.pi
+local Rn = 6 -- Maximum radius
+local Zn = 5 -- Effect duration
+local DENSITY = 10 -- Adjustable density (reduced for better outer circle)
+
+-- Generate circular points with improved distribution
+local function GenerateCircularPoints()
+	local points = {}
+	local min_radius = 1.0 -- Smaller minimum radius for center coverage
+
+	for radius = Rn, min_radius, -1.2 do -- Smaller steps for smoother distribution
+		-- Improved density calculation for outer circles
+		local base_density = DENSITY * (0.8 + (radius / Rn) ^ 1.5) -- Better outer circle density
+		local circumference = 2 * PI * radius
+
+		-- Minimum segments for outer circles to prevent sparse appearance
+		local min_segments = math.max(8, math.floor(radius * 5.5)) -- Ensure minimum density
+		local calc_segments = math.floor(circumference / base_density)
+		local segments = math.max(min_segments, calc_segments)
+
+		-- Golden angle for optimal distribution (137.5 degrees in radians)
+		local golden_angle = 2.39996
+		local offset = (radius % 2) * golden_angle / 3 -- Reduced offset for better alignment
+
+		for i = 1, segments do
+			local angle = (golden_angle * i) + offset
+			local x = math.cos(angle) * radius
+			local z = math.sin(angle) * radius
+			table.insert(points, {
+				pos = Vector3(x, 0, z),
+				radius = radius,
+				angle = angle, -- Store angle for sequencing
+				segment_index = i,
+				total_segments = segments,
+			})
+		end
 	end
+
+	-- Sort points by radius first (inside-out), then by angle for smooth progression
+	table.sort(points, function(a, b)
+		if math.abs(a.radius - b.radius) < 0.1 then -- Same radius group
+			return a.angle < b.angle
+		end
+		return a.radius < b.radius -- Inner circles first
+	end)
+
+	return points
 end
+
+local PRE_COMPUTED_POINTS = GenerateCircularPoints()
+local hstrongtay = STRINGS.NAMES.LYDOHOISINH_THIENSU
 
 local function HealFunc2(inst, target, pos)
 	local hstrongtay = STRINGS.NAMES.LYDOHOISINH
@@ -52,29 +90,60 @@ local function HealFunc2(inst, target, pos)
 		caster.components.talker:Say("I need more sanity!")
 		return
 	else
-		local xu = CreateEntity()
-		xu.entity:AddTransform()
-		xu.Transform:SetPosition(pos.x, 0, pos.z)
-		for k, v in pairs(hua) do
-			xu:DoTaskInTime(math.random() * 0.2, function()
-				local fx = SpawnPrefab("lavaarena_bloom_kocho" .. math.random(6))
-				fx.Transform:SetPosition((pos + v):Get())
-				fx:chixu(Zn + math.random())
-			end)
-		end
-		local playersheal = FindPlayersInRange(pos.x, pos.y, pos.z, Rn)
-		for _, v in ipairs(playersheal) do
-			if v.components.health:IsDead() or v:HasTag("playerghost") then
-				v:PushEvent("respawnfromghost")
-				v.rezsource = hstrongtay
-				caster.components.health:DoDelta(-50, true, "lydochet")
-				inst.components.finiteuses:Use(10)
+		--local pos = Vector3(caster.Transform:GetWorldPosition())
+		local players = FindPlayersInRange(pos.x, pos.y, pos.z, Rn)
+		for _, player in ipairs(players) do
+			if player and player:IsValid() then
+				if player.components.health and player.components.health:IsDead() or player:HasTag("playerghost") then
+					player:PushEvent("respawnfromghost")
+					player.rezsource = hstrongtay
+				end
+				player:AddDebuff("kocho_buff_heal", "kocho_buff_heal")
 			end
-			inst.components.finiteuses:Use(10)
-			v:AddDebuff("kocho_buff_heal", "kocho_buff_heal")
 		end
 
-		xu:DoTaskInTime(Zn, xu.Remove)
+		-- Improved concentric circle effect with better timing
+		local fx_center = CreateEntity()
+		fx_center.entity:AddTransform()
+		fx_center.Transform:SetPosition(pos:Get())
+
+		-- Improved timing parameters
+		local base_delay = 0.1 -- Base delay between effects
+		local radius_multiplier = 0.12 -- Radius-based delay multiplier
+		local wave_speed = 0.3 -- Wave propagation speed (higher = faster)
+
+		for i, data in ipairs(PRE_COMPUTED_POINTS) do
+			-- Improved delay calculation for smoother outward wave
+			local radius_delay = (data.radius / Rn) * radius_multiplier / wave_speed
+			local sequence_delay = (i * 0.002) -- Small sequential delay
+			local angular_variation = math.sin(data.angle * 0.3) * 0.01 -- Subtle angular variation
+
+			local total_delay = base_delay + radius_delay + sequence_delay + angular_variation
+
+			fx_center:DoTaskInTime(total_delay, function()
+				local fx = SpawnPrefab("lavaarena_bloom_kocho1")
+				if fx then
+					local offset_pos = pos + data.pos
+					-- Add slight vertical variation for more organic feel
+					offset_pos.y = offset_pos.y + math.sin(data.angle * 2) * 0.2
+					fx.Transform:SetPosition(offset_pos:Get())
+
+					if fx.chixu then
+						-- Slightly varied duration for natural look
+						local duration_variance = 0.2 + math.random() * 0.3
+						fx:chixu(Zn + duration_variance)
+					end
+				end
+			end)
+		end
+
+		-- Clean up fx_center after all effects are done
+		local max_delay = base_delay + (radius_multiplier / wave_speed) + (#PRE_COMPUTED_POINTS * 0.002)
+		fx_center:DoTaskInTime(max_delay + Zn + 1, function()
+			if fx_center and fx_center:IsValid() then
+				fx_center:Remove()
+			end
+		end)
 	end
 end
 

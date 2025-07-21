@@ -389,7 +389,7 @@ end
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
 	Kochoseiapi.MakeItemSkin("miohm", "swap_kochosei_purplebattleaxe", {
 		name = "Purple Battle Axe",
-		atlas = "images/inventoryimages/kochosei_purplebattleaxe_icon.xml",
+		atlas = "images/inventoryimages/kochosei_inv.xml",
 		image = "kochosei_purplebattleaxe_icon",
 		build = "kochosei_purplebattleaxe",
 		bank = "kochosei_purplebattleaxe",
