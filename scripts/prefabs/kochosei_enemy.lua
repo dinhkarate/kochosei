@@ -153,8 +153,7 @@ local function retargetfn(inst)
 				and not guy.components.health:IsDead()
 				and inst.components.combat:CanTarget(guy)
 				and not (inst.components.follower and inst.components.follower.leader ~= nil and guy:HasTag("abigail"))
-			)
-				and not (inst.components.follower and inst.components.follower:IsLeaderSame(guy))
+			) and not (inst.components.follower and inst.components.follower:IsLeaderSame(guy))
 		end
 	end, RETARGET_TAGS, RETARGET_NO_TAGS)
 end
@@ -263,6 +262,10 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 		inst:AddComponent("debuffable")
 
 		inst:AddComponent("knownlocations")
+
+		inst:AddComponent("grogginess")
+		
+		inst:AddComponent("rider")
 
 		inst.components.combat.hiteffectsymbol = "torso"
 		inst.components.combat:SetRange(2)

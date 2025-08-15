@@ -1,4 +1,5 @@
 require("worldsettingsutil")
+require "prefabutil"
 
 local loot = {
     "lunarplant_husk",
@@ -446,6 +447,5 @@ local function fn()
 
     return inst
 end
-
 return Prefab("cay_hoa_sang", fn),
 MakePlacer("cay_hoa_sang_placer", "lunarthrall_plant", "lunarthrall_plant_front", "idle_med")

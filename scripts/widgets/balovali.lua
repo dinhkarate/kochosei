@@ -126,7 +126,29 @@ function containers.widgetsetup(container, prefab, data)
 		return pwidgetsetup(container, prefab, data)
 	end
 end
+function params.kochosei_fridge_5x5.itemtestfn (container, item, slot)
+    if item:HasTag("icebox_valid") then
+        return true
+    end
 
+    --Perishable
+    if not (item:HasTag("fresh") or item:HasTag("stale") or item:HasTag("spoiled")) then
+        return false
+    end
+
+	if item:HasTag("smallcreature") then
+		return false
+	end
+
+    --Edible
+    for k, v in pairs(FOODTYPE) do
+        if item:HasTag("edible_"..v) then
+            return true
+        end
+    end
+
+    return false
+end
 -- function params.kochosei_fridge_5x5.itemtestfn(container, item, slot)
 --     if item:HasTag("icebox_valid") then
 --         return true

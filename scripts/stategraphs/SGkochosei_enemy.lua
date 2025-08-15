@@ -86,6 +86,22 @@ local function TryRepeatAction(inst, buffaction, right)
 	end
 	return false
 end
+local function SetSleeperAwakeState(inst)
+    if inst.components.grue ~= nil then
+        inst.components.grue:RemoveImmunity("sleeping")
+    end
+    if inst.components.talker ~= nil then
+        inst.components.talker:StopIgnoringAll("sleeping")
+    end
+    if inst.components.firebug ~= nil then
+        inst.components.firebug:Enable()
+    end
+    if inst.components.playercontroller ~= nil then
+        inst.components.playercontroller:EnableMapControls(true)
+        inst.components.playercontroller:Enable(true)
+    end
+
+end
 local actionhandlers = {
 	ActionHandler(ACTIONS.CHOP, function(inst)
 		if FixupWorkerCarry(inst, "swap_axe") then
@@ -141,6 +157,49 @@ local events = {
 			inst.sg:GoToState("no")
 		end
 	end),
+	    EventHandler("knockedout",
+        function(inst)
+            if inst.sg:HasStateTag("knockout") then
+                inst.sg.statemem.cometo = nil
+            elseif not (inst.sg:HasStateTag("sleeping") or inst.sg:HasStateTag("bedroll") or inst.sg:HasStateTag("tent") or inst.sg:HasStateTag("waking") or inst.sg:HasStateTag("drowning") or inst.sg:HasStateTag("falling")) then
+                if inst.sg:HasStateTag("jumping") then
+                    inst.sg.statemem.queued_post_land_state = "knockout"
+                else
+                    inst.sg:GoToState("knockout")
+                end
+            end
+        end),
+	EventHandler("yawn", function(inst, data)
+		--NOTE: yawns DO knock you out of shell/bush hat
+		--      yawns do NOT affect:
+		--       sleeping
+		--       frozen
+		--       pinned
+		if
+			not (
+				inst.components.health:IsDead()
+				or inst.sg:HasStateTag("sleeping")
+				or (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen())
+				or (inst.components.pinnable ~= nil and inst.components.pinnable:IsStuck())
+			)
+		then
+			inst.sg:GoToState("yawn", data)
+		end
+	end),
+   EventHandler("attacked", function(inst, data)
+        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("drowning") and not inst.sg:HasStateTag("falling") then
+            if inst.sg:HasStateTag("sleeping") then
+
+                if inst.sleepingbag ~= nil then
+                    inst.sleepingbag.components.sleepingbag:DoWakeUp()
+                    inst.sleepingbag = nil
+                else
+                    inst.sg.statemem.iswaking = true
+                    inst.sg:GoToState("wakeup")
+                end
+			end
+        end
+    end)
 }
 
 local states = {
@@ -1037,6 +1096,168 @@ local states = {
 				end
 			end),
 		},
+	}),
+	State{
+        name = "wakeup",
+        tags = { "busy", "waking", "nomorph", "nodangle" },
+
+        onenter = function(inst, data)
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+            end
+            if inst.AnimState:IsCurrentAnimation("bedroll") or
+                inst.AnimState:IsCurrentAnimation("bedroll_sleep_loop") then
+                inst.AnimState:PlayAnimation("bedroll_wakeup")
+            elseif not (inst.AnimState:IsCurrentAnimation("bedroll_wakeup") or
+                        inst.AnimState:IsCurrentAnimation("wakeup")) then
+                inst.AnimState:PlayAnimation("wakeup")
+            end
+
+			if data ~= nil and data.goodsleep then
+                inst.sg.statemem.goodsleep=true
+            end
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            SetSleeperAwakeState(inst)
+            if inst.sg.statemem.goodsleep then
+            end
+        end,
+    },
+	    State{
+        name = "knockout",
+        tags = { "busy", "knockout", "nopredict", "nomorph" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst:ClearBufferedAction()
+
+            inst.sg.statemem.isinsomniac = inst:HasTag("insomniac")
+
+            if inst.components.rider:IsRiding() then
+                inst.sg:AddStateTag("dismounting")
+                inst.AnimState:PlayAnimation("fall_off")
+                inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+            else
+                inst.AnimState:PlayAnimation(inst.sg.statemem.isinsomniac and "insomniac_dozy" or "dozy")
+            end
+
+
+            inst.sg:SetTimeout(TUNING.KNOCKOUT_SLEEP_TIME)
+        end,
+
+        ontimeout = function(inst)
+            if inst.components.grogginess == nil then
+                inst.sg.statemem.iswaking = true
+                inst.sg:GoToState("wakeup")
+            end
+        end,
+
+        events =
+        {
+            EventHandler("firedamage", function(inst)
+                if inst.sg:HasStateTag("sleeping") and not inst.sg:HasStateTag("drowning") and not inst.sg:HasStateTag("falling") then
+                    inst.sg.statemem.iswaking = true
+                    inst.sg:GoToState("wakeup")
+                else
+                    inst.sg.statemem.cometo = true
+                end
+            end),
+            EventHandler("cometo", function(inst)
+                if inst.sg:HasStateTag("sleeping") and not inst.sg:HasStateTag("drowning") and not inst.sg:HasStateTag("falling") then
+                    inst.sg.statemem.iswaking = true
+                    inst.sg:GoToState("wakeup")
+                else
+                    inst.sg.statemem.cometo = true
+                end
+            end),
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    if inst.sg:HasStateTag("dismounting") then
+                        inst.sg:RemoveStateTag("dismounting")
+                        inst.components.rider:ActualDismount()
+                        inst.AnimState:PlayAnimation(inst.sg.statemem.isinsomniac and "insomniac_dozy" or "dozy")
+                    elseif inst.sg.statemem.cometo then
+                        inst.sg.statemem.iswaking = true
+                        inst.sg:GoToState("wakeup")
+                    else
+                        inst.AnimState:PlayAnimation(inst.sg.statemem.isinsomniac and "insomniac_sleep_loop" or "sleep_loop", true)
+                        inst.sg:AddStateTag("sleeping")
+                    end
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.components.grogginess then
+                inst.components.grogginess.knockedout = false
+				inst.components.grogginess:CapToResistance()
+            end
+            if inst.sg:HasStateTag("dismounting") then
+                --Interrupted
+                inst.components.rider:ActualDismount()
+            end
+            if not inst.sg.statemem.iswaking then
+                --Interrupted
+                SetSleeperAwakeState(inst)
+            end
+        end,
+    },
+	State({
+		name = "yawn",
+		tags = { "busy", "yawn", "pausepredict" },
+
+		onenter = function(inst, data)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+			if data ~= nil and data.grogginess ~= nil and data.grogginess > 0 and inst.components.grogginess ~= nil then
+				--Because we have the yawn state tag, we will not get
+				--knocked out no matter what our grogginess level is.
+				inst.sg.statemem.groggy = true
+				inst.sg.statemem.knockoutduration = data.knockoutduration
+				inst.components.grogginess:AddGrogginess(data.grogginess, data.knockoutduration)
+			end
+
+			inst.AnimState:PlayAnimation("yawn")
+		end,
+
+		timeline = {
+			TimeEvent(0.1, function(inst)
+			end),
+			TimeEvent(8 * FRAMES, function(inst)
+				if inst:HasTag("weregoose") then
+					DoYawnSound(inst)
+				end
+			end),
+			TimeEvent(15 * FRAMES, function(inst)
+			end),
+		},
+
+		events = {
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:RemoveStateTag("yawn")
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if inst.sg.statemem.groggy and not inst.sg:HasStateTag("yawn") and inst.components.grogginess ~= nil then
+				--Add a little grogginess to see if it triggers
+				--knock out now that we don't have the yawn tag
+				inst.components.grogginess:AddGrogginess(0.01, inst.sg.statemem.knockoutduration)
+			end
+		end,
 	}),
 }
 CommonStates.AddHopStates(states, true, { pre = "boat_jump_pre", loop = "boat_jump_loop", pst = "boat_jump_pst" })

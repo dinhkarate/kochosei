@@ -50,6 +50,7 @@ GLOBAL.setmetatable(env, {
 		return GLOBAL.rawget(GLOBAL, k)
 	end,
 })
+
 GLOBAL.Kochoseiapi = env
 local cooking = require("cooking")
 local ingredients = cooking.ingredients
@@ -67,7 +68,6 @@ local listmodneedcheck = {
 	"3152056502",
 	"2979177306", -- ** Nó, tôi cần phải mạnh hơn nữa
 }
-TUNING.KOCHOSEI_CHECKWIFI_CONFIG = GetModConfigData("kochosei_va_waifu") -- Này là wifi
 TUNING.KOCHOSEI_CHECKMOD = nil
 TUNING.KOCHOSEI_CHECKMOD_KYOUKA = nil
 TUNING.KOCHOSEI_CHECKWIFI = 0 -- Wifi mà, không phải waifu, nó là 0 vì nó nên như thế )
@@ -86,18 +86,18 @@ for _, v in ipairs(modsToLoad) do
 		end
 	end
 end
-
-if TUNING.KOCHOSEI_CHECKWIFI_CONFIG == 1 then
-	for _, v in ipairs(listmodneedcheck) do
-		for _, listmod in ipairs(modsToLoad) do
-			if listmod == "workshop-" .. v then
-				TUNING.KOCHOSEI_CHECKWIFI = TUNING.KOCHOSEI_CHECKWIFI + 50
-				break
-			end
+for _, v in ipairs(listmodneedcheck) do
+	for _, listmod in ipairs(modsToLoad) do
+		if listmod == "workshop-" .. v then
+			TUNING.KOCHOSEI_CHECKWIFI = TUNING.KOCHOSEI_CHECKWIFI + 50
+			break
 		end
 	end
 end
-
+if TUNING.KOCHOSEI_CHECKMOD_KYOUKA == 1 then
+	TUNING.KOCHOSEI_CHECKWIFI = TUNING.KOCHOSEI_CHECKWIFI + 200
+end
+print("Tổng điểm wifi trong host:", TUNING.KOCHOSEI_CHECKWIFI)
 function themgiap(inst)
 	if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
 		GLOBAL.dobenvohan = false
@@ -105,6 +105,7 @@ function themgiap(inst)
 
 	print(TUNING.KOCHO_HAT1_DURABILITY)
 end
+modimport("scripts/value_dhkg_a") -- TUNING- Value đ hiểu kiểu gì ạ
 
 ---- API skin cũ không dùng nữa nhưng vẫn để đó, biết đâu sau lại cần
 --[[ 
@@ -134,57 +135,56 @@ local kochofood = {
 }
 
 local listiteminv = {
-    "cay_hoa_sang",
-    "doro_xamchiemtraidat",
-    "kocho_lotus",
-    "kocho_lotus_flower",
-    "kocho_lotus_flower_cooked",
-    "kocho_miku_back",
-    "kocho_miku_cos",
-    "kocho_purplesword",
-    "kochosei_ancient_books",
-    "kochosei_apple",
-    "kochosei_apple_cooked",
-    "kochosei_armor_1",
-    "kochosei_armor_2",
-    "kochosei_building_redlantern",
-    "kochosei_chest_5x5",
-    "kochosei_christmast_torch1",
-    "kochosei_demonlord",
-    "kochosei_fridge_5x5",
-    "kochosei_hat1",
-    "kochosei_hat2",
-    "kochosei_hat3",
-    "kochosei_hatfl",
-    "kochosei_hatfl_skin",
-    "kochosei_house",
-    "kochosei_lantern",
-    "kochosei_may_gacha",
-    "kochosei_purplemagic",
-    "kochosei_ribbon",
-    "kochosei_streetlight1_left",
-    "kochosei_streetlight1_musicbox",
-    "kochosei_streetlight1_right",
-    "kochosei_tab_icon",
-    "kochosei_thien_su_ban_phuc_cam",
-    "kochosei_thien_su_ban_phuc_hong",
-    "kochosei_thien_su_ban_phuc_xanh",
-    "kochosei_torigate",
-    "kochosei_umbrella",
-    "kochosei_wishlamp",
-    "kochotambourin",
-    "lucky_hammer",
-    "miku_usagi_backpack",
-    "miohm",
-    "ms_kochosei_hat2",
-    "ms_kochosei_hat3",
+	"cay_hoa_sang",
+	"doro_xamchiemtraidat",
+	"kocho_lotus",
+	"kocho_lotus_flower",
+	"kocho_lotus_flower_cooked",
+	"kocho_miku_back",
+	"kocho_miku_cos",
+	"kocho_purplesword",
+	"kochosei_ancient_books",
+	"kochosei_apple",
+	"kochosei_apple_cooked",
+	"kochosei_armor_1",
+	"kochosei_armor_2",
+	"kochosei_building_redlantern",
+	"kochosei_chest_5x5",
+	"kochosei_christmast_torch1",
+	"kochosei_demonlord",
+	"kochosei_fridge_5x5",
+	"kochosei_hat1",
+	"kochosei_hat2",
+	"kochosei_hat3",
+	"kochosei_hatfl",
+	"kochosei_hatfl_skin",
+	"kochosei_house",
+	"kochosei_lantern",
+	"kochosei_may_gacha",
+	"kochosei_purplemagic",
+	"kochosei_ribbon",
+	"kochosei_streetlight1_left",
+	"kochosei_streetlight1_musicbox",
+	"kochosei_streetlight1_right",
+	"kochosei_tab_icon",
+	"kochosei_thien_su_ban_phuc_cam",
+	"kochosei_thien_su_ban_phuc_hong",
+	"kochosei_thien_su_ban_phuc_xanh",
+	"kochosei_torigate",
+	"kochosei_umbrella",
+	"kochosei_wishlamp",
+	"kochotambourin",
+	"lucky_hammer",
+	"miku_usagi_backpack",
+	"miohm",
+	"ms_kochosei_hat2",
+	"ms_kochosei_hat3",
 	"kochosei_card_health",
 	"kochosei_card_attack",
 	"kochosei_card_defend",
 	"kochosei_duke_crown",
-	"kochosei_harvest_book"
+	"kochosei_harvest_book",
 }
-
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
 -- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
@@ -284,8 +284,6 @@ function KeyBind(_, key)
 	end -- disable old binding
 	skillnamngua = key and GLOBAL.TheInput:AddKeyDownHandler(key, SendnamnguaRPC) or nil -- new binding or delete
 end
-
-modimport("scripts/value_dhkg_a") -- TUNING- Value đ hiểu kiểu gì ạ
 
 modimport("scripts/widgets/balovali") -- balovali
 

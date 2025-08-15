@@ -9,7 +9,7 @@ If you want to change the key for Kocho to sleep, you can set it in the game Set
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
 
-version = "4.3.4"
+version = "4.3.5"
 
 forumthread = ""
 

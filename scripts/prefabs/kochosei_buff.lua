@@ -153,9 +153,6 @@ local function Buff_Food_Tom(inst, target)
 	target.components.hunger:SetMax(999)
 	target.components.health:SetMaxHealth(999)
 	target.components.sanity:SetMax(999)
-	if not target.components.planarentity then
-		target:AddComponent("planarentity")
-	end
 end
 
 local function D_Buff_Food_Tom(inst, target)
