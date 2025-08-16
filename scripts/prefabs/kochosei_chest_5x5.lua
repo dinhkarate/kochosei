@@ -126,8 +126,8 @@ end
 local function fnfr()
 	local inst = commonchest("kochosei_fridge_5x5", "kochosei_fridge_5x5")
 
-    inst:AddTag("fridge")
-    inst:AddTag("structure")
+    inst:AddTag("frozen")
+	inst:AddTag("fridge")
 	inst.SoundEmitter:PlaySound("dontstarve/common/ice_box_LP", "idlesound")
 	if not TheWorld.ismastersim then
 		return inst

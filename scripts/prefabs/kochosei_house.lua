@@ -206,6 +206,17 @@ local function onsleep(inst, sleeper)
 		inst.sleeptask:Cancel()
 	end
 	inst.sleeptask = inst:DoPeriodicTask(TUNING.SLEEP_TICK_PERIOD, onsleeptick, nil, sleeper)
+	if sleeper and sleeper:HasTag("kochosei") then
+		local pet = sleeper.components.petleash:GetPets()
+		for _, v in pairs(pet) do
+			v:DoTaskInTime(2, function()
+				v:PushEvent("yawn", {
+					grogginess = 4,
+					knockoutduration = 1 / 0,
+				})
+			end)
+		end
+	end
 end
 
 local function onsave(inst, data)
@@ -257,7 +268,7 @@ local function common_fn(bank, build, icon, tag, onbuiltfn)
 	inst.AnimState:SetBuild("kochosei_house")
 	inst.AnimState:PlayAnimation("idle", true)
 
-	 inst.AnimState:SetScale(SCALE, SCALE, SCALE)
+	inst.AnimState:SetScale(SCALE, SCALE, SCALE)
 
 	inst.MiniMapEntity:SetIcon(icon)
 
