@@ -67,7 +67,7 @@ local function fnback()
     return inst
 end
 
-local KHONG_TAG = {"player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic"}
+local KHONG_TAG = {"player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic","warg"}
 local CAN_TAG = {"shadowcreature", "monster", "frog"}
 local function checkfl(inst)
     local follower = inst.components.follower

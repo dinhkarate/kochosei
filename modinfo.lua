@@ -9,7 +9,7 @@ If you want to change the key for Kocho to sleep, you can set it in the game Set
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
 
-version = "4.3.5"
+version = "4.4.0"
 
 forumthread = ""
 
@@ -374,10 +374,17 @@ configuration_options = {
 		default = 0,
 	},
 	{
-		name = "keykocho",
+		name = "key_namngua",
 		label = "Kochosei Key To Sleep",
 		options = keys, -- all keys
-		default = 'KEY_End', -- default key
+		default = 'End', -- default key
+
+	},
+		{
+		name = "key_kochoweapon",
+		label = "Kochosei Get Weapon Back",
+		options = keys, -- all keys
+		default = 'Home', -- default key
 
 	},
 	{

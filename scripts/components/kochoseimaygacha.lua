@@ -4,7 +4,7 @@ end)
 -- Cơ bản nó để thêm action chứ không có ứng dụng gì khác
 function Kochoseimaygacha:Gachatime(doer)
 	if not self.inst.components.timer:TimerExists("maygacha") then
-		self.inst.components.timer:StartTimer("maygacha", 5)
+		self.inst.components.timer:StartTimer("maygacha", 1)
 	end
 	self.inst:PushEvent("banoidungnghiennua", { doer = doer })
 end

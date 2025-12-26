@@ -11,6 +11,7 @@ local kochosei_tab = {
 AddRecipeFilter(kochosei_tab)
 
 STRINGS.UI.CRAFTING_FILTERS.KOCHOSEI_TAB = "Cái con cò gì thế này?"
+--[[
 AddCharacterRecipe(
 	"kochosei_fridge_5x5",
 	{ Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1) },
@@ -35,6 +36,8 @@ AddCharacterRecipe(
 
 	{ "CHARACTER" }
 )
+--]]
+
 AddCharacterRecipe(
 	"doro_xamchiemtraidat",
 	{ Ingredient("twigs", 2) },

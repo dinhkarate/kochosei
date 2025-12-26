@@ -155,7 +155,10 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
 		inst:AddComponent("lootdropper")
 		inst:AddComponent("talker")
-
+		
+		inst:AddComponent("grogginess")
+		
+		inst:AddComponent("rider")
 		inst:SetBrain(brain)
 		inst:SetStateGraph("SGkochosei_enemy")
 
