@@ -22,7 +22,7 @@ local function ExtendBuff(inst)
 
 	if inst[buffTaskKey] then
 		inst[buffTaskKey]:Cancel()
-		local duration = inst.prefab == "elysia_5_buff" and 120 or 60
+		local duration = inst.prefab == "elysia_5_buff" and 240 or 120
 		inst[buffTaskKey] = inst:DoTaskInTime(duration, StopBuff)
 	end
 end

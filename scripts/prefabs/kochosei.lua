@@ -362,6 +362,23 @@ end
 -----------------------------------------------------------------------------
 
 local function OnEquipCustom(inst, data)
+    if data.item and data.item:HasTag("miohm") then
+        local weapon = data.item.components.weapon
+        local kochosei = inst.components.kochoseiweapon
+        if weapon then
+            local weapondamage = weapon.damage or 0
+            local miohmdamage = kochosei and kochosei.damagemiohm or 0
+
+            if weapondamage > miohmdamage then
+                kochosei.damagemiohm = weapondamage
+            else
+                weapon.damage = miohmdamage
+            end
+        end
+        inst.saveidmiohm = data.item.GUID
+        print("Save id miohm: " .. tostring(inst.saveidmiohm))
+    end
+
     local checkskin = inst.AnimState:GetBuild()
     if checkskin and checkskin == "kochosei_skin_shinku_full" then
         inst.AnimState:ClearOverrideSymbol("swap_hat")
@@ -482,6 +499,80 @@ local function namngua(inst)
     end
 
 end
+local MIO_NOT_TAG = {"INLIMBO", "NOCLICK", "notarget", "playerghost", "wall"}
+
+local function checkmiohmonhandslot(inst)
+    local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+    return item ~= nil and item:HasTag("miohm")
+end
+
+local function getmiohmback(inst)
+    -- Nếu đã có miohm trên tay thì không làm gì
+    if checkmiohmonhandslot(inst) then
+        return
+    end
+
+    -- Nếu chưa sở hữu thì không gọi được
+    if not inst.components.kochoseiweapon or not inst.components.kochoseiweapon.ownmiohm then
+        inst.components.talker:Say("Chưa sở hữu Miohm không thể gọi nó")
+        return
+    end
+
+    local target = nil
+    local items = inst.components.inventory:ReferenceAllItems()
+
+    -- Ưu tiên tìm trong inventory
+    if inst.saveidmiohm and inst.components.inventory then
+        for _, v in pairs(items) do
+            if v and v.GUID == inst.saveidmiohm then
+                target = v
+                break
+            end
+        end
+    end
+
+    -- Nếu chưa tìm thấy trong inventory thì tìm trong world
+    if not target and inst.saveidmiohm then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local ents = TheSim:FindEntities(x, y, z, 9999, {"miohm"}, MIO_NOT_TAG)
+        for _, v in ipairs(ents) do
+            if v and v.GUID == inst.saveidmiohm then
+                target = v
+                break
+            end
+        end
+    end
+
+    -- Xóa những miohm thừa (không trùng GUID với saveidmiohm)
+    for _, v in pairs(items) do
+        if v and v:HasTag("miohm") and (not inst.saveidmiohm or v.GUID ~= inst.saveidmiohm) then
+            v:Remove()
+        end
+    end
+
+    -- Nếu vẫn không có thì spawn mới
+    if not target then
+        target = SpawnPrefab("miohm")
+    end
+
+    -- Equip item vào slot tay
+    if target and inst.components.inventory then
+        inst.components.inventory:Equip(target)
+
+        -- Hiệu ứng spawn ngay tại vị trí nhân vật
+        local spawnfx = SpawnPrefab("spawn_fx_small")
+        if spawnfx then
+            spawnfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end
+    end
+end
+
+local function OnCraftMiohm(inst, data)
+    if data and data.recipe and data.recipe.name == "miohm" then
+        inst.components.kochoseiweapon.ownmiohm = true
+    end
+end
+
 local master_postinit = function(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
     inst.OnNewSpawn = OnNewSpawn
@@ -519,6 +610,8 @@ local master_postinit = function(inst)
     inst:AddComponent("cuocdoiquabatcongdi") -- Wifi không nên thế
     inst.components.cuocdoiquabatcongdi:Character()
 
+    inst:AddComponent("kochoseiweapon") -- Vũ khí của Kochosei
+
     inst:ListenForEvent("emote", onemote)
     inst:ListenForEvent("equip", OnEquipCustom)
     inst:ListenForEvent("unequip", OnUnequipCustom)
@@ -529,6 +622,8 @@ local master_postinit = function(inst)
     inst:ListenForEvent("picksomething", onpick)
     inst:ListenForEvent("onhitother", OnHitOther)
     inst:ListenForEvent("namngua", namngua)
+    inst:ListenForEvent("getmiohmback", getmiohmback)
+    inst:ListenForEvent("builditem", OnCraftMiohm)
     inst.wlist = wlist
     ---------------------------Kén ăn------------------
     local inedibles = {}
