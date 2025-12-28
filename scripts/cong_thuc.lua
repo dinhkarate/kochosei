@@ -572,3 +572,17 @@ AddCharacterRecipe(
 	{ builder_tag = "kochosei", product = "butter" },
 	{ "CHARACTER" }
 )
+
+-- Elysia Gift - decorative structure with light, warmth and sanity aura
+AddRecipe2(
+	"kochosei_elysia_gift",
+	{ Ingredient("petals", 10), Ingredient("twigs", 2) },
+	TECH.NONE,
+	{ 
+		placer = "kochosei_elysia_gift_placer", 
+		min_spacing = 1,
+		atlas = "images/inventoryimages/kochosei_elysia_gift_64.xml",
+		image = "kochosei_elysia_gift_64.tex",
+	},
+	{ "KOCHOSEI_TAB" }
+)

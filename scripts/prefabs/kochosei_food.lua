@@ -71,7 +71,7 @@ local function MakePreparedFood(data)
 			inst.AnimState:SetBuild(realname)
 			inst.AnimState:SetBank(realname)
 		end
-		inst.AnimState:PlayAnimation("idle")
+		inst.AnimState:PlayAnimation("idle", true)
 		inst.AnimState:OverrideSymbol("swap_food", realname, realname)
 
 		if data.floater ~= nil then

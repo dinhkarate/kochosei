@@ -156,6 +156,9 @@ for _, prefab in ipairs(listiteminv) do
     RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
 end
 
+-- Elysia Gift dùng atlas riêng
+RegisterInventoryItemAtlas(resolvefilepath("images/inventoryimages/kochosei_elysia_gift_64.xml"), "kochosei_elysia_gift_64.tex")
+
 PrefabFiles = {
     "kochosei_apple_tree", "kochosei_apple_planted_tree", "kochosei_apple",
     "kochosei_apple_plantables", "kochosei", "kochosei_none", "kochosei_miohm",
@@ -176,7 +179,8 @@ PrefabFiles = {
     "kochosei_altar", "kochosei_duke", "kochosei_tornado",
     "catcoon_build_projectile", "kochosei_enemy_d", -- T dùng )
     "kochosei_tigershark_duke_shadow", "kochosei_card", "kochosei_boss",
-    "kochosei_thien_su_ban_phuc" -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+    "kochosei_thien_su_ban_phuc", -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+    "kochosei_elysia_gift" -- Elysia Gift structure with light, warmth and sanity aura
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
