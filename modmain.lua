@@ -1,6 +1,8 @@
 --[[
 Cảnh báo: Bãi rác phía trước đã lâu không có người dọn dẹp.
-Warning: The dump ahead has not been cleaned for a long time.                                                                                       
+Warning: The dump ahead has not been cleaned for a long time.     
+
+Chậc chậc... Đúng là một bãi rác thật sự.
                                            ÅÅggggÅ                                                  
                                       ÅgÞ‡3333333333g                                               
                                    ÅÅÅÅÅÅÅgggÅ633333GÅ                                              
@@ -112,9 +114,10 @@ local kochofood = {
     "kochofood_cheese_honey_cake", "kochofood_apple_candy",
     "kochofood_kiwi_juice", "kochofood_xienthit", "kochofood_seafood_soup",
     "kochofood_berry_cake", "kochofood_cafe", "kochofood_bunreal",
-    "kochofood_banhmi_2"
+    "kochofood_banhmi_2", "kochosei_tyrant_juice"
 }
 
+-- Cái đéo gì Doro xâm chiếm trái đất ????????????????
 local listiteminv = {
     "cay_hoa_sang", "doro_xamchiemtraidat", "kocho_lotus", "kocho_lotus_flower",
     "kocho_lotus_flower_cooked", "kocho_miku_back", "kocho_miku_cos",
@@ -132,21 +135,34 @@ local listiteminv = {
     "kochosei_wishlamp", "kochotambourin", "lucky_hammer",
     "miku_usagi_backpack", "miohm", "ms_kochosei_hat2", "ms_kochosei_hat3",
     "kochosei_card_health", "kochosei_card_attack", "kochosei_card_defend",
-    "kochosei_duke_crown", "kochosei_harvest_book"
+    "kochosei_duke_crown", "kochosei_harvest_book", "triple_kocho"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
 -- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
 for _, prefab in ipairs(kochofood) do
-    local atlas = "images/inventoryimages/kochofood.xml"
-    local tex = prefab .. ".tex"
-    RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
+    -- kochosei_tyrant_juice dùng atlas riêng
+    if prefab == "kochosei_tyrant_juice" then
+        local atlas = "images/inventoryimages/kochosei_tyrant_juice.xml"
+        local tex = "kochosei_tyrant_juice.tex"
+        RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
+    else
+        local atlas = "images/inventoryimages/kochofood.xml"
+        local tex = prefab .. ".tex"
+        RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
+    end
 end
 for _, prefab in ipairs(listiteminv) do
     local atlas = "images/inventoryimages/kochosei_inv.xml"
     local tex = prefab .. ".tex"
     RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
 end
+
+-- Elysia Gift dùng atlas riêng
+RegisterInventoryItemAtlas(resolvefilepath("images/inventoryimages/kochosei_elysia_gift_64.xml"), "kochosei_elysia_gift_64.tex")
+
+-- Kochosei Coffin dùng atlas riêng
+RegisterInventoryItemAtlas(resolvefilepath("images/inventoryimages/kochosei_coffin_close_64.xml"), "kochosei_coffin_close_64.tex")
 
 PrefabFiles = {
     "kochosei_apple_tree", "kochosei_apple_planted_tree", "kochosei_apple",
@@ -168,7 +184,10 @@ PrefabFiles = {
     "kochosei_altar", "kochosei_duke", "kochosei_tornado",
     "catcoon_build_projectile", "kochosei_enemy_d", -- T dùng )
     "kochosei_tigershark_duke_shadow", "kochosei_card", "kochosei_boss",
-    "kochosei_thien_su_ban_phuc" -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+    "kochosei_thien_su_ban_phuc", -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+    "kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
+    "kochosei_coffin", -- Cursed coffin - sleep anytime, super regen, die when crafting
+    "triple_kocho" -- Rương lớn 10x5 slots
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -555,6 +574,8 @@ STRINGS.NAMES.KOCHOFOOD_APPLE_CANDY = "Apple Candy"
 STRINGS.NAMES.KOCHOFOOD_BUNREAL = "Bún Real"
 STRINGS.NAMES.KOCHOFOOD_BANHMI_2 = "Bánh Mì"
 STRINGS.NAMES.KOCHOFOOD_CAFE = "Cà Phê Sữa Đá"
+STRINGS.NAMES.KOCHOSEI_TYRANT_JUICE = "Tyrant Juice"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_TYRANT_JUICE = "Tyrant's favourite drink"
 STRINGS.NAMES.KOCHOSEI_GIFT = STRINGS.NAMES.GIFT
 --------------------------------------
 STRINGS.NAMES.LYDOCHET = "Cast Revive Kochotambourin"
@@ -604,6 +625,11 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_2 = "Are You"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
+-- Kochosei Coffin - Cursed sleeping coffin
+STRINGS.NAMES.KOCHOSEI_COFFIN = "Cursed Coffin"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_COFFIN = "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+STRINGS.RECIPE_DESC.KOCHOSEI_COFFIN = "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+
 -- STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
@@ -627,6 +653,7 @@ AddStategraphState("wilson",GLOBAL.State{
 })
 
 ----lam chua xong
+-- RỒi sao ko làm tiếp coi
 
 AddStategraphActionHandler("wilson",GLOBAL.ActionHandler(GLOBAL.ACTIONS.TILL,function(inst)
             return inst:HasTag("kochosei") and "tillconcomio" or  "till_start"   end))

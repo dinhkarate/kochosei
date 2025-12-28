@@ -19,7 +19,7 @@ if folder_name:match("2978066706") then
 elseif folder_name:match("2733891656") then
 	name = "Kochosei in Onmyoji"
 else
-	name = "Test Local -- Dinh"
+	name = "Test Local -- Dinh 28 12 2025"
 	-- ?
 end
 
