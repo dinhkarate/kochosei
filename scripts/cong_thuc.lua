@@ -606,3 +606,20 @@ AddRecipe2(
 	},
 	{ "KOCHOSEI_TAB" }
 )
+
+-- Triple Kocho - Rương lớn 10x5 = 50 slots
+AddRecipe2(
+	"triple_kocho",
+	{ 
+		Ingredient("reviver", 3),
+		Ingredient("kochosei_purplemagic", 3),
+	},
+	TECH.NONE,
+	{ 
+		placer = "triple_kocho_placer", 
+		min_spacing = 1,
+		atlas = "images/inventoryimages/triple_kocho.xml",
+		image = "triple_kocho.tex",
+	},
+	{ "KOCHOSEI_TAB" }
+)

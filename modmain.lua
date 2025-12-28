@@ -135,7 +135,7 @@ local listiteminv = {
     "kochosei_wishlamp", "kochotambourin", "lucky_hammer",
     "miku_usagi_backpack", "miohm", "ms_kochosei_hat2", "ms_kochosei_hat3",
     "kochosei_card_health", "kochosei_card_attack", "kochosei_card_defend",
-    "kochosei_duke_crown", "kochosei_harvest_book"
+    "kochosei_duke_crown", "kochosei_harvest_book", "triple_kocho"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
@@ -186,7 +186,8 @@ PrefabFiles = {
     "kochosei_tigershark_duke_shadow", "kochosei_card", "kochosei_boss",
     "kochosei_thien_su_ban_phuc", -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
     "kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
-    "kochosei_coffin" -- Cursed coffin - sleep anytime, super regen, die when crafting
+    "kochosei_coffin", -- Cursed coffin - sleep anytime, super regen, die when crafting
+    "triple_kocho" -- Rương lớn 10x5 slots
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
