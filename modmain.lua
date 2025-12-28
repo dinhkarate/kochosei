@@ -112,9 +112,10 @@ local kochofood = {
     "kochofood_cheese_honey_cake", "kochofood_apple_candy",
     "kochofood_kiwi_juice", "kochofood_xienthit", "kochofood_seafood_soup",
     "kochofood_berry_cake", "kochofood_cafe", "kochofood_bunreal",
-    "kochofood_banhmi_2"
+    "kochofood_banhmi_2", "kochosei_tyrant_juice"
 }
 
+-- Cái đéo gì Doro xâm chiếm trái đất ????????????????
 local listiteminv = {
     "cay_hoa_sang", "doro_xamchiemtraidat", "kocho_lotus", "kocho_lotus_flower",
     "kocho_lotus_flower_cooked", "kocho_miku_back", "kocho_miku_cos",
@@ -138,9 +139,16 @@ local listiteminv = {
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
 -- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
 for _, prefab in ipairs(kochofood) do
-    local atlas = "images/inventoryimages/kochofood.xml"
-    local tex = prefab .. ".tex"
-    RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
+    -- kochosei_tyrant_juice dùng atlas riêng
+    if prefab == "kochosei_tyrant_juice" then
+        local atlas = "images/inventoryimages/kochosei_tyrant_juice.xml"
+        local tex = "kochosei_tyrant_juice.tex"
+        RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
+    else
+        local atlas = "images/inventoryimages/kochofood.xml"
+        local tex = prefab .. ".tex"
+        RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
+    end
 end
 for _, prefab in ipairs(listiteminv) do
     local atlas = "images/inventoryimages/kochosei_inv.xml"
@@ -555,6 +563,8 @@ STRINGS.NAMES.KOCHOFOOD_APPLE_CANDY = "Apple Candy"
 STRINGS.NAMES.KOCHOFOOD_BUNREAL = "Bún Real"
 STRINGS.NAMES.KOCHOFOOD_BANHMI_2 = "Bánh Mì"
 STRINGS.NAMES.KOCHOFOOD_CAFE = "Cà Phê Sữa Đá"
+STRINGS.NAMES.KOCHOSEI_TYRANT_JUICE = "Tyrant Juice"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_TYRANT_JUICE = "Tyrant's favourite drink"
 STRINGS.NAMES.KOCHOSEI_GIFT = STRINGS.NAMES.GIFT
 --------------------------------------
 STRINGS.NAMES.LYDOCHET = "Cast Revive Kochotambourin"
