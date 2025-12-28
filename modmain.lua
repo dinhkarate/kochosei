@@ -1,6 +1,8 @@
 --[[
 Cảnh báo: Bãi rác phía trước đã lâu không có người dọn dẹp.
-Warning: The dump ahead has not been cleaned for a long time.                                                                                       
+Warning: The dump ahead has not been cleaned for a long time.     
+
+Chậc chậc... Đúng là một bãi rác thật sự.
                                            ÅÅggggÅ                                                  
                                       ÅgÞ‡3333333333g                                               
                                    ÅÅÅÅÅÅÅgggÅ633333GÅ                                              
@@ -159,6 +161,9 @@ end
 -- Elysia Gift dùng atlas riêng
 RegisterInventoryItemAtlas(resolvefilepath("images/inventoryimages/kochosei_elysia_gift_64.xml"), "kochosei_elysia_gift_64.tex")
 
+-- Kochosei Coffin dùng atlas riêng
+RegisterInventoryItemAtlas(resolvefilepath("images/inventoryimages/kochosei_coffin_close_64.xml"), "kochosei_coffin_close_64.tex")
+
 PrefabFiles = {
     "kochosei_apple_tree", "kochosei_apple_planted_tree", "kochosei_apple",
     "kochosei_apple_plantables", "kochosei", "kochosei_none", "kochosei_miohm",
@@ -180,7 +185,8 @@ PrefabFiles = {
     "catcoon_build_projectile", "kochosei_enemy_d", -- T dùng )
     "kochosei_tigershark_duke_shadow", "kochosei_card", "kochosei_boss",
     "kochosei_thien_su_ban_phuc", -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
-    "kochosei_elysia_gift" -- Elysia Gift structure with light, warmth and sanity aura
+    "kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
+    "kochosei_coffin" -- Cursed coffin - sleep anytime, super regen, die when crafting
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -618,6 +624,11 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_2 = "Are You"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
+-- Kochosei Coffin - Cursed sleeping coffin
+STRINGS.NAMES.KOCHOSEI_COFFIN = "Cursed Coffin"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_COFFIN = "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+STRINGS.RECIPE_DESC.KOCHOSEI_COFFIN = "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+
 -- STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
@@ -641,6 +652,7 @@ AddStategraphState("wilson",GLOBAL.State{
 })
 
 ----lam chua xong
+-- RỒi sao ko làm tiếp coi
 
 AddStategraphActionHandler("wilson",GLOBAL.ActionHandler(GLOBAL.ACTIONS.TILL,function(inst)
             return inst:HasTag("kochosei") and "tillconcomio" or  "till_start"   end))

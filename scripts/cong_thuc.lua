@@ -1,5 +1,6 @@
 local Ingredient = GLOBAL.Ingredient
 local TECH = GLOBAL.TECH
+local CHARACTER_INGREDIENT = GLOBAL.CHARACTER_INGREDIENT
 
 local kochosei_tab = {
 	name = "kochosei_tab",
@@ -583,6 +584,25 @@ AddRecipe2(
 		min_spacing = 1,
 		atlas = "images/inventoryimages/kochosei_elysia_gift_64.xml",
 		image = "kochosei_elysia_gift_64.tex",
+	},
+	{ "KOCHOSEI_TAB" }
+)
+
+-- Kochosei Coffin - Cursed sleeping coffin (die when crafting)
+-- Công thức: tim đen x1, gỗ ma x4, vàng x4, toàn bộ máu player
+AddRecipe2(
+	"kochosei_coffin",
+	{ 
+		Ingredient("reviver", 1),
+		Ingredient("livinglog", 4),
+		Ingredient("goldnugget", 4),
+	},
+	TECH.NONE,
+	{ 
+		placer = "kochosei_coffin_placer", 
+		min_spacing = 1,
+		atlas = "images/inventoryimages/kochosei_coffin_close_64.xml",
+		image = "kochosei_coffin_close_64.tex",
 	},
 	{ "KOCHOSEI_TAB" }
 )
