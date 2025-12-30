@@ -1,5 +1,6 @@
 local Ingredient = GLOBAL.Ingredient
 local TECH = GLOBAL.TECH
+local CHARACTER_INGREDIENT = GLOBAL.CHARACTER_INGREDIENT
 
 local kochosei_tab = {
 	name = "kochosei_tab",
@@ -11,7 +12,6 @@ local kochosei_tab = {
 AddRecipeFilter(kochosei_tab)
 
 STRINGS.UI.CRAFTING_FILTERS.KOCHOSEI_TAB = "Cái con cò gì thế này?"
---[[
 AddCharacterRecipe(
 	"kochosei_fridge_5x5",
 	{ Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1) },
@@ -36,7 +36,7 @@ AddCharacterRecipe(
 
 	{ "CHARACTER" }
 )
---]]
+
 
 AddCharacterRecipe(
 	"doro_xamchiemtraidat",
@@ -571,4 +571,48 @@ AddCharacterRecipe(
 	TECH.NONE,
 	{ builder_tag = "kochosei", product = "butter" },
 	{ "CHARACTER" }
+)
+
+-- Elysia Gift - decorative structure with light, warmth and sanity aura
+AddRecipe2(
+	"kochosei_elysia_gift",
+	{ Ingredient("petals", 10), Ingredient("twigs", 2) },
+	TECH.NONE,
+	{ 
+		placer = "kochosei_elysia_gift_placer", 
+		min_spacing = 1,
+	},
+	{ "KOCHOSEI_TAB" }
+)
+
+-- Kochosei Coffin - Cursed sleeping coffin (die when crafting)
+-- Công thức: tim đen x1, gỗ ma x4, vàng x4, toàn bộ máu player
+AddRecipe2(
+	"kochosei_coffin",
+	{ 
+		Ingredient("reviver", 1),
+		Ingredient("livinglog", 4),
+		Ingredient("goldnugget", 4),
+	},
+	TECH.NONE,
+	{ 
+		placer = "kochosei_coffin_placer", 
+		min_spacing = 1,
+	},
+	{ "KOCHOSEI_TAB" }
+)
+
+-- Triple Kocho - Rương lớn 10x5 = 50 slots
+AddRecipe2(
+	"triple_kocho",
+	{ 
+		Ingredient("reviver", 3),
+		Ingredient("kochosei_purplemagic", 3),
+	},
+	TECH.NONE,
+	{ 
+		placer = "triple_kocho_placer", 
+		min_spacing = 1,
+	},
+	{ "KOCHOSEI_TAB" }
 )

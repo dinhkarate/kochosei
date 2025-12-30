@@ -1,6 +1,8 @@
 --[[
 Cảnh báo: Bãi rác phía trước đã lâu không có người dọn dẹp.
-Warning: The dump ahead has not been cleaned for a long time.                                                                                       
+Warning: The dump ahead has not been cleaned for a long time.     
+
+Chậc chậc... Đúng là một bãi rác thật sự.
                                            ÅÅggggÅ                                                  
                                       ÅgÞ‡3333333333g                                               
                                    ÅÅÅÅÅÅÅgggÅ633333GÅ                                              
@@ -112,9 +114,10 @@ local kochofood = {
     "kochofood_cheese_honey_cake", "kochofood_apple_candy",
     "kochofood_kiwi_juice", "kochofood_xienthit", "kochofood_seafood_soup",
     "kochofood_berry_cake", "kochofood_cafe", "kochofood_bunreal",
-    "kochofood_banhmi_2"
+    "kochofood_banhmi_2", "kochofood_tyrant_juice"
 }
 
+-- Cái đéo gì Doro xâm chiếm trái đất ????????????????
 local listiteminv = {
     "cay_hoa_sang", "doro_xamchiemtraidat", "kocho_lotus", "kocho_lotus_flower",
     "kocho_lotus_flower_cooked", "kocho_miku_back", "kocho_miku_cos",
@@ -132,12 +135,14 @@ local listiteminv = {
     "kochosei_wishlamp", "kochotambourin", "lucky_hammer",
     "miku_usagi_backpack", "miohm", "ms_kochosei_hat2", "ms_kochosei_hat3",
     "kochosei_card_health", "kochosei_card_attack", "kochosei_card_defend",
-    "kochosei_duke_crown", "kochosei_harvest_book"
+    "kochosei_duke_crown", "kochosei_harvest_book", "triple_kocho",
+    "kochosei_elysia_gift", "kochosei_coffin"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
 -- Biết dùng hẳn cái này luôn rồi Haru quá mạnh --
 for _, prefab in ipairs(kochofood) do
+
     local atlas = "images/inventoryimages/kochofood.xml"
     local tex = prefab .. ".tex"
     RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
@@ -168,18 +173,21 @@ PrefabFiles = {
     "kochosei_altar", "kochosei_duke", "kochosei_tornado",
     "catcoon_build_projectile", "kochosei_enemy_d", -- T dùng )
     "kochosei_tigershark_duke_shadow", "kochosei_card", "kochosei_boss",
-    "kochosei_thien_su_ban_phuc" -- "kochosei_chest_5x5", Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+    "kochosei_thien_su_ban_phuc", "kochosei_chest_5x5", --Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+    "kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
+    "kochosei_coffin", -- Cursed coffin - sleep anytime, super regen, die when crafting
+    "triple_kocho" -- Rương lớn 10x5 slots
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
 modimport("scripts/keybind")
 
-
 local function namngua(inst)
     if inst.prefab ~= "kochosei" then
         if inst.components.talker then
-            inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
+            inst.components.talker:Say(
+                "Không phải con lông tím bấm phím đó vô ích hoi")
         end
         return
     end
@@ -189,7 +197,8 @@ end
 local function getmiohmback(inst)
     if inst.prefab ~= "kochosei" then
         if inst.components.talker then
-            inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
+            inst.components.talker:Say(
+                "Không phải con lông tím bấm phím đó vô ích hoi")
         end
         return
     end
@@ -208,7 +217,7 @@ end
 local key_handlers = {}
 local handler_fns = {
     key_namngua = SendnamnguaRPC,
-    key_kochoweapon = Sendgetmiohmbackrpc,
+    key_kochoweapon = Sendgetmiohmbackrpc
 }
 
 function KeyBind(name, key)
@@ -217,15 +226,14 @@ function KeyBind(name, key)
         key_handlers[name] = nil
     end
     if key and handler_fns[name] then
-        key_handlers[name] = GLOBAL.TheInput:AddKeyDownHandler(key, handler_fns[name])
+        key_handlers[name] = GLOBAL.TheInput:AddKeyDownHandler(key,
+                                                               handler_fns[name])
     end
 end
 
 --------------------------------------------------------------------------
 -- Import keybind system
 --------------------------------------------------------------------------
-
-
 
 modimport("scripts/widgets/balovali") -- balovali
 
@@ -321,6 +329,10 @@ end)
 AddPrefabPostInit("deerclops", function(inst)
     if not TheWorld.ismastersim then return inst end
     inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
+end)
+
+AddPrefabPostInit("sharkboi_ice_hazard", function(inst)
+    inst:AddTag("ice_kochosei")    
 end)
 
 AddBrainPostInit("butterflybrain",
@@ -555,6 +567,9 @@ STRINGS.NAMES.KOCHOFOOD_APPLE_CANDY = "Apple Candy"
 STRINGS.NAMES.KOCHOFOOD_BUNREAL = "Bún Real"
 STRINGS.NAMES.KOCHOFOOD_BANHMI_2 = "Bánh Mì"
 STRINGS.NAMES.KOCHOFOOD_CAFE = "Cà Phê Sữa Đá"
+STRINGS.NAMES.KOCHOSEI_TYRANT_JUICE = "Tyrant Juice"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_TYRANT_JUICE =
+    "Tyrant's favourite drink"
 STRINGS.NAMES.KOCHOSEI_GIFT = STRINGS.NAMES.GIFT
 --------------------------------------
 STRINGS.NAMES.LYDOCHET = "Cast Revive Kochotambourin"
@@ -604,6 +619,13 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_2 = "Are You"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_3 = "So"
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 
+-- Kochosei Coffin - Cursed sleeping coffin
+STRINGS.NAMES.KOCHOSEI_COFFIN = "Cursed Coffin"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_COFFIN =
+    "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+STRINGS.RECIPE_DESC.KOCHOSEI_COFFIN =
+    "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+
 -- STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
 -----------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
@@ -627,6 +649,7 @@ AddStategraphState("wilson",GLOBAL.State{
 })
 
 ----lam chua xong
+-- RỒi sao ko làm tiếp coi
 
 AddStategraphActionHandler("wilson",GLOBAL.ActionHandler(GLOBAL.ACTIONS.TILL,function(inst)
             return inst:HasTag("kochosei") and "tillconcomio" or  "till_start"   end))

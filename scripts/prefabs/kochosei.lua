@@ -40,6 +40,23 @@ local function spawnfcmnx(inst)
     end
 end
 
+local function HandleIceSpawn(inst)
+    if inst.kochostop > 300 then
+        -- Kiểm tra đã có băng gần chưa
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local near_ice = TheSim:FindEntities(x, y, z, 16, {"ice_kochosei"})
+        if #near_ice <= 3 then
+            local ice = SpawnPrefab("sharkboi_ice_hazard")
+            if ice then
+                local random_dist = math.random() * 6 + 2
+                ice.Transform:SetPosition(x + random_dist * math.cos(math.random() * 2 * PI), 0,
+                    z + random_dist * math.sin(math.random() * 2 * PI))
+
+            end
+        end
+    end
+end
+
 local function givefood(inst)
     local season = TheWorld.state.season
     local food = nil
@@ -598,6 +615,7 @@ local master_postinit = function(inst)
 
     inst:DoPeriodicTask(1, OnTaskTick)
     inst:DoPeriodicTask(5, in_fire)
+    inst:DoPeriodicTask(60, HandleIceSpawn)
 
     inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
     inst.components.eater.PrefersToEat = anvaochetnguoiay
