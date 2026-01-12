@@ -47,8 +47,7 @@ local function OnEquip(inst, owner)
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
         owner:PushEvent("equipskinneditem", inst:GetSkinName())
-        owner.AnimState:OverrideSymbol("swap_object", skin_build or "swap_kochosei_purplebattleaxe",
-            "swap_kochosei_purplebattleaxe")
+        owner.AnimState:OverrideSymbol("swap_object", skin_build , skin_build)
     else
         owner.AnimState:OverrideSymbol("swap_object", "swap_miohm", "swap_miohm")
     end
@@ -417,6 +416,15 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         bank = "kochosei_purplebattleaxe",
         basebuild = "miohm",
         basebank = "miohm"
+    })
+        Kochoseiapi.MakeItemSkin("kocho_purplesword", "swap_new_nier_sword2", {
+        name = "Cây Kiếm Của Ông Mạ Non, Trông Mẻ Mẻ Nhưng Hình Như Vẫn Dùng Được",
+        atlas = "images/inventoryimages/kochosei_inv.xml",
+        image = "swap_new_nier_sword2",
+        build = "new_nier_sword2",
+        bank = "new_nier_sword2",
+        basebuild = "kocho_purplesword",
+        basebank = "kocho_purplesword"
     })
 end
 STRINGS.NAMES.MIOHM = "MioHM"

@@ -136,7 +136,7 @@ local listiteminv = {
     "miku_usagi_backpack", "miohm", "ms_kochosei_hat2", "ms_kochosei_hat3",
     "kochosei_card_health", "kochosei_card_attack", "kochosei_card_defend",
     "kochosei_duke_crown", "kochosei_harvest_book", "triple_kocho",
-    "kochosei_elysia_gift", "kochosei_coffin"
+    "kochosei_elysia_gift", "kochosei_coffin", "swap_new_nier_sword2"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
@@ -181,6 +181,8 @@ PrefabFiles = {
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
+
+-- Import keybind system --
 modimport("scripts/keybind")
 
 local function namngua(inst)
@@ -231,9 +233,7 @@ function KeyBind(name, key)
     end
 end
 
---------------------------------------------------------------------------
--- Import keybind system
---------------------------------------------------------------------------
+
 
 modimport("scripts/widgets/balovali") -- balovali
 
@@ -276,7 +276,7 @@ local function OnHitOther_BuffDamage(inst, data)
             target, target.sohit, "sidanay") -- Tăng dần st mỗi hit
     end
 end
-
+-- Tăng dần sát thương khi buff tangst
 local function tat_buff_tangst(inst, data)
     if data.name == "Gacha cooldown" then inst.tangst = false end
 end
@@ -301,7 +301,7 @@ AddPrefabPostInit("butterfly", function(inst)
     if not TheWorld.ismastersim then return inst end
     AddHauntableCustomReaction(inst, CustomOnHauntkochosei, true, false, true)
 end)
-
+---- Tweak fish box cho kochosei --
 local function spawntom(inst, data)
     if inst.components.container then
         local findtem = inst.components.container:HasItemWithTag("hoasen", 1)
@@ -335,6 +335,7 @@ AddPrefabPostInit("sharkboi_ice_hazard", function(inst)
     inst:AddTag("ice_kochosei")    
 end)
 
+--Sửa AI bướm không chạy khi có kochosei--
 AddBrainPostInit("butterflybrain",
                  function(brain) -- print(brain) if u need to debug
     local runaway
@@ -362,8 +363,7 @@ AddGamePostInit(function()
 end)
 -]]
 -- Boss Drop nơ siêu cấp--
---------Wick đó----------
-
+--- Tweak farmtiller cho doro xâm chiếm đất --
 AddComponentPostInit("farmtiller", function(self)
     local _oldtill = self.Till
     self.Till = function(self, pt, doer, ...)
@@ -393,7 +393,7 @@ AddComponentPostInit("farmtiller", function(self)
         end
     end
 end)
-
+--- Tweak cần câu cho kochosei --
 AddComponentPostInit("fishingrod", function(self)
     local oldWaitForFish = self.WaitForFish
 
@@ -422,7 +422,7 @@ AddComponentPostInit("fishingrod", function(self)
         oldWaitForFish(self, ...)
     end
 end)
-
+-- Buff damage cho clone
 local allclone = {
     "kochosei_enemy", "kochodragonfly", "dinhcutenhathematroi",
     "kochodeerclops", "kocho_bearger"
@@ -440,7 +440,7 @@ for _, v in ipairs(allclone) do
         inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
     end)
 end
-
+--Idle anim khi đứng yên quá lâu--
 AddStategraphPostInit("wilson", function(sg)
     local _old_funnyidle_onenter = sg.states.funnyidle.onenter
     sg.states.funnyidle.onenter = function(inst)
@@ -458,6 +458,21 @@ AddStategraphPostInit("wilson", function(sg)
         end
     end
 end)
+-- Thêm tag fooddrink cho các món nước --
+local tagdrinkfood = {"kochofood_tyrant_juice", "kochofood_cafe", "kochofood_grape_juice", "kochofood_kiwi_juice"}
+local spices = {"_spice_chili", "_spice_sugar", "_spice_salt", "_spice_garlic"}
+local base_count = #tagdrinkfood
+
+for i = 1, base_count do
+    for _, spice in ipairs(spices) do
+        table.insert(tagdrinkfood, tagdrinkfood[i] .. spice)
+    end
+end
+for _, v in pairs(tagdrinkfood) do
+    AddPrefabPostInit(v, function(inst)
+        inst:AddTag("fooddrink")
+    end)
+end
 
 -------- T đã muốn xử lý cái này từ lâu nhưng đủ trình----------
 -- https://forums.kleientertainment.com/forums/topic/69732-dont-use-addingredientvalues-in-mods/#comment-806510
@@ -549,7 +564,6 @@ for _, v in pairs(spicer) do
         AddCookerRecipe(v, recipe)
     end
 end
-
 -----------------------------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------------------------
@@ -626,8 +640,6 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_COFFIN =
 STRINGS.RECIPE_DESC.KOCHOSEI_COFFIN =
     "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
 
--- STRINGS.CHARACTERS.KOCHOSEI.DESCRIBE.MULTIPLAYER_PORTAL = " Nhấp vào cổng để hiện lại \n Điểm waifu hiện có: " .. TUNING.KOCHOSEI_CHECKWIFI .. "\n Búa max damage: " .. TUNING.KOCHOSEI_MAX_LEVEL + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. "\n Nơ kháng " .. TUNING.KOCHO_HAT1_ABSORPTION*100 .. "% damage" .. " có " .. TUNING.KOCHO_HAT1_DURABILITY + (TUNING.KOCHOSEI_CHECKWIFI * 2) .. " điểm độ bền"
------------------------------------------------------------------------------------------------
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
 ACTIONS.HAUNT.fn = function(act)
 	if act.doer ~= nil and act.doer:HasTag("kochosei") and act.doer:HasTag("playerghost")
