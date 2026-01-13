@@ -67,9 +67,9 @@ local function make(code, description, check_des_boolean, alter_description, fil
 					end
 				end
 				if code == "kochosei_card_health" then
-					local healthPercent = owner.components.health:GetPercent()
 					owner.components.health:SetMaxHealth(currentMaxHealth + 500)
-					owner.components.health:SetPercent(healthPercent)
+					owner.components.health:SetCurrentHealth(currentMaxHealth - DeltaHealth + 500)
+					owner.components.health:DoDelta(0.01)
 				end
 				owner:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
 				--owner:DoTaskInTime(0, function()
@@ -101,9 +101,17 @@ local function make(code, description, check_des_boolean, alter_description, fil
 					end
 				end
 				if code == "kochosei_card_health" then
-					local healthPercent = owner.components.health:GetPercent()
 					owner.components.health:SetMaxHealth(currentMaxHealth - 500)
-					owner.components.health:SetPercent(healthPercent)
+					owner.components.health:DoDelta(DeltaHealth)
+					-- Cố tình gỡ thì thấp hơn 500 máu thì cút
+					--if (currentMaxHealth - DeltaHealth - 500) > 0 then
+					--    owner.components.health:SetCurrentHealth(currentMaxHealth - DeltaHealth - 500)
+					--    owner.components.health:DoDelta(-0.01)
+					--else
+					--    owner.components.health:SetCurrentHealth(1)
+					--    owner.components.health:DoDelta(-0.01)
+					--DoDelta để lấy hiệu ứng trên thanh máu
+					--end
 				end
 
 				owner:RemoveEventCallback("ms_respawnedfromghost", onbecamehuman)

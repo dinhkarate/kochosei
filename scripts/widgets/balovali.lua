@@ -27,26 +27,6 @@ for y = 2, 7 do
     table.insert(params.miku_usagi_backpack.widget.slotpos, Vector3(-58 + 75, -75 * y + 498, 0))
 end
 
---====================================================================--
--- Triple Kocho (10x5) - Rương lớn 50 slots
---====================================================================--
-params.triple_kocho = {
-    widget = {
-        slotpos = {},
-        animbank = "triple_kocho_UI",
-        animbuild = "triple_kocho_UI",
-        pos = Vector3(-850, 200, 0), -- Căn giữa màn hình
-    },
-    issidewidget = true,
-    type = "chest",
-}
--- 5 hàng x 10 cột = 50 slots
-for y = 2, -2, -1 do
-    for x = -4, 5 do
-        table.insert(params.triple_kocho.widget.slotpos, Vector3(x * 75 + 220, y * 75 + 15, 0))
-    end
-end
-
 -- Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
 --[[
 --====================================================================--

@@ -323,31 +323,6 @@ local prkochofood = {
 			"honeyed",
 		},
 	},
-
-	kochosei_tyrant_juice = {
-		test = function(cooker, names, tags)
-			return ((names.kochosei_apple or 0) + (names.kochosei_apple_cooked or 0)) >= 1
-				and (names.ice or 0) >= 3
-				and not tags.meat
-				and not tags.egg
-				and not tags.inedible
-		end,
-		priority = 666,
-		foodtype = FOODTYPE.MEAT,
-		health = 40,
-		hunger = 10,
-		sanity = 40,
-		perishtime = TUNING.PERISH_MED,
-		cooktime = 0.5,
-		potlevel = "med",
-		temperature = TUNING.COLD_FOOD_BONUS_TEMP,
-		temperatureduration = TUNING.BUFF_FOOD_TEMP_DURATION,
-		oneatenfn = function(inst, eater)
-			if eater.components.freezable ~= nil then
-				eater.components.freezable:AddColdness(2)
-			end
-		end,
-	},
 }
 
 for k, v in pairs(prkochofood) do

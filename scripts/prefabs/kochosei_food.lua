@@ -14,15 +14,9 @@ local function MakePreparedFood(data)
 		table.insert(assets, Asset("INV_IMAGE", spicename .. "_over"))
 	end
 
-	-- Hỗ trợ custom atlas cho kochosei_tyrant_juice và các món tương tự
-	local inv_atlas = data.inv_atlas or "images/inventoryimages/kochofood.xml"
-	if realname == "kochosei_tyrant_juice" then
-		inv_atlas = "images/inventoryimages/kochosei_tyrant_juice.xml"
-	end
-
 	local assets = {
 		Asset("ANIM", "anim/" .. realname .. ".zip"),
-		Asset("ATLAS", inv_atlas),
+		Asset("ATLAS", "images/inventoryimages/kochofood.xml"),
 	}
 
 	local function onsave(inst, data)
@@ -71,7 +65,7 @@ local function MakePreparedFood(data)
 			inst.AnimState:SetBuild(realname)
 			inst.AnimState:SetBank(realname)
 		end
-		inst.AnimState:PlayAnimation("idle", true)
+		inst.AnimState:PlayAnimation("idle")
 		inst.AnimState:OverrideSymbol("swap_food", realname, realname)
 
 		if data.floater ~= nil then
@@ -136,7 +130,7 @@ local function MakePreparedFood(data)
 		elseif data.basename ~= nil then
 			inst.components.inventoryitem:ChangeImageName(data.basename)
 		else
-			inst.components.inventoryitem.atlasname = inv_atlas
+			inst.components.inventoryitem.atlasname = "images/inventoryimages/kochofood.xml"
 		end
 
 		inst.OnSave = onsave
