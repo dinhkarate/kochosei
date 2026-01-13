@@ -136,7 +136,7 @@ local listiteminv = {
     "miku_usagi_backpack", "miohm", "ms_kochosei_hat2", "ms_kochosei_hat3",
     "kochosei_card_health", "kochosei_card_attack", "kochosei_card_defend",
     "kochosei_duke_crown", "kochosei_harvest_book", "triple_kocho",
-    "kochosei_elysia_gift", "kochosei_coffin", "swap_new_nier_sword2"
+    "kochosei_elysia_gift", "kochosei_coffin","kochosei_elysia_gift", "swap_new_nier_sword2"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
