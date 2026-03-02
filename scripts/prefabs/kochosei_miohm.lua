@@ -47,7 +47,7 @@ local function OnEquip(inst, owner)
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
         owner:PushEvent("equipskinneditem", inst:GetSkinName())
-        owner.AnimState:OverrideSymbol("swap_object", skin_build , skin_build)
+        owner.AnimState:OverrideSymbol("swap_object", skin_build, skin_build)
     else
         owner.AnimState:OverrideSymbol("swap_object", "swap_miohm", "swap_miohm")
     end
@@ -155,32 +155,43 @@ local function aoeSpell(inst, target, caster)
         return
     end
 
-    if target:HasTag("player") or target:HasTag("beefalo") then
+    if target:HasTag("beefalo") then
         caster.components.talker:Say("Please don't!!, We are goodfriend! :>")
         return
     end
 
     caster.components.talker:Say("Thunder attack!")
+
     if type(TUNING.MIOHM_DURABILITY) == "number" then
         inst.components.finiteuses:Use(10)
     end
+
     caster.components.sanity:DoDelta(-10)
     caster.components.hunger:DoDelta(-10)
 
     local x, y, z = target.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, 7, {"freezable"}, MIOHM_CANT_TAGS)
 
-    local damage = target.components.health.maxhealth / 30
+    local damage = 0
+    if target.components.health then
+        damage = target.components.health.maxhealth / 30
+    end
 
+    -- Freeze AOE vẫn giữ nguyên
     for _, ent in pairs(ents) do
         freezeSpell(inst, ent)
     end
 
-    local healthComponent = target.components.health
-    if healthComponent and healthComponent.currenthealth > 100000 then
-        healthComponent:DoDelta(-damage)
+    -- ✅ Không gây damage nếu là player
+    if not target:HasTag("player") then
+        local healthComponent = target.components.health
+        if healthComponent and healthComponent.currenthealth > 100000 then
+            healthComponent:DoDelta(-damage)
+        end
     end
-    local lightning = SpawnPrefab("moonstorm_lightning")
+
+    -- FX vẫn giữ nguyên
+    local lightning = SpawnPrefab("lavaarena_creature_teleport_small_fx")
     lightning.Transform:SetPosition(x, y, z)
 
     local lightningPrefab = "kochosei_moonstorm_ground_lightning_fx"
@@ -195,6 +206,12 @@ local function aoeSpell(inst, target, caster)
         local freeze_fx = SpawnPrefab("kochosei_crabking_feeze")
         freeze_fx.Transform:SetPosition(x, y, z)
         inst.components.timer:StartTimer("miohmcrabking", 15)
+    end
+    if target == caster then
+        caster:DoTaskInTime(0.2, function()
+            caster.sg:GoToState("hit")
+
+        end)
     end
 end
 
@@ -232,7 +249,6 @@ local function applyupgrades(inst)
         inst.components.planardamage:SetBaseDamage(TUNING.MIOHM_DAMAGE)
     end
 end
-
 
 local function onUse(inst, owner)
     inst.caybuasidanay = 1 - inst.caybuasidanay
@@ -394,6 +410,13 @@ local function fn()
 
     inst.lights = {}
 
+    inst:DoPeriodicTask(5, function()
+        local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
+        if owner == nil then -- owner có thể là rương, balo v...v nên không cần thiết phải ra fx, nó chỉ fx khi dưới măt đất thôi
+            local fx = SpawnPrefab("electricchargedfx")
+            fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end
+    end)
     MakeHauntableLaunch(inst)
 
     -------------level-------------------
@@ -417,7 +440,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         basebuild = "miohm",
         basebank = "miohm"
     })
-        Kochoseiapi.MakeItemSkin("kocho_purplesword", "swap_new_nier_sword2", {
+    Kochoseiapi.MakeItemSkin("kocho_purplesword", "swap_new_nier_sword2", {
         name = "Cây Kiếm Của Ông Mạ Non, Trông Mẻ Mẻ Nhưng Hình Như Vẫn Dùng Được",
         atlas = "images/inventoryimages/kochosei_inv.xml",
         image = "swap_new_nier_sword2",
@@ -426,6 +449,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeItemSkin ~= nil then
         basebuild = "kocho_purplesword",
         basebank = "kocho_purplesword"
     })
+
 end
 STRINGS.NAMES.MIOHM = "MioHM"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.MIOHM = "Woaaah, i want it!! XD"

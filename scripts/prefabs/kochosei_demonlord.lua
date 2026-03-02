@@ -25,20 +25,61 @@ end
 local function Spawnclone(inst, target, pos, prefabclone)
 	inst.components.spawnclonekochosei:Spawclone(inst, target, pos, "dinhcutenhathematroi")
 end
+
+local MIN_RANGE = .5      -- khoảng cách tối thiểu so với player
+local MAX_RANGE = 1.5      -- khoảng cách tối đa
+local MAX_PLANTS = 18
+
+local PLANTFX_TAGS =
+{
+    "shadowtrail",
+}
+
+local function PlantTick(inst)
+    if not inst.entity:IsVisible() then
+        return
+    end
+
+    local x, y, z = inst.Transform:GetWorldPosition()
+
+    -- Giới hạn số FX quanh player
+    if #TheSim:FindEntities(x, y, z, MAX_RANGE, PLANTFX_TAGS) >= MAX_PLANTS then
+        return
+    end
+
+    local pt = Vector3(0, 0, 0)
+
+    local offset = FindValidPositionByFan(
+        math.random() * 2 * PI,
+        MIN_RANGE + math.random() * (MAX_RANGE - MIN_RANGE),
+        6, -- số lần thử
+        function(offset)
+            pt.x = x + offset.x
+            pt.z = z + offset.z
+
+            -- Chỉ check trùng FX, KHÔNG check địa hình
+            return #TheSim:FindEntities(pt.x, 0, pt.z, 0.5, PLANTFX_TAGS) < 3
+        end
+    )
+
+    if offset ~= nil then
+        local plant = SpawnPrefab("cane_ancient_fx")
+        if plant ~= nil then
+            plant.Transform:SetPosition(
+                x + offset.x,
+                0,
+                z + offset.z
+            )
+        end
+    end
+end
+
 local function OnEquip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_object", "swap_demonlord", "swap_demonlord")
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
-
-	if inst.magicfx ~= nil then
-		inst.magicfx:Remove()
-		inst.magicfx = nil
-	end
-	inst.magicfx = SpawnPrefab("cane_victorian_fx")
-	if inst.magicfx then
-		inst.magicfx.entity:AddFollower()
-		inst.magicfx.entity:SetParent(owner.entity)
-		inst.magicfx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, -60, 0)
+	if owner.demonlord == nil then 
+		owner.demonlord = owner:DoPeriodicTask(0.15, PlantTick)
 	end
 	TurnOn(inst, owner)
 end
@@ -46,11 +87,11 @@ end
 local function OnUnequip(inst, owner)
 	owner.AnimState:Hide("ARM_carry")
 	owner.AnimState:Show("ARM_normal")
-	if inst.magicfx ~= nil then
-		inst.magicfx:Remove()
-		inst.magicfx = nil
-	end
 	TurnOff(inst, owner)
+	if owner.demonlord ~= nil then
+		owner.demonlord:Cancel()
+		owner.demonlord = nil
+	end
 end
 
 local function fn()

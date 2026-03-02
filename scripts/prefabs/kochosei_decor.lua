@@ -1,6 +1,6 @@
 local Assets = {Asset("ANIM", "anim/kocho_miku_cos.zip"), Asset("ANIM", "anim/kocho_miku_back.zip"),
                 Asset("ANIM", "anim/kochosei_fuji_tree.zip"), Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
-                Asset("ATLAS", "minimap/kochosei_apple_tree.xml")}
+                Asset("ATLAS", "minimap/kochosei_apple_tree.xml"), Asset("ANIM", "anim/kochosei_tele_item.zip")}
 
 local prefabs = {"globalmapicon"}
 local RANGE_CUA_CAY_THAN_KY = 15
@@ -67,7 +67,7 @@ local function fnback()
     return inst
 end
 
-local KHONG_TAG = {"player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic","warg"}
+local KHONG_TAG = {"player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic", "warg"}
 local CAN_TAG = {"shadowcreature", "monster", "frog"}
 local function checkfl(inst)
     local follower = inst.components.follower
@@ -228,6 +228,10 @@ end
 local function on_find_fire(inst, firePos)
     inst.components.wateryprotection:SpreadProtectionAtPoint(firePos:Get())
 end
+local function on_player_far(inst, player)
+        player:AddDebuff("Buff_Cay_Than_Ky", "buff_moistureimmunity")
+
+end
 local function cay_kocho()
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -255,7 +259,7 @@ local function cay_kocho()
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
     inst.AnimState:SetBank("kochosei_fuji_tree")
     inst.AnimState:SetBuild("kochosei_fuji_tree")
-    inst.AnimState:PlayAnimation("idle")
+    inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetScale(1.5, 1.5)
     inst:AddTag("shelter")
     inst:AddTag("shadecanopy")
@@ -307,6 +311,11 @@ local function cay_kocho()
 
     inst:AddComponent("heater")
     inst.components.heater.heat = 80
+
+    inst:AddComponent("playerprox")
+    	inst.components.playerprox:SetTargetMode(inst.components.playerprox.TargetModes.AllPlayers)
+        inst.components.playerprox:SetDist(3, 10)
+        inst.components.playerprox:SetOnPlayerFar(on_player_far)
     tudienbien_tuchuyenhoa(inst)
 
     return inst
@@ -382,6 +391,200 @@ local function oc_cmndao()
 
     return inst
 end
+
+local function statue_death(inst)
+    inst.AnimState:PlayAnimation("death")
+    inst.isdead = true
+    local x, y, z = inst.Transform:GetWorldPosition()
+
+    inst:DoTaskInTime(2, function()
+        local fx1 = SpawnPrefab("shadow_despawn")
+        fx1.Transform:SetPosition(x, y, z)
+        inst.components.talker:ShutUp()
+        inst:Remove()
+    end)
+end
+
+local function onhammered_statue(inst, worker)
+    statue_death(inst)
+end
+local function onhit_statue(inst, worker)
+    inst.AnimState:PlayAnimation("hit")
+    inst.AnimState:PushAnimation("acting_idle1", true)
+
+end
+
+local function launchitem(item, angle)
+    local speed = math.random() * 4 + 2
+    angle = (angle + math.random() * 60 - 30) * DEGREES
+    item.Physics:SetVel(speed * math.cos(angle), math.random() * 2 + 8, speed * math.sin(angle) / 2)
+end
+
+local function ontradeforgold(inst, item, giver)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    y = 4.5
+
+    local angle
+    if giver ~= nil and giver:IsValid() then
+        angle = 180 - giver:GetAngleToPoint(x, 0, z)
+    else
+        local down = TheCamera:GetDownVec()
+        angle = math.atan2(down.z, down.x) / DEGREES
+        giver = nil
+    end
+
+    for k = 1, item.components.tradable.goldvalue do
+        local nug = SpawnPrefab("goldnugget")
+        nug.Transform:SetPosition(x, y, z)
+        launchitem(nug, angle)
+    end
+
+    if item.components.tradable.tradefor ~= nil then
+        for _, v in pairs(item.components.tradable.tradefor) do
+            local item = SpawnPrefab(v)
+            if item ~= nil then
+                item.Transform:SetPosition(x, y, z)
+                launchitem(item, angle)
+            end
+        end
+    end
+end
+local function OnGetItemFromPlayer(inst, giver, item)
+    -- Chỉ giữ lại logic đổi vàng
+    if item.components.tradable and item.components.tradable.goldvalue > 0 then
+        inst.sg:GoToState("cointoss")
+        inst:DoTaskInTime(2 / 3, ontradeforgold, item, giver)
+    end
+end
+
+local function OnRefuseItem(inst, giver, item)
+    inst.sg:GoToState("refuseeat")
+end
+
+local function AbleToAcceptTest(inst, item, giver)
+    -- Đã xóa logic kiểm tra mini game, mặc định cho phép thử
+    return true
+end
+
+local function AcceptTest(inst, item, giver)
+    -- Chỉ chấp nhận những món đồ có thuộc tính tradable và có giá trị vàng > 0
+    return item.components.tradable ~= nil and item.components.tradable.goldvalue > 0
+end
+local function iswinter(inst)
+    local season = TheWorld.state.season
+    if season == "winter" then
+        inst.AnimState:OverrideSymbol("swap_object", "swap_kochosei_umbrella", "swap_kochosei_umbrella")
+        inst.AnimState:Show("ARM_carry")
+        inst.AnimState:Hide("ARM_normal")
+        if inst.magicfx ~= nil then
+            inst.magicfx:Remove()
+            inst.magicfx = nil
+        end
+        inst.magicfx = SpawnPrefab("cane_candy_fx")
+        if inst.magicfx then
+            inst.magicfx.entity:AddFollower()
+            inst.magicfx.entity:SetParent(inst.entity)
+            inst.magicfx.Follower:FollowSymbol(inst.GUID, "swap_object", 0, -350, 3)
+
+        end
+    else
+        inst.AnimState:Hide("ARM_carry")
+        inst.AnimState:Show("ARM_normal")
+        inst.AnimState:ClearOverrideSymbol("swap_object")
+        if inst.magicfx ~= nil then
+            inst.magicfx:Remove()
+            inst.magicfx = nil
+        end
+    end
+
+end
+local function spawnfcmnx(inst)
+    local dist = 0.5 * math.random()
+    local theta = 2 * PI * math.random()
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local fx = SpawnPrefab("crab_king_icefx")
+    if fx then
+        fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
+    end
+end
+local function onteleport(inst)
+    statue_death(inst)
+end
+local function kochosei_statue()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+    inst.AnimState:Hide("ARM_carry")
+    MakeObstaclePhysics(inst, 0.66)
+
+    inst.AnimState:SetBank("wilson")
+    inst.AnimState:SetBuild("kochosei_snowmiku_skin1")
+    inst.AnimState:PlayAnimation("acting_idle1", true)
+    inst:AddTag("statue")
+    inst:AddTag("kochosei_statue")
+    -- inst.Transform:SetFourFaced(inst)
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("inspectable")
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    inst.components.workable:SetWorkLeft(4)
+    inst.components.workable:SetOnFinishCallback(onhammered_statue)
+    inst.components.workable:SetOnWorkCallback(onhit_statue)
+    --   inst:ListenForEvent("onbuilt", onbuilt_statue)
+    inst:AddComponent("talker")
+    inst:DoPeriodicTask(60, function()
+        inst.sg:GoToState("talk")
+        inst.components.talker:Say("Bạn muốn đổi đồ à, liên hệ lông xanh tôi đây!!!")
+        iswinter(inst)
+    end)
+    inst:DoPeriodicTask(1, spawnfcmnx)
+    inst:ListenForEvent("teleport", onteleport)
+    inst:SetStateGraph("SGkochosei_statue")
+    -- inst:SetStateGraph("SGkochosei_enemy")
+
+    inst:AddComponent("trader")
+
+    inst.components.trader:SetAbleToAcceptTest(AbleToAcceptTest)
+    inst.components.trader:SetAcceptTest(AcceptTest)
+    inst.components.trader.onaccept = OnGetItemFromPlayer
+    inst.components.trader.onrefuse = OnRefuseItem
+    return inst
+end
+
+local function kochosei_statue_item()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+    MakeInventoryPhysics(inst)
+
+    inst.AnimState:SetBank("kochosei_tele_item")
+    inst.AnimState:SetBuild("kochosei_tele_item")
+    inst.AnimState:PlayAnimation("idle")
+    inst.AnimState:SetScale(0.5, 0.5, 0.5)
+    inst:AddTag("kochosei_statue_item")
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("inspectable")
+
+    inst:AddComponent("inventoryitem")
+
+    inst:AddComponent("kochoseiteleport")
+
+    return inst
+end
 STRINGS.NAMES.KOCHO_MIKU_COS = "Snow Miku Costume"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHO_MIKU_COS = "o((>ω< ))o"
 STRINGS.RECIPE_DESC.KOCHO_MIKU_COS = "Change Skin Of Clone"
@@ -395,6 +598,16 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE =
     "Cây đã thi công xong, xin lỗi đã làm phiền, mong quý vị thông cảm ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
 STRINGS.NAMES.KOCHOSEI_OC_CMNDAO = "Cái Gì Đó...Giống Như Ốc Đảo"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Có ếch ở dưới hồ không nhỉ?"
+STRINGS.NAMES.KOCHOSEI_STATUE = "Tượng Kochosei"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_STATUE =     "Tượng của Kochosei... Mà người ta còn sống nhăn sao lại tạc tượng rồi?"
 
+STRINGS.NAMES.KOCHOSEI_STATUE_ITEM = "Tele To Kochosei Statue"
+STRINGS.RECIPE_DESC.KOCHOSEI_STATUE_ITEM = "Dùng nó để teleport đến chỗ có tượng Kochosei"
+
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_STATUE_ITEM = "Dùng nó để teleport đến chỗ có tượng Kochosei"
 return Prefab("kocho_miku_cos", fn, Assets), Prefab("kocho_miku_back", fnback, Assets),
-    Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs)
+    Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs),
+    Prefab("kochosei_statue", kochosei_statue, Assets, prefabs),
+    Prefab("kochosei_statue_item", kochosei_statue_item, Assets, prefabs),
+    MakePlacer("kochosei_statue_placer", "wilson", "kochosei_snowmiku_skin1", "acting_idle1", nil, nil, nil)
+

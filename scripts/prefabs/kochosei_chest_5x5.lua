@@ -58,6 +58,8 @@ end
 local function onbuilt(inst)
 	if inst.prefab == "kochosei_fridge_5x5" then
 		inst.SoundEmitter:PlaySound("dontstarve/common/icebox_craft")
+		inst.AnimState:PlayAnimation("build")
+		--inst.AnimState:PushAnimation("close", false)
 	else
 		inst.SoundEmitter:PlaySound("dontstarve/common/chest_craft")
 	end
@@ -74,7 +76,7 @@ local function commonchest(name, anim)
 	local SCALE = 0.8
 	inst.AnimState:SetBank(name)
 	inst.AnimState:SetBuild(name)
-	inst.AnimState:PlayAnimation("close")
+	inst.AnimState:PlayAnimation("build")
 	inst.AnimState:SetScale(SCALE, SCALE, SCALE)
 
 	inst._chestupgrade_stacksize = true
@@ -146,5 +148,5 @@ STRINGS.RECIPE_DESC.KOCHOSEI_CHEST_5X5 =
 	"Chứa được nhiều đồ hơn rương 3x3, còn lại không có gì đặc biệt"
 return Prefab("kochosei_chest_5x5", fn, assets),
 	Prefab("kochosei_fridge_5x5", fnfr, assets),
-	MakePlacer("kochosei_chest_5x5_placer", "kochosei_chest_5x5", "kochosei_chest_5x5", "close"),
-	MakePlacer("kochosei_fridge_5x5_placer", "kochosei_fridge_5x5", "kochosei_fridge_5x5", "close")
+	MakePlacer("kochosei_chest_5x5_placer", "kochosei_chest_5x5", "kochosei_chest_5x5", "idle"),
+	MakePlacer("kochosei_fridge_5x5_placer", "kochosei_fridge_5x5", "kochosei_fridge_5x5", "idle")

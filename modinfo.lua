@@ -9,7 +9,7 @@ If you want to change the key for Kocho to sleep, you can set it in the game Set
 ]]
 author = "Mio, dinhkarate, Haruhi Kawaii"
 
-version = "4.4.0"
+version = "4.4.4"
 
 forumthread = ""
 
@@ -356,8 +356,8 @@ local kocho_luckyhammer_durability = {
 configuration_options = {
 	{
 		name = "kochosei_va_waifu",
-		label = "Kochosei adjusts power",
-		hover = "Kochosei adjusts its power based on enabled mods",
+		label = "Kochosei Vanilla Mode",
+		hover = "Just Kochosei Vanilla mode, too weak and no fun",
 		options = {
 			{ description = "No", data = 0 },
 			{ description = "Yes", data = 1 },

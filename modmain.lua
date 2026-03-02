@@ -53,6 +53,7 @@ Chậc chậc... Đúng là một bãi rác thật sự.
 GLOBAL.Kochoseiapi = env
 local cooking = require("cooking")
 local ingredients = cooking.ingredients
+local ingredients = cooking.ingredients
 local cookpot = {"cookpot"}
 local spicer = {"portablespicer"}
 local listmodneedcheck = {
@@ -85,9 +86,7 @@ for _, v in ipairs(listmodneedcheck) do
         end
     end
 end
-if TUNING.KOCHOSEI_CHECKMOD_KYOUKA == 1 then
-    TUNING.KOCHOSEI_CHECKWIFI = TUNING.KOCHOSEI_CHECKWIFI + 200
-end
+
 print("Tổng điểm wifi trong host:", TUNING.KOCHOSEI_CHECKWIFI)
 function themgiap(inst)
     if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
@@ -136,7 +135,7 @@ local listiteminv = {
     "miku_usagi_backpack", "miohm", "ms_kochosei_hat2", "ms_kochosei_hat3",
     "kochosei_card_health", "kochosei_card_attack", "kochosei_card_defend",
     "kochosei_duke_crown", "kochosei_harvest_book", "triple_kocho",
-    "kochosei_elysia_gift", "kochosei_coffin","kochosei_elysia_gift", "swap_new_nier_sword2"
+    "kochosei_elysia_gift", "kochosei_coffin","kochosei_elysia_gift", "swap_new_nier_sword2","kochosei_cookpot_item","kochosei_statue_item","kochosei_statue"
 }
 
 -- Icon item ở đây không cần làm từng cái ở mỗi prefab nữa --
@@ -176,7 +175,8 @@ PrefabFiles = {
     "kochosei_thien_su_ban_phuc", "kochosei_chest_5x5", --Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
     "kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
     "kochosei_coffin", -- Cursed coffin - sleep anytime, super regen, die when crafting
-    "triple_kocho" -- Rương lớn 10x5 slots
+    "triple_kocho", -- Rương lớn 10x5 slots
+    "kochosei_noi"
 }
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
@@ -233,8 +233,55 @@ function KeyBind(name, key)
     end
 end
 
+_G = GLOBAL
+AddSimPostInit(function ()
+    if rawget(_G, "AddCookingPot") then
+        _G.AddCookingPot("kochosei_cookpot")
+    end
+end)
+
+local cookware_morphs = {
+    cookpot = {
+        kochosei_cookpot = true,
+    },
+    portablecookpot = { -- What morph is it (one of [cookpot, portablecookpot, portablespicer])
+        kochosei_cookpot = true, -- Your cookware name
+    }
+}
+local AUTO_COOKING_COOKWARES = rawget(_G, "AUTO_COOKING_COOKWARES") or {}
+_G.AUTO_COOKING_COOKWARES = AUTO_COOKING_COOKWARES
+for base, morphs in pairs(cookware_morphs) do
+    AUTO_COOKING_COOKWARES[base] = shallowcopy(morphs, AUTO_COOKING_COOKWARES[base])
+end
 
 
+-- 1. Đăng ký toàn bộ món ăn ĐANG CÓ (Vanilla + Các mod đã load trước đó)
+-- Chúng ta thường lấy từ 'cookpot' vì nó chứa hầu hết công thức chuẩn.
+for cooker, recipes in pairs(cooking.recipes) do
+    -- Kiểm tra nếu là nồi nấu thông thường (để tránh lấy nhầm các công thức đặc biệt như trạm gia vị)
+    if cooker == "cookpot" or cooker == "portablecookpot" or cooker == "archive_cookpot" then
+        for name, recipe in pairs(recipes) do
+            -- Đăng ký món ăn đó cho nồi của bạn
+            -- Lưu ý: Dùng chính hàm AddCookerRecipe của game để đảm bảo cookbook hoạt động đúng
+            AddCookerRecipe("kochosei_cookpot", recipe)
+        end
+    end
+end
+
+-- 2. Hook (đánh chặn) hàm AddCookerRecipe để hỗ trợ các Mod load sau
+-- Nếu một mod khác thêm món vào 'cookpot', nó cũng sẽ tự động được thêm vào 'kochosei_cookpot'
+local oldAddCookerRecipe = _G.AddCookerRecipe
+_G.AddCookerRecipe = function(cooker, recipe, is_mod_food)
+    -- Gọi hàm gốc để không làm hỏng game
+    oldAddCookerRecipe(cooker, recipe, is_mod_food)
+
+    -- Nếu món ăn được thêm vào các nồi chuẩn, tự động "sao chép" sang nồi của mình
+    if cooker == "cookpot" or cooker == "portablecookpot" or cooker == "archive_cookpot" then
+        -- Tránh lặp vô hạn bằng cách kiểm tra tên nồi
+        oldAddCookerRecipe("kochosei_cookpot", recipe, is_mod_food)
+    end
+end
+--]]
 modimport("scripts/widgets/balovali") -- balovali
 
 modimport("scripts/widgets/kochosei_altar") -- kochosei_altar
@@ -280,6 +327,18 @@ end
 local function tat_buff_tangst(inst, data)
     if data.name == "Gacha cooldown" then inst.tangst = false end
 end
+local function tele(inst)
+    local statue = TheSim:FindFirstEntityWithTag("kochosei_statue")
+    if statue ~= nil then
+        inst.components.talker:Say("Đang dịch chuyển đến tượng Kochosei...")
+        local x, y, z = statue.Transform:GetWorldPosition()
+        statue:PushEvent("teleport")
+        inst:DoTaskInTime(3, function()
+            inst.Transform:SetPosition(x, y, z)
+            inst.sg:GoToState("gravestone_rebirth")
+        end)
+    end
+end
 AddPlayerPostInit(function(inst)
     if not TheWorld.ismastersim then return inst end
     inst.tangst = false
@@ -287,6 +346,8 @@ AddPlayerPostInit(function(inst)
     inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
     if not inst.components.timer then inst:AddComponent("timer") end
     inst:ListenForEvent("timerdone", tat_buff_tangst)
+    inst:ListenForEvent("kochoseiteleport", tele)
+
 end)
 
 --- Hồi sinh từ bướm ---
@@ -326,6 +387,8 @@ AddPrefabPostInit("alterguardian_phase3", function(inst)
     if not TheWorld.ismastersim then return inst end
     inst.components.lootdropper:AddChanceLoot("kochosei_hatfl", 1)
 end)
+
+
 AddPrefabPostInit("deerclops", function(inst)
     if not TheWorld.ismastersim then return inst end
     inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
@@ -427,7 +490,7 @@ local allclone = {
     "kochosei_enemy", "kochodragonfly", "dinhcutenhathematroi",
     "kochodeerclops", "kocho_bearger"
 }
-
+if TUNING.KOCHOSEI_VANILLA_MODE == 1 then
 for _, v in ipairs(allclone) do
     AddPrefabPostInit(v, function(inst)
         if not TheWorld.ismastersim then return inst end
@@ -439,6 +502,8 @@ for _, v in ipairs(allclone) do
                                           TUNING.SHADOWWAXWELL_HEALTH_REGEN_PERIOD)
         inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
     end)
+end
+TUNING.KOCHOSEI_CHECKWIFI = 0
 end
 --Idle anim khi đứng yên quá lâu--
 AddStategraphPostInit("wilson", function(sg)
@@ -697,4 +762,30 @@ AddGlobalClassPostConstruct("widgets/redux/characterbutton", "CharacterButton", 
     end
 end)
 
+--]]
+--[[
+--Test code, xóa sau khi test xong
+local function on_player_near(inst, player)
+
+    if player and player:IsValid() then
+        player.components.talker:Say("Bạn đã đến gần cây hoa sáng!")
+        player.components.hunger.burnratemodifiers:SetModifier(inst, -5, "cay_hoa_sang_buff") -- Giảm tốc độ đói khi gần cây hoa sáng
+    end
+end
+
+local function on_player_far(inst, player)
+    if player and player:IsValid() then
+        player.components.talker:Say("Bạn đã rời xa cây hoa sáng!")
+        player.components.hunger.burnratemodifiers:RemoveModifier(inst, "cay_hoa_sang_buff") -- Loại bỏ giảm tốc độ đói khi rời xa cây hoa sáng
+    end
+end
+
+AddPrefabPostInit("kochosei_fuji_tree", function(inst)
+    if not TheWorld.ismastersim then return inst end
+    inst:AddComponent("playerprox")
+    	inst.components.playerprox:SetTargetMode(inst.components.playerprox.TargetModes.AllPlayers)
+        inst.components.playerprox:SetDist(3, 7)
+        inst.components.playerprox:SetOnPlayerNear(on_player_near)
+        inst.components.playerprox:SetOnPlayerFar(on_player_far)
+end)
 --]]

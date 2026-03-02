@@ -590,6 +590,19 @@ local function OnCraftMiohm(inst, data)
     end
 end
 
+local function tele(inst)
+    local statue = TheSim:FindFirstEntityWithTag("kochosei_statue")
+    if statue ~= nil then
+        inst.components.talker:Say("Đang dịch chuyển đến tượng Kochosei...")
+        local x, y, z = statue.Transform:GetWorldPosition()
+        statue:PushEvent("teleport")
+        inst:DoTaskInTime(3, function()
+            inst.Transform:SetPosition(x, y, z)
+            inst.sg:GoToState("gravestone_rebirth")
+        end)
+    end
+end
+
 local master_postinit = function(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
     inst.OnNewSpawn = OnNewSpawn
@@ -642,6 +655,7 @@ local master_postinit = function(inst)
     inst:ListenForEvent("namngua", namngua)
     inst:ListenForEvent("getmiohmback", getmiohmback)
     inst:ListenForEvent("builditem", OnCraftMiohm)
+    inst:ListenForEvent("kochoseiteleport", tele)
     inst.wlist = wlist
     ---------------------------Kén ăn------------------
     local inedibles = {}
