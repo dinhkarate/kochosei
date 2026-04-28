@@ -200,5 +200,37 @@ local function fcmnx()
 	return inst
 end
 
-return Prefab("kochosei_crabking_feeze", freezefn)
---,  Prefab("kochosei_idle_crabking_feeze", fcmnx, nil, freezeprefabs)
+local function fxfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+
+    inst.Transform:SetFourFaced()
+
+    inst.AnimState:SetBuild("winters_feast_fx")
+    inst.AnimState:SetBank("winters_feast_fx")
+    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+    inst.AnimState:SetLightOverride(1)
+
+    inst.AnimState:PlayAnimation(math.random(1, 10))
+
+    inst:AddTag("FX")
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.persists = false
+
+    inst:ListenForEvent("animover", inst.Remove)
+
+    inst.OnEntitySleep = inst.Remove
+
+    return inst
+end
+return Prefab("kochosei_crabking_feeze", freezefn),
+	Prefab("wintersfeastbuff_fx_custom", fxfn, { Asset("ANIM", "anim/winters_feast_fx.zip") })	

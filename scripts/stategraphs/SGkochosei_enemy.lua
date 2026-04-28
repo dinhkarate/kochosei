@@ -139,6 +139,8 @@ local actionhandlers = {
 				)
 			or nil
 	end),
+	ActionHandler(ACTIONS.WOBY_PICKUP, "pickup"),
+
 }
 
 local events = {

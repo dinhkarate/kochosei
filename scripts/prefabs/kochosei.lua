@@ -176,17 +176,26 @@ local HEAL_CANT_TAGS = {"DECOR", "eyeofterror", "FX", "INLIMBO", "NOCLICK", "not
 local function OnTaskTick(inst)
     if inst.components.health:IsDead() or inst:HasTag("playerghost") then
         inst.kochostop = 0
+        if inst:HasTag("idle_snow_aura") then
+            inst:RemoveTag("idle_snow_aura")
+        end
         return
     end
     if not inst.components.locomotor.wantstomoveforward or not inst.sg:HasStateTag("moving") then
         inst.kochostop = inst.kochostop + 1
     else
         inst.kochostop = 0
+        if inst:HasTag("idle_snow_aura") then
+            inst:RemoveTag("idle_snow_aura")
+        end
     end
 
     if inst.kochostop >= 120 then
         -- Nếu đang trong trạng thái chết mà đổi state sẽ gây crash
         spawnfcmnx(inst)
+        if not inst:HasTag("idle_snow_aura") then
+            inst:AddTag("idle_snow_aura")
+        end
     end
     if inst.components.sanity:GetPercent() < 1 then
         return
@@ -718,6 +727,7 @@ if TUNING.KOCHOSEI_CHECKMOD ~= 1 and Kochoseiapi.MakeCharacterSkin ~= nil then -
         },
         skin_tags = {"BASE", "kochosei", "CHARACTER", "ICE"}
     })
+
 end
 -- Không dùng khi có modded được phát hiện--
 

@@ -109,7 +109,7 @@ end
 
 local function Ely_3_HoiNao_TangSpeed(inst, target)
 	AttachCommon(inst, target)
-	inst.bufftask_3 = inst:DoTaskInTime(60, StopBuff)
+	inst.bufftask_3 = inst:DoTaskInTime(300, StopBuff)
 
 	if target and target:IsValid() and target.components.combat then
 		target:AddDebuff("sweettea_buff", "sweettea_buff")

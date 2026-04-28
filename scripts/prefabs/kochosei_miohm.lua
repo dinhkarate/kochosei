@@ -2,6 +2,8 @@ local assets = {Asset("ANIM", "anim/miohm.zip"), Asset("ANIM", "anim/swap_miohm.
                 Asset("ANIM", "anim/swap_kochosei_purplebattleaxe.zip"),
                 Asset("ANIM", "anim/kochosei_purplebattleaxe.zip")}
 
+local prefabs = {"lavaarena_creature_teleport_small_fx"}
+
 local function onattack(inst, attacker, target)
     if target ~= nil and target:IsValid() and attacker ~= nil and attacker:IsValid() then
         SpawnPrefab("electrichitsparks"):AlignToTarget(target, attacker, true)
@@ -173,7 +175,7 @@ local function aoeSpell(inst, target, caster)
     local ents = TheSim:FindEntities(x, y, z, 7, {"freezable"}, MIOHM_CANT_TAGS)
 
     local damage = 0
-    if target.components.health then
+    if target.components.health and TUNING.KOCHOSEI_VANILLA_MODE == 1 then
         damage = target.components.health.maxhealth / 30
     end
 
@@ -191,16 +193,32 @@ local function aoeSpell(inst, target, caster)
     end
 
     -- FX vẫn giữ nguyên
-    local lightning = SpawnPrefab("lavaarena_creature_teleport_small_fx")
-    lightning.Transform:SetPosition(x, y, z)
+    local lightningfx = SpawnPrefab("lavaarena_creature_teleport_small_fx")
+    lightningfx.Transform:SetPosition(x, y, z)
 
-    local lightningPrefab = "kochosei_moonstorm_ground_lightning_fx"
-    local numLightnings = 5
+local lightningPrefab = "kochosei_moonstorm_ground_lightning_fx"
+local numLightnings = 8 -- Số lượng tia sét (tăng lên để vòng tròn đầy đặn hơn)
+local radius = 3        -- Khoảng cách từ tâm đến tia sét
 
-    for i = 1, numLightnings do
-        local lightning = SpawnPrefab(lightningPrefab)
-        lightning.Transform:SetPosition(x, y, z)
+for i = 1, numLightnings do
+    -- Tính toán góc cho mỗi tia sét (đơn vị là Radian)
+    -- Chia 2*PI (360 độ) cho tổng số lượng tia sét
+    local angle = (i - 1) * (2 * math.pi / numLightnings)
+    
+    -- Tính tọa độ x và z dựa trên góc và bán kính
+    local dx = radius * math.cos(angle)
+    local dz = radius * math.sin(angle)
+    
+    local lightning = SpawnPrefab(lightningPrefab)
+    if lightning ~= nil then
+        -- Đặt vị trí cho tia sét tỏa ra xung quanh tâm (x, z)
+        lightning.Transform:SetPosition(x + dx, y, z + dz)
+        
+        -- (Tùy chọn) Xoay tia sét hướng về tâm hoặc theo hướng tỏa ra
+        -- Chuyển đổi từ Radian sang Độ (Degrees) vì SetRotation dùng Độ
+        lightning.Transform:SetRotation(-angle * RADIANS) 
     end
+end
 
     if not inst.components.timer:TimerExists("miohmcrabking") then
         local freeze_fx = SpawnPrefab("kochosei_crabking_feeze")
@@ -238,9 +256,15 @@ local function applyupgrades(inst)
         upgrades = level
     end
 
-    -- Tính damage
+    -- Tính damage cơ bản
     local damage = upgrades + TUNING.MIOHM_DAMAGE
 
+    -- Kiểm tra VANILLA_MODE: Nếu bật, damage tối đa không vượt quá MAX_LEVEL
+    if TUNING.KOCHOSEI_VANILLA_MODE == 1 then
+        damage = math.min(damage, TUNING.KOCHOSEI_MAX_LEVEL)
+    end
+
+    -- Áp dụng damage vào component
     if inst.caybuasidanay == 1 then
         inst.components.weapon:SetDamage(TUNING.MIOHM_DAMAGE)
         inst.components.planardamage:SetBaseDamage(damage)

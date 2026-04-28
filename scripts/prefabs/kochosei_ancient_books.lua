@@ -2,8 +2,8 @@ local assets = {
 	Asset("ANIM", "anim/book_maxwell.zip"),
 	Asset("INV_IMAGE", "waxwelljournal_open"),
 	Asset("ANIM", "anim/kochosei_ancient_books.zip"),
-	Asset("ATLAS", "images/inventoryimages/elysia_scmn_pell.xml"),
-	Asset("IMAGE", "images/inventoryimages/elysia_scmn_pell.tex"),
+	Asset("ATLAS", "images/elysia_scmn_pell.xml"),
+	Asset("IMAGE", "images/elysia_scmn_pell.tex"),
 }
 
 local IDLE_SOUND_VOLUME = 0.5
@@ -167,7 +167,7 @@ local SPELLS = {
 			end
 		end,
 		execute = StartAOETargeting,
-		atlas = "images/inventoryimages/elysia_scmn_pell.xml",
+		atlas = "images/elysia_scmn_pell.xml",
 		normal = "elysia_1.tex",
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,
@@ -181,7 +181,7 @@ local SPELLS = {
 			end
 		end,
 		execute = StartAOETargeting,
-		atlas = "images/inventoryimages/elysia_scmn_pell.xml",
+		atlas = "images/elysia_scmn_pell.xml",
 		normal = "elysia_2.tex",
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,
@@ -195,7 +195,7 @@ local SPELLS = {
 			end
 		end,
 		execute = StartAOETargeting,
-		atlas = "images/inventoryimages/elysia_scmn_pell.xml",
+		atlas = "images/elysia_scmn_pell.xml",
 		normal = "elysia_3.tex",
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,
@@ -209,7 +209,7 @@ local SPELLS = {
 			end
 		end,
 		execute = StartAOETargeting,
-		atlas = "images/inventoryimages/elysia_scmn_pell.xml",
+		atlas = "images/elysia_scmn_pell.xml",
 		normal = "elysia_4.tex",
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,

@@ -1,20 +1,26 @@
-local Assets = {Asset("ANIM", "anim/kocho_miku_cos.zip"), Asset("ANIM", "anim/kocho_miku_back.zip"),
-                Asset("ANIM", "anim/kochosei_fuji_tree.zip"), Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
-                Asset("ATLAS", "minimap/kochosei_apple_tree.xml"), Asset("ANIM", "anim/kochosei_tele_item.zip")}
+local Assets = {
+    Asset("ANIM", "anim/kocho_miku_cos.zip"),
+    Asset("ANIM", "anim/kocho_miku_back.zip"),
+    Asset("ANIM", "anim/kochosei_fuji_tree.zip"),
+    Asset("IMAGE", "minimap/kochosei_apple_tree.tex"),
+    Asset("ATLAS", "minimap/kochosei_apple_tree.xml"),
+    Asset("ANIM", "anim/kochosei_tele_item.zip")
+}
 
 local prefabs = {"globalmapicon"}
 local RANGE_CUA_CAY_THAN_KY = 15
 
-local small_ram_products = {"twigs", "cutgrass", "petals", "oceantree_leaf_fx_fall", "oceantree_leaf_fx_fall", "frog"}
+local small_ram_products = {
+    "twigs", "cutgrass", "petals", "oceantree_leaf_fx_fall",
+    "oceantree_leaf_fx_fall", "frog"
+}
 
 local DROP_ITEMS_DIST_MIN = 8
 local DROP_ITEMS_DIST_VARIANCE = 12
 local NUM_DROP_SMALL_ITEMS_MIN = 10
 local NUM_DROP_SMALL_ITEMS_MAX = 14
 
-local function OnDropped(inst)
-    inst.components.disappears:PrepareDisappear()
-end
+local function OnDropped(inst) inst.components.disappears:PrepareDisappear() end
 
 local function backcos()
     local inst = CreateEntity()
@@ -24,9 +30,7 @@ local function backcos()
     inst.entity:AddSoundEmitter()
     MakeInventoryPhysics(inst)
 
-    if not TheWorld.ismastersim then
-        return inst
-    end
+    if not TheWorld.ismastersim then return inst end
     inst.entity:SetPristine()
     MakeSmallBurnable(inst)
     MakeSmallPropagator(inst)
@@ -67,30 +71,27 @@ local function fnback()
     return inst
 end
 
-local KHONG_TAG = {"player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic", "warg"}
+local KHONG_TAG = {
+    "player", "FX", "playerghost", "NOCLICK", "DECOR", "INLIMBO", "epic", "warg"
+}
 local CAN_TAG = {"shadowcreature", "monster", "frog"}
 local function checkfl(inst)
     local follower = inst.components.follower
     if follower ~= nil then
         local leader = follower:GetLeader()
-        if leader and leader:HasTag("player") then
-            return true
-        end
+        if leader and leader:HasTag("player") then return true end
     end
-    if follower == nil then
-        return false
-    end
+    if follower == nil then return false end
 end
 
 local function thithet(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, RANGE_CUA_CAY_THAN_KY, nil, KHONG_TAG, CAN_TAG)
+    local ents = TheSim:FindEntities(x, y, z, RANGE_CUA_CAY_THAN_KY, nil,
+                                     KHONG_TAG, CAN_TAG)
 
     for i, v in ipairs(ents) do
         if v.components.health and v.components.combat then
-            if not checkfl(v) then
-                v.components.health:Kill()
-            end
+            if not checkfl(v) then v.components.health:Kill() end
         end
     end
 end
@@ -100,11 +101,35 @@ local function lam_kho_item(inst)
     local players = FindPlayersInRange(x, y, z, RANGE_CUA_CAY_THAN_KY, true)
 
     for _, player in pairs(players) do
-        if player.components.debuffable and not player.components.debuffable:HasDebuff("Buff_Cay_Than_Ky") then
+        if player.components.debuffable and
+            not player.components.debuffable:HasDebuff("Buff_Cay_Than_Ky") then
             player:AddDebuff("Buff_Cay_Than_Ky", "buff_moistureimmunity")
             print("Buff_Cay_Than_Ky")
         end
-        local items = player.components.inventory:ReferenceAllItems()
+
+    end
+end
+
+local function on_player_near(inst, player)
+    if not player then return end
+    player:AddDebuff("cay_than_ky", "wintersfeastbuff")
+    local buff = player:GetDebuff("cay_than_ky")
+
+    if buff ~= nil then
+        -- Gọi hàm gốc để kích hoạt các hiệu ứng âm thanh/visual nếu cần
+
+        -- Ghi đè thời gian: ví dụ cho buff kéo dài 5 ngày game
+        -- 1 ngày game = 480 giây
+        local duration = 480
+
+        if buff.components.timer then
+            buff.components.timer:StopTimer("buffover") -- Dừng cái cũ
+            buff.components.timer:StartTimer("buffover", duration) -- Chạy cái mới với thời gian mong muốn
+        end
+    end
+
+    local items = player.components.inventory:ReferenceAllItems()
+    if items then
         for _, item in ipairs(items) do
             if item.components.inventoryitem ~= nil then
                 item.components.inventoryitem:DryMoisture()
@@ -113,6 +138,17 @@ local function lam_kho_item(inst)
     end
 end
 
+local function on_player_far(inst, player)
+    if not player then return end
+
+    -- player:RemoveTag("mybuff_tag_fuji")
+
+    -- if player.playerbuffromcaythanky then
+    --     player.playerbuffromcaythanky:Cancel()
+    --     player.playerbuffromcaythanky = nil
+    -- end
+    player:RemoveDebuff("cay_than_ky")
+end
 -- fix 23/01/2024
 local function OnInit(inst)
     inst.icon = SpawnPrefab("globalmapicon")
@@ -120,8 +156,10 @@ local function OnInit(inst)
 end
 
 local FIREFLY_MUST = {"firefly"}
-local FIREFLY_CANT = {"FX", "NOBLOCK", "NOCLICK", "DECOR", "flying", "boat", "walkingplank", "_inventoryitem",
-                      "structure"}
+local FIREFLY_CANT = {
+    "FX", "NOBLOCK", "NOCLICK", "DECOR", "flying", "boat", "walkingplank",
+    "_inventoryitem", "structure"
+}
 local function tudienbien_tuchuyenhoa(inst)
     local season = TheWorld.state.season
 
@@ -161,13 +199,10 @@ local function OnPhaseChanged(inst, phase)
                     }
                     count = count + 1
 
-                    pos = {
-                        x = x + offset.x,
-                        y = 0,
-                        z = z + offset.z
-                    }
+                    pos = {x = x + offset.x, y = 0, z = z + offset.z}
 
-                    if TheSim:CountEntities(pos.x, pos.y, pos.z, 5, nil, FIREFLY_CANT) > 0 then
+                    if TheSim:CountEntities(pos.x, pos.y, pos.z, 5, nil,
+                                            FIREFLY_CANT) > 0 then
                         offset = nil
                     end
                 end
@@ -182,9 +217,7 @@ local function OnPhaseChanged(inst, phase)
 end
 
 local function CustomOnHauntkochosei(inst, haunter)
-    haunter:PushEvent("respawnfromghost", {
-        source = inst
-    })
+    haunter:PushEvent("respawnfromghost", {source = inst})
 end
 
 local function DropLightningItems(inst, items)
@@ -192,46 +225,45 @@ local function DropLightningItems(inst, items)
     local num_items = #items
 
     for i, item_prefab in ipairs(items) do
-        local dist = DROP_ITEMS_DIST_MIN + DROP_ITEMS_DIST_VARIANCE * math.random()
+        local dist = DROP_ITEMS_DIST_MIN + DROP_ITEMS_DIST_VARIANCE *
+                         math.random()
         local theta = 2 * PI * math.random()
 
         inst:DoTaskInTime(i * 5 * FRAMES, function(inst2)
             local item = SpawnPrefab(item_prefab)
-            item.Transform:SetPosition(x + dist * math.cos(theta), 20, z + dist * math.sin(theta))
+            item.Transform:SetPosition(x + dist * math.cos(theta), 20,
+                                       z + dist * math.sin(theta))
 
             if i == num_items then
                 inst._lightning_drop_task:Cancel()
                 inst._lightning_drop_task = nil
             end
-            if item.prefab == "frog" then
-                item.sg:GoToState("fall")
-            end
+            if item.prefab == "frog" then item.sg:GoToState("fall") end
         end)
     end
 end
 
 local function OnLightningStrike(inst)
-    if inst._lightning_drop_task ~= nil then
-        return
-    end
+    if inst._lightning_drop_task ~= nil then return end
 
-    local num_small_items = math.random(NUM_DROP_SMALL_ITEMS_MIN, NUM_DROP_SMALL_ITEMS_MAX)
+    local num_small_items = math.random(NUM_DROP_SMALL_ITEMS_MIN,
+                                        NUM_DROP_SMALL_ITEMS_MAX)
     local items_to_drop = {}
 
     for i = 1, num_small_items do
-        table.insert(items_to_drop, small_ram_products[math.random(1, #small_ram_products)])
+        table.insert(items_to_drop,
+                     small_ram_products[math.random(1, #small_ram_products)])
     end
 
-    inst._lightning_drop_task = inst:DoTaskInTime(20 * FRAMES, DropLightningItems, items_to_drop)
+    inst._lightning_drop_task = inst:DoTaskInTime(20 * FRAMES,
+                                                  DropLightningItems,
+                                                  items_to_drop)
 end
 
 local function on_find_fire(inst, firePos)
     inst.components.wateryprotection:SpreadProtectionAtPoint(firePos:Get())
 end
-local function on_player_far(inst, player)
-        player:AddDebuff("Buff_Cay_Than_Ky", "buff_moistureimmunity")
 
-end
 local function cay_kocho()
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -264,9 +296,7 @@ local function cay_kocho()
     inst:AddTag("shelter")
     inst:AddTag("shadecanopy")
 
-    if not TheWorld.ismastersim then
-        return inst
-    end
+    if not TheWorld.ismastersim then return inst end
 
     inst:DoTaskInTime(5, OnInit)
     inst:AddTag("flower")
@@ -274,9 +304,9 @@ local function cay_kocho()
     inst:AddTag("shelter")
     inst.entity:SetPristine()
     MakeSmallPropagator(inst)
-    inst:ListenForEvent("phasechanged", function(src, phase)
-        OnPhaseChanged(inst, phase)
-    end, TheWorld)
+    inst:ListenForEvent("phasechanged",
+                        function(src, phase) OnPhaseChanged(inst, phase) end,
+                        TheWorld)
 
     inst:WatchWorldState("season", tudienbien_tuchuyenhoa)
 
@@ -303,19 +333,25 @@ local function cay_kocho()
     inst.components.firedetector:Activate(true)
 
     inst:AddComponent("wateryprotection")
-    inst.components.wateryprotection.extinguishheatpercent = TUNING.FIRESUPPRESSOR_EXTINGUISH_HEAT_PERCENT
-    inst.components.wateryprotection.temperaturereduction = TUNING.FIRESUPPRESSOR_TEMP_REDUCTION
-    inst.components.wateryprotection.witherprotectiontime = TUNING.FIRESUPPRESSOR_PROTECTION_TIME
-    inst.components.wateryprotection.addcoldness = TUNING.FIRESUPPRESSOR_ADD_COLDNESS
+    inst.components.wateryprotection.extinguishheatpercent =
+        TUNING.FIRESUPPRESSOR_EXTINGUISH_HEAT_PERCENT
+    inst.components.wateryprotection.temperaturereduction =
+        TUNING.FIRESUPPRESSOR_TEMP_REDUCTION
+    inst.components.wateryprotection.witherprotectiontime =
+        TUNING.FIRESUPPRESSOR_PROTECTION_TIME
+    inst.components.wateryprotection.addcoldness =
+        TUNING.FIRESUPPRESSOR_ADD_COLDNESS
     inst.components.wateryprotection:AddIgnoreTag("player")
 
     inst:AddComponent("heater")
     inst.components.heater.heat = 80
 
     inst:AddComponent("playerprox")
-    	inst.components.playerprox:SetTargetMode(inst.components.playerprox.TargetModes.AllPlayers)
-        inst.components.playerprox:SetDist(3, 10)
-        inst.components.playerprox:SetOnPlayerFar(on_player_far)
+    inst.components.playerprox:SetTargetMode(
+        inst.components.playerprox.TargetModes.AllPlayers)
+    inst.components.playerprox:SetDist(5, 10)
+    inst.components.playerprox:SetOnPlayerFar(on_player_far)
+    inst.components.playerprox:SetOnPlayerNear(on_player_near)
     tudienbien_tuchuyenhoa(inst)
 
     return inst
@@ -324,9 +360,7 @@ end
 local WATER_RADIUS = 3.8
 local NO_DEPLOY_RADIUS = WATER_RADIUS + 0.1
 
-local function GetFish(inst)
-    return "kochosei_gift"
-end
+local function GetFish(inst) return "kochosei_gift" end
 
 local function oc_cmndao()
     local inst = CreateEntity()
@@ -367,9 +401,7 @@ local function oc_cmndao()
 
     inst.entity:SetPristine()
 
-    if not TheWorld.ismastersim then
-        return inst
-    end
+    if not TheWorld.ismastersim then return inst end
 
     inst:AddComponent("inspectable")
 
@@ -405,9 +437,7 @@ local function statue_death(inst)
     end)
 end
 
-local function onhammered_statue(inst, worker)
-    statue_death(inst)
-end
+local function onhammered_statue(inst, worker) statue_death(inst) end
 local function onhit_statue(inst, worker)
     inst.AnimState:PlayAnimation("hit")
     inst.AnimState:PushAnimation("acting_idle1", true)
@@ -417,7 +447,8 @@ end
 local function launchitem(item, angle)
     local speed = math.random() * 4 + 2
     angle = (angle + math.random() * 60 - 30) * DEGREES
-    item.Physics:SetVel(speed * math.cos(angle), math.random() * 2 + 8, speed * math.sin(angle) / 2)
+    item.Physics:SetVel(speed * math.cos(angle), math.random() * 2 + 8,
+                        speed * math.sin(angle) / 2)
 end
 
 local function ontradeforgold(inst, item, giver)
@@ -457,9 +488,7 @@ local function OnGetItemFromPlayer(inst, giver, item)
     end
 end
 
-local function OnRefuseItem(inst, giver, item)
-    inst.sg:GoToState("refuseeat")
-end
+local function OnRefuseItem(inst, giver, item) inst.sg:GoToState("refuseeat") end
 
 local function AbleToAcceptTest(inst, item, giver)
     -- Đã xóa logic kiểm tra mini game, mặc định cho phép thử
@@ -468,48 +497,42 @@ end
 
 local function AcceptTest(inst, item, giver)
     -- Chỉ chấp nhận những món đồ có thuộc tính tradable và có giá trị vàng > 0
-    return item.components.tradable ~= nil and item.components.tradable.goldvalue > 0
+    return item.components.tradable ~= nil and
+               item.components.tradable.goldvalue > 0
 end
 local function iswinter(inst)
     local season = TheWorld.state.season
     if season == "winter" then
-        inst.AnimState:OverrideSymbol("swap_object", "swap_kochosei_umbrella", "swap_kochosei_umbrella")
-        inst.AnimState:Show("ARM_carry")
-        inst.AnimState:Hide("ARM_normal")
-        if inst.magicfx ~= nil then
-            inst.magicfx:Remove()
-            inst.magicfx = nil
-        end
-        inst.magicfx = SpawnPrefab("cane_candy_fx")
-        if inst.magicfx then
-            inst.magicfx.entity:AddFollower()
-            inst.magicfx.entity:SetParent(inst.entity)
-            inst.magicfx.Follower:FollowSymbol(inst.GUID, "swap_object", 0, -350, 3)
-
-        end
+        local gethandslot = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+        if not gethandslot then
+            local spawnum = SpawnPrefab("kochosei_umbrella")
+            if spawnum then
+                inst.components.inventory:Equip(spawnum)
+                inst:ListenForEvent("onremove", function(inst)
+                    if spawnum and spawnum:IsValid() then
+                        spawnum:Remove()
+                    end
+                end)
+            end
+        end 
     else
-        inst.AnimState:Hide("ARM_carry")
-        inst.AnimState:Show("ARM_normal")
-        inst.AnimState:ClearOverrideSymbol("swap_object")
-        if inst.magicfx ~= nil then
-            inst.magicfx:Remove()
-            inst.magicfx = nil
+        local gethandslot = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+        if gethandslot and gethandslot.prefab == "kochosei_umbrella" then
+            gethandslot:Remove()
         end
     end
 
 end
-local function spawnfcmnx(inst)
-    local dist = 0.5 * math.random()
-    local theta = 2 * PI * math.random()
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local fx = SpawnPrefab("crab_king_icefx")
-    if fx then
-        fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
-    end
+
+-- Hàm tạo FX dày đặc
+local function SetupStatueEffects(inst)
+    inst:DoPeriodicTask(0.25, function()
+        local fx = SpawnPrefab("wintersfeastbuff_fx_custom")
+        fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    end)
 end
-local function onteleport(inst)
-    statue_death(inst)
-end
+local function onteleport(inst) statue_death(inst) end
+
 local function kochosei_statue()
     local inst = CreateEntity()
 
@@ -527,9 +550,7 @@ local function kochosei_statue()
     inst:AddTag("kochosei_statue")
     -- inst.Transform:SetFourFaced(inst)
 
-    if not TheWorld.ismastersim then
-        return inst
-    end
+    if not TheWorld.ismastersim then return inst end
 
     inst:AddComponent("inspectable")
     inst:AddComponent("workable")
@@ -541,10 +562,20 @@ local function kochosei_statue()
     inst:AddComponent("talker")
     inst:DoPeriodicTask(60, function()
         inst.sg:GoToState("talk")
-        inst.components.talker:Say("Bạn muốn đổi đồ à, liên hệ lông xanh tôi đây!!!")
+        inst.components.talker:Say(
+            "Bạn muốn đổi đồ à, liên hệ lông xanh tôi đây!!!")
         iswinter(inst)
     end)
-    inst:DoPeriodicTask(1, spawnfcmnx)
+    inst:DoTaskInTime(1, SetupStatueEffects)
+
+    -- Dọn dẹp khi tượng bị mất
+    inst:ListenForEvent("onremove", function(inst)
+        if inst.statue_fxs then
+            for _, fx in ipairs(inst.statue_fxs) do
+                if fx:IsValid() then fx:Remove() end
+            end
+        end
+    end)
     inst:ListenForEvent("teleport", onteleport)
     inst:SetStateGraph("SGkochosei_statue")
     -- inst:SetStateGraph("SGkochosei_enemy")
@@ -555,6 +586,8 @@ local function kochosei_statue()
     inst.components.trader:SetAcceptTest(AcceptTest)
     inst.components.trader.onaccept = OnGetItemFromPlayer
     inst.components.trader.onrefuse = OnRefuseItem
+    inst:AddComponent("inventory")
+
     return inst
 end
 
@@ -573,9 +606,7 @@ local function kochosei_statue_item()
     inst.AnimState:SetScale(0.5, 0.5, 0.5)
     inst:AddTag("kochosei_statue_item")
 
-    if not TheWorld.ismastersim then
-        return inst
-    end
+    if not TheWorld.ismastersim then return inst end
 
     inst:AddComponent("inspectable")
 
@@ -597,17 +628,24 @@ STRINGS.NAMES.KOCHOSEI_FUJI_TREE = "Cây Đ Gì Thần Kỳ v~"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_FUJI_TREE =
     "Cây đã thi công xong, xin lỗi đã làm phiền, mong quý vị thông cảm ヾ(•ω•`)o\nDinh last visited: 20/01/2024"
 STRINGS.NAMES.KOCHOSEI_OC_CMNDAO = "Cái Gì Đó...Giống Như Ốc Đảo"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO = "Có ếch ở dưới hồ không nhỉ?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_OC_CMNDAO =
+    "Có ếch ở dưới hồ không nhỉ?"
 STRINGS.NAMES.KOCHOSEI_STATUE = "Tượng Kochosei"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_STATUE =     "Tượng của Kochosei... Mà người ta còn sống nhăn sao lại tạc tượng rồi?"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_STATUE =
+    "Tượng của Kochosei... Mà người ta còn sống nhăn sao lại tạc tượng rồi?"
 
 STRINGS.NAMES.KOCHOSEI_STATUE_ITEM = "Tele To Kochosei Statue"
-STRINGS.RECIPE_DESC.KOCHOSEI_STATUE_ITEM = "Dùng nó để teleport đến chỗ có tượng Kochosei"
+STRINGS.RECIPE_DESC.KOCHOSEI_STATUE_ITEM =
+    "Dùng nó để teleport đến chỗ có tượng Kochosei"
 
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_STATUE_ITEM = "Dùng nó để teleport đến chỗ có tượng Kochosei"
-return Prefab("kocho_miku_cos", fn, Assets), Prefab("kocho_miku_back", fnback, Assets),
-    Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs), Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs),
-    Prefab("kochosei_statue", kochosei_statue, Assets, prefabs),
-    Prefab("kochosei_statue_item", kochosei_statue_item, Assets, prefabs),
-    MakePlacer("kochosei_statue_placer", "wilson", "kochosei_snowmiku_skin1", "acting_idle1", nil, nil, nil)
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_STATUE_ITEM =
+    "Dùng nó để teleport đến chỗ có tượng Kochosei"
+return Prefab("kocho_miku_cos", fn, Assets),
+       Prefab("kocho_miku_back", fnback, Assets),
+       Prefab("kochosei_fuji_tree", cay_kocho, Assets, prefabs),
+       Prefab("kochosei_oc_cmndao", oc_cmndao, Assets, prefabs),
+       Prefab("kochosei_statue", kochosei_statue, Assets, prefabs),
+       Prefab("kochosei_statue_item", kochosei_statue_item, Assets, prefabs),
+       MakePlacer("kochosei_statue_placer", "wilson", "kochosei_snowmiku_skin1",
+                  "acting_idle1", nil, nil, nil)
 

@@ -26,51 +26,51 @@ local function Spawnclone(inst, target, pos, prefabclone)
 	inst.components.spawnclonekochosei:Spawclone(inst, target, pos, "dinhcutenhathematroi")
 end
 
-local MIN_RANGE = .5      -- khoảng cách tối thiểu so với player
-local MAX_RANGE = 1.5      -- khoảng cách tối đa
-local MAX_PLANTS = 18
+-- Tên FX hardcode thẳng, không cần qua SKIN_FX_PREFAB như skin system
+local DEMONLORD_VFX    = nil              -- FX bám theo vũ khí (swap_object), đặt tên prefab nếu có
+local DEMONLORD_TRAIL  = "cane_ancient_fx" -- FX trail spawn dưới đất khi di chuyển
+local DEMONLORD_VFX_OFFSET = -105         -- offset dọc của vfx (giống cane skin)
 
-local PLANTFX_TAGS =
-{
-    "shadowtrail",
-}
+local TRAIL_FLAGS = { "shadowtrail" }
 
+-- inst = weapon (giống cane_do_trail chuẩn, lấy owner qua GetGrandOwner)
 local function PlantTick(inst)
-    if not inst.entity:IsVisible() then
+    local owner = inst.components.inventoryitem ~= nil
+        and inst.components.inventoryitem:GetGrandOwner()
+        or nil
+    if owner == nil or not owner.entity:IsVisible() then
         return
     end
 
-    local x, y, z = inst.Transform:GetWorldPosition()
+    local x, y, z = owner.Transform:GetWorldPosition()
 
-    -- Giới hạn số FX quanh player
-    if #TheSim:FindEntities(x, y, z, MAX_RANGE, PLANTFX_TAGS) >= MAX_PLANTS then
-        return
+    -- Dịch điểm spawn theo hướng & tốc độ thực nếu đang di chuyển
+    if owner.sg ~= nil and owner.sg:HasStateTag("moving") then
+        local theta = -owner.Transform:GetRotation() * DEGREES
+        local speed = owner.components.locomotor ~= nil
+            and owner.components.locomotor:GetRunSpeed() * .1
+            or 0
+        x = x + speed * math.cos(theta)
+        z = z + speed * math.sin(theta)
     end
 
-    local pt = Vector3(0, 0, 0)
+    local mounted = owner.components.rider ~= nil and owner.components.rider:IsRiding()
+    local map = TheWorld.Map
 
     local offset = FindValidPositionByFan(
-        math.random() * 2 * PI,
-        MIN_RANGE + math.random() * (MAX_RANGE - MIN_RANGE),
-        6, -- số lần thử
+        math.random() * TWOPI,
+        (mounted and 1 or .5) + math.random() * .5,
+        4,
         function(offset)
-            pt.x = x + offset.x
-            pt.z = z + offset.z
-
-            -- Chỉ check trùng FX, KHÔNG check địa hình
-            return #TheSim:FindEntities(pt.x, 0, pt.z, 0.5, PLANTFX_TAGS) < 3
+            local pt = Vector3(x + offset.x, 0, z + offset.z)
+            return map:IsPassableAtPoint(pt:Get())
+                and not map:IsPointNearHole(pt)
+                and #TheSim:FindEntities(pt.x, 0, pt.z, .7, TRAIL_FLAGS) <= 0
         end
     )
 
     if offset ~= nil then
-        local plant = SpawnPrefab("cane_ancient_fx")
-        if plant ~= nil then
-            plant.Transform:SetPosition(
-                x + offset.x,
-                0,
-                z + offset.z
-            )
-        end
+        SpawnPrefab(DEMONLORD_TRAIL).Transform:SetPosition(x + offset.x, 0, z + offset.z)
     end
 end
 
@@ -78,20 +78,38 @@ local function OnEquip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_object", "swap_demonlord", "swap_demonlord")
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
-	if owner.demonlord == nil then 
-		owner.demonlord = owner:DoPeriodicTask(0.15, PlantTick)
+
+	-- VFX bám theo vũ khí (tương đương _vfx_fx_inst trong cane skin)
+	if DEMONLORD_VFX ~= nil and inst._vfx_inst == nil then
+		inst._vfx_inst = SpawnPrefab(DEMONLORD_VFX)
+		inst._vfx_inst.entity:AddFollower()
+		inst._vfx_inst.entity:SetParent(owner.entity)
+		inst._vfx_inst.Follower:FollowSymbol(owner.GUID, "swap_object", 0, DEMONLORD_VFX_OFFSET, 0)
 	end
+
+	-- Trail FX task trên weapon (inst), lấy owner qua GetGrandOwner bên trong PlantTick
+	if DEMONLORD_TRAIL ~= nil and inst._trailtask == nil then
+		inst._trailtask = inst:DoPeriodicTask(6 * FRAMES, PlantTick, 2 * FRAMES)
+	end
+
 	TurnOn(inst, owner)
 end
 
 local function OnUnequip(inst, owner)
 	owner.AnimState:Hide("ARM_carry")
 	owner.AnimState:Show("ARM_normal")
-	TurnOff(inst, owner)
-	if owner.demonlord ~= nil then
-		owner.demonlord:Cancel()
-		owner.demonlord = nil
+
+	if inst._vfx_inst ~= nil then
+		inst._vfx_inst:Remove()
+		inst._vfx_inst = nil
 	end
+
+	if inst._trailtask ~= nil then
+		inst._trailtask:Cancel()
+		inst._trailtask = nil
+	end
+
+	TurnOff(inst, owner)
 end
 
 local function fn()

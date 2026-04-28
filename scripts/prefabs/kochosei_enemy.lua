@@ -225,6 +225,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 		inst:AddTag("kochosei_enemy")
 		inst:AddTag("kochosei_enemy_skin_1")
 		inst:AddTag("trader")
+		inst:AddTag("worker")
 		inst:SetPrefabNameOverride("kochosei_enemy")
 
 		inst.entity:SetPristine()

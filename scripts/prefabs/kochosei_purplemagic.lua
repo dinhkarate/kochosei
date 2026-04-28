@@ -74,7 +74,7 @@ local function OnEquip(inst, owner)
         inst.magicfx:Remove()
         inst.magicfx = nil
     end
-    inst.magicfx = SpawnPrefab("cane_victorian_fx")
+    inst.magicfx = SpawnPrefab("cane_rose_fx")
     if inst.magicfx then
         inst.magicfx.entity:AddFollower()
         inst.magicfx.entity:SetParent(owner.entity)

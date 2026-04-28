@@ -2,8 +2,6 @@ local assets = {
 	Asset("ANIM", "anim/book_maxwell.zip"),
 	Asset("INV_IMAGE", "waxwelljournal_open"),
 	Asset("ANIM", "anim/kochosei_ancient_books.zip"),
-	Asset("ATLAS", "images/inventoryimages/elysia_scmn_pell.xml"),
-	Asset("IMAGE", "images/inventoryimages/elysia_scmn_pell.tex"),
 }
 local reader
 

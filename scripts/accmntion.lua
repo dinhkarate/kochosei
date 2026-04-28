@@ -16,6 +16,7 @@ NHAC_THA_T_RA.fn = function(act)
     end
     return true
 end
+
 local NHAC_BAT_LAI = GLOBAL.Action({
     distance = 1
 })
@@ -77,24 +78,92 @@ KOCHOSEI_TELEPORT.str = "Teleport To Statue"
 KOCHOSEI_TELEPORT.id = "Kocho Teleport"
 KOCHOSEI_TELEPORT.fn = function(act)
     if act.invobject ~= nil and act.doer ~= nil then
-			act.doer:PushEvent("kochoseiteleport")
-			act.invobject:Remove()
-	end
-	return true
+        act.doer:PushEvent("kochoseiteleport")
+        act.invobject:Remove()
+    end
+    return true
 end
 AddAction(KOCHOSEI_TELEPORT)
 
 AddComponentAction("INVENTORY", "kochoseiteleport", function(inst, doer, actions, right)
-        table.insert(actions, KOCHOSEI_TELEPORT)
+    table.insert(actions, KOCHOSEI_TELEPORT)
 end)
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
-AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_BAT_LAI, "dolongaction"))
 
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(NHAC_THA_T_RA, "dolongaction"))
-AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_THA_T_RA, "dolongaction"))
+-- ============================================================
+-- ACTION: Đưa kochosei_heal_item cho người chơi khác để heal
+-- ============================================================
+local KOCHOSEI_GIVE_HEAL = GLOBAL.Action({
+    distance      = 2,     -- khoảng cách tay với tay
+    canforce      = false,
+    rmb           = true,  -- gắn vào chuột phải
+})
+KOCHOSEI_GIVE_HEAL.str      = "Hồi máu bạn ơi"
+KOCHOSEI_GIVE_HEAL.id       = "KOCHOSEI GIVE HEAL"
 
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA, "dolongaction"))
-AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA, "dolongaction"))
+KOCHOSEI_GIVE_HEAL.fn = function(act)
+    -- Guard cơ bản
+    if not (act.doer and act.target and act.invobject) then return false end
+    if act.doer == act.target then return false end  -- không tự cho mình
 
-AddStategraphActionHandler("wilson", GLOBAL.ActionHandler(KOCHOSEI_TELEPORT, "doshortaction"))
+    local target = act.target
+    local item   = act.invobject
+
+    -- Target phải là người chơi còn sống, có component health
+    if not (target.components.health
+            and not target:HasTag("playerghost")
+            and target:HasTag("player") and target.components.health) then
+        return false
+    end
+
+    -- Heal target
+    target.components.health:DoDelta(50, nil, "kochosei_heal")
+    act.doer.components.health:DoDelta(50, nil, "kochosei_heal") -- Trừ máu người cho một ít để cân bằng
+    target:AddDebuff("elysia_3_buff", "elysia_3_buff")
+    act.doer:AddDebuff("elysia_3_buff", "elysia_3_buff")
+    -- Spawn FX trên cả 2 người (dùng hàm nội bộ của component)
+    if item.components.itemhealingkochosei then
+        item.components.itemhealingkochosei:SpawnFX(act.doer)
+        item.components.itemhealingkochosei:SpawnFX(target)
+    end
+
+    -- Trừ 1 item khỏi stack (hoặc xóa thẳng nếu không stack)
+    if item.components.stackable then
+        local popped = item.components.stackable:Get(1)
+        if popped then popped:Remove() end
+    elseif item:IsValid() then
+        item:Remove()
+    end
+
+    return true
+end
+
+AddAction(KOCHOSEI_GIVE_HEAL)
+
+-- Hiện action khi cầm kochosei_heal_item rồi click phải vào người chơi khác
+AddComponentAction("USEITEM", "itemhealingkochosei", function(inst, doer, target, actions, right)
+    -- inst = item đang cầm, target = người được click
+    if right
+        and target ~= nil
+        and target ~= doer
+        and target:HasTag("player")
+        and not target:HasTag("playerghost")
+    then
+        table.insert(actions, KOCHOSEI_GIVE_HEAL)
+    end
+end)
+
+-- StateGraph handler (dùng dolongaction để có animation đưa tay)
+AddStategraphActionHandler("wilson",        GLOBAL.ActionHandler(NHAC_BAT_LAI,      "dolongaction"))
+AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_BAT_LAI,      "dolongaction"))
+
+AddStategraphActionHandler("wilson",        GLOBAL.ActionHandler(NHAC_THA_T_RA,     "dolongaction"))
+AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(NHAC_THA_T_RA,     "dolongaction"))
+
+AddStategraphActionHandler("wilson",        GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA,"dolongaction"))
+AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(KOCHOSEI_MAY_GACHA,"dolongaction"))
+
+AddStategraphActionHandler("wilson",        GLOBAL.ActionHandler(KOCHOSEI_TELEPORT, "doshortaction"))
 AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(KOCHOSEI_TELEPORT, "doshortaction"))
+
+AddStategraphActionHandler("wilson",        GLOBAL.ActionHandler(KOCHOSEI_GIVE_HEAL,"dolongaction"))
+AddStategraphActionHandler("wilson_client", GLOBAL.ActionHandler(KOCHOSEI_GIVE_HEAL,"dolongaction"))

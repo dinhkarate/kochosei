@@ -235,6 +235,7 @@ local function fn()
 	inst:AddTag("kochoseipet")
 	inst.entity:SetPristine()
 	inst:AddComponent("talker")
+	inst:AddTag("mutated")
 
 	if not TheWorld.ismastersim then
 		return inst

@@ -271,7 +271,6 @@ local function fn()
     inst.DynamicShadow:SetSize(2, 1)
 
     inst:AddTag("structure")
-    inst:AddTag("mastercookware")
 
     --stewer (from stewer component) added to pristine state for optimization
     inst:AddTag("stewer")
@@ -279,6 +278,7 @@ local function fn()
     inst.AnimState:SetBank("portable_cook_pot_kocho")
     inst.AnimState:SetBuild("portable_cook_pot_kocho")
     inst.AnimState:PlayAnimation("idle_empty")
+    inst.AnimState:SetScale(.7,.7,.7)
     inst.scrapbook_anim = "idle_empty"
 
     inst:SetPrefabNameOverride("kochosei_cookpot_item")
@@ -287,7 +287,7 @@ local function fn()
 
 	if not TheWorld.ismastersim then
 		inst.OnEntityReplicated = function(inst)
-			inst.replica.container:WidgetSetup("portablecookpot")
+			inst.replica.container:WidgetSetup("kochosei_cookpot")
 		end
         return inst
 	end
@@ -297,7 +297,7 @@ local function fn()
     inst.components.portablestructure:SetOnDismantleFn(OnDismantle)
 
     inst:AddComponent("stewer")
-    inst.components.stewer.cooktimemult = TUNING.PORTABLE_COOK_POT_TIME_MULTIPLIER
+    inst.components.stewer.cooktimemult = .12
     inst.components.stewer.onstartcooking = startcookfn
     inst.components.stewer.oncontinuecooking = continuecookfn
     inst.components.stewer.oncontinuedone = continuedonefn
@@ -306,7 +306,7 @@ local function fn()
     inst.components.stewer.onspoil = spoilfn
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("portablecookpot")
+    inst.components.container:WidgetSetup("kochosei_cookpot")
     inst.components.container.onopenfn = onopen
     inst.components.container.onclosefn = onclose
     inst.components.container.skipclosesnd = true
@@ -366,6 +366,8 @@ local function itemfn()
 
     inst.AnimState:SetBank("portable_cook_pot_kocho")
     inst.AnimState:SetBuild("portable_cook_pot_kocho")
+    inst.AnimState:SetScale(.7,.7,.7)
+
     inst.AnimState:PlayAnimation("idle_ground")
     inst.scrapbook_anim = "idle_ground"
 
@@ -384,7 +386,6 @@ local function itemfn()
     inst:AddComponent("inventoryitem")
 
     inst:AddComponent("deployable")
-    inst.components.deployable.restrictedtag = "masterchef"
     inst.components.deployable.ondeploy = ondeploy
     --inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
     --inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.NONE)
@@ -403,5 +404,5 @@ STRINGS.NAMES.KOCHOSEI_COOKPOT_ITEM = "Cái nồi gì thế?"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_COOKPOT_ITEM = "Cái nồi gì thế?"
 STRINGS.RECIPE_DESC.KOCHOSEI_COOKPOT_ITEM ="Người Ta Bảo Nó Là Cái Chum, Trông Bé Vậy Khi Deploy Ra Trông To Ác"
 return Prefab("kochosei_cookpot", fn, assets, prefabs),
-    MakePlacer("kochosei_cookpot_item_placer", "portable_cook_pot_kocho", "portable_cook_pot_kocho", "idle_empty"),
+    MakePlacer("kochosei_cookpot_item_placer", "portable_cook_pot_kocho", "portable_cook_pot_kocho", "idle_empty", nil, nil, nil, .7),
     Prefab("kochosei_cookpot_item", itemfn, assets_item, prefabs_item)

@@ -362,8 +362,11 @@ local function ShouldButtTarget(inst, target)
 		local dx = x1 - x
 		local dz = z1 - z
 		local distsq = dx * dx + dz * dz
-		-- Chỉ cần trong range, butt_pre tự xoay đúng hướng
-		return distsq > 0 and distsq < 64
+		if distsq > 0 and distsq < 64 then
+			local rot = inst.Transform:GetRotation() + 180
+			local rot1 = math.atan2(-dz, dx) * RADIANS
+			return DiffAngle(rot, rot1) < TRACKING_ARC
+		end
 	end
 	return false
 end
@@ -444,16 +447,20 @@ local function HandleChopQueueOver(inst, next_chop_state)
         return true
     end
 
-    -- Cây cuối (1 hit còn lại) → finisher
+    -- Cây cuối (1 hit còn lại) → finisher bắt buộc
     if workable.workleft ~= nil and workable.workleft <= 1 then
+        inst.chop_target = nil
         if math.random() < 0.5 then
-            -- Ground pound (quad)
             inst.sg:GoToState("pound")
         else
-            -- Butt slam
             inst.sg:GoToState("butt_pre", target)
         end
-        inst.chop_target = nil
+        return true
+    end
+
+    -- Xen kẽ quad ngẫu nhiên giữa các swing (25%) như bearger gốc
+    if not inst.components.timer:TimerExists("GroundPound") and math.random() < 0.25 then
+        inst.sg:GoToState("pound")
         return true
     end
 
@@ -540,6 +547,7 @@ local function DoFootstep(inst)
 		inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_soft")
 	else
 		inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_stomp")
+		ShakeIfClose_Footstep(inst)
 	end
 end
 
@@ -563,6 +571,10 @@ local states = {
 	State({
 		name = "init",
 		onenter = function(inst)
+			-- Bật combat flags để gấu dùng combo tát + butt trong combat
+			inst.cancombo = true
+			inst.canbutt = true
+			inst.canrunningbutt = true
 			inst.sg:GoToState(inst.components.locomotor ~= nil and "idle" or "corpse_idle")
 		end,
 	}),
@@ -1028,10 +1040,7 @@ local states = {
 			end),
 			--
 			FrameEvent(41, function(inst)
-				-- Chỉ tiếp tục combo nếu: đang chặt cây HOẶC GroundPound còn cooldown
-				-- Nếu GroundPound sẵn sàng → để animation kết thúc → animqueueover sẽ chọn pound/butt
-				if ShouldComboTarget(inst, inst.sg.statemem.target)
-					and (inst.chop_target ~= nil or inst.components.timer:TimerExists("GroundPound")) then
+				if ShouldComboTarget(inst, inst.sg.statemem.target) then
 					inst.sg:GoToState("attack_combo2", inst.sg.statemem.target)
 				end
 			end),
@@ -1055,10 +1064,6 @@ local states = {
 					-- CHOP: xử lý chặt cây, tiếp tục với combo2
 					if HandleChopQueueOver(inst, "attack_combo2") then return end
 					if inst.canbutt and TryButt(inst) then return end
-					if not inst.components.timer:TimerExists("GroundPound") then
-						inst.sg:GoToState("pound")
-						return
-					end
 					inst.sg.statemem.keepfacing = true
 					inst.sg:GoToState("idle", IDLE_FLAGS.Aggro)
 				end
@@ -1146,8 +1151,7 @@ local states = {
 			end),
 			--
 			FrameEvent(37, function(inst)
-				if ShouldComboTarget(inst, inst.sg.statemem.target)
-					and (inst.chop_target ~= nil or inst.components.timer:TimerExists("GroundPound")) then
+				if ShouldComboTarget(inst, inst.sg.statemem.target) then
 					inst.sg:GoToState("attack_combo1a", inst.sg.statemem.target)
 				end
 			end),
@@ -1171,10 +1175,6 @@ local states = {
 					-- CHOP: xử lý chặt cây, tiếp tục với combo1a
 					if HandleChopQueueOver(inst, "attack_combo1a") then return end
 					if inst.canbutt and TryButt(inst) then return end
-					if not inst.components.timer:TimerExists("GroundPound") then
-						inst.sg:GoToState("pound")
-						return
-					end
 					inst.sg:GoToState("idle", IDLE_FLAGS.Aggro)
 				end
 			end),
@@ -1261,8 +1261,7 @@ local states = {
 			end),
 			--
 			FrameEvent(37, function(inst)
-				if ShouldComboTarget(inst, inst.sg.statemem.target)
-					and (inst.chop_target ~= nil or inst.components.timer:TimerExists("GroundPound")) then
+				if ShouldComboTarget(inst, inst.sg.statemem.target) then
 					inst.sg:GoToState("attack_combo2", inst.sg.statemem.target)
 				end
 			end),
@@ -1286,10 +1285,6 @@ local states = {
 					-- CHOP: xử lý chặt cây, tiếp tục với combo1 (vòng lặp)
 					if HandleChopQueueOver(inst, "attack_combo1") then return end
 					if inst.canbutt and TryButt(inst) then return end
-					if not inst.components.timer:TimerExists("GroundPound") then
-						inst.sg:GoToState("pound")
-						return
-					end
 					inst.sg:GoToState("idle", IDLE_FLAGS.Aggro)
 				end
 			end),
@@ -1359,7 +1354,7 @@ local states = {
 				if target ~= nil and target:IsValid() then
 					local x1, y1, z1 = target.Transform:GetWorldPosition()
 					local rot = inst.Transform:GetRotation()
-					local rot1 = inst:GetAngleToPoint(x1, y1, z1)
+					local rot1 = inst:GetAngleToPoint(x1, y1, z1) + 180
 					local drot = ReduceAngle(rot1 - rot)
 					if drot ~= 0 and math.abs(drot) < TRACKING_ARC then
 						left = drot > 0
@@ -2306,8 +2301,8 @@ local states = {
 
 
 	--------------------------------------------------------------------------
-	-- FIX: Dig – dùng quad (ground pound) trước, rồi butt slam, rồi quad lại.
-	-- Sequence: dig_work (quad) → dig_work_butt → dig_work_final (quad)
+	-- DIG: mỗi lần brain trigger, random quad hoặc butt.
+	-- Butt cần xoay gấu 180° trước vì butt slam về phía SAU lưng.
 	State({
 		name = "dig_work",
 		tags = { "attack", "busy" },
@@ -2318,20 +2313,35 @@ local states = {
 				inst.sg:GoToState("idle")
 				return
 			end
-			inst.sg.statemem.dig_target = ba.target
-			-- Bắt đầu bằng quad (ground_pound)
-			if GoToStandState(inst, "bi") then
-				inst.components.locomotor:StopMoving()
-				inst.AnimState:PlayAnimation("ground_pound")
+			local target = ba.target
+			inst.sg.statemem.dig_target = target
+
+			if math.random() < 0.5 then
+				-- Quad: ground_pound
+				inst.sg.statemem.dig_mode = "quad"
+				if GoToStandState(inst, "bi") then
+					inst.components.locomotor:StopMoving()
+					inst.AnimState:PlayAnimation("ground_pound")
+				end
+			else
+				-- Butt: xoay 180° để lưng hướng về stump, rồi butt_pre
+				inst.sg.statemem.dig_mode = "butt"
+				if target:IsValid() then
+					local rot = inst:GetAngleToPoint(target:GetPosition())
+					inst.Transform:SetRotation(rot + 180)
+				end
+				inst.sg:GoToState("butt_pre", target)
 			end
 		end,
 
 		timeline = {
 			FrameEvent(13, function(inst)
-				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+				if inst.sg.statemem.dig_mode == "quad" then
+					inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/swhoosh")
+				end
 			end),
 			FrameEvent(20, function(inst)
-				-- Thực hiện hit đầu tiên lên stump/dig target
+				if inst.sg.statemem.dig_mode ~= "quad" then return end
 				local target = inst.sg.statemem.dig_target
 				if target ~= nil and target:IsValid() then
 					local workable = target.components.workable
@@ -2346,49 +2356,25 @@ local states = {
 				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound")
 			end),
 			FrameEvent(21, function(inst)
-				inst:SetStandState("quad")
+				if inst.sg.statemem.dig_mode == "quad" then
+					inst:SetStandState("quad")
+				end
 			end),
 			FrameEvent(30, function(inst)
-				inst.sg:AddStateTag("caninterrupt")
+				if inst.sg.statemem.dig_mode == "quad" then
+					inst.sg:AddStateTag("caninterrupt")
+				end
 			end),
 		},
 
 		events = {
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
-					-- Tiếp theo dùng butt
-					local target = inst.sg.statemem.dig_target
-					if target ~= nil and target:IsValid() then
-						local workable = target.components.workable
-						if workable ~= nil and workable:CanBeWorked() then
-							inst.sg:GoToState("dig_work_butt", target)
-							return
-						end
-					end
-					-- Stump đã dig xong
 					inst:PerformBufferedAction()
 					inst.sg:GoToState("idle")
 				end
 			end),
 		},
-	}),
-
-	State({
-		name = "dig_work_butt",
-		tags = { "attack", "busy" },
-
-		onenter = function(inst, target)
-			inst.sg.statemem.dig_target = target
-			-- Dùng butt_pre → butt để slam
-			if target ~= nil and target:IsValid() then
-				inst.sg:GoToState("butt_pre", target)
-			else
-				inst.sg:GoToState("idle")
-			end
-		end,
-
-		-- Không cần timeline/events, state này chỉ redirect sang butt_pre.
-		-- Sau khi butt_pst kết thúc, SG về idle. Brain sẽ trigger dig_work lần 2 (quad cuối).
 	}),
 
 	--------------------------------------------------------------------------
@@ -2510,6 +2496,7 @@ local states = {
 			end),
 			FrameEvent(54, function(inst)
 				inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/step_stomp")
+				ShakeIfClose_Footstep(inst)
 			end),
 			FrameEvent(56, function(inst)
 				inst:SetStandState("quad")

@@ -137,6 +137,12 @@ AddCharacterRecipe("kochosei_thien_su_ban_phuc_xanh", {Ingredient("reviver", 3),
         builder_tag = "kochosei"
     }, {"CHARACTER"})
 
+AddCharacterRecipe("kochosei_heal_item", {Ingredient("reviver", 1), Ingredient("spidergland", 1)},
+    TECH.SCIENCE_ONE, {
+        numtogive = 1,
+        builder_tag = "kochosei"
+    }, {"CHARACTER"})
+
 AddCharacterRecipe("kochosei_thien_su_ban_phuc_hong", {Ingredient("spoiled_food", 10), Ingredient("lavae_egg", 1)},
     TECH.ANCIENT_TWO, {
         numtogive = 50,

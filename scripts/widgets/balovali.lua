@@ -35,9 +35,10 @@ params.triple_kocho = {
         slotpos = {},
         animbank = "triple_kocho_UI",
         animbuild = "triple_kocho_UI",
-        pos = Vector3(-950, 200, 0), -- Căn giữa màn hình
+        pos = Vector3(-140, 150, 0),
+        side_align_tip = 160,
     },
-    issidewidget = true,
+  --  issidewidget = true,
     type = "chest",
 }
 -- 5 hàng x 10 cột = 50 slots
@@ -56,9 +57,10 @@ params.kochosei_chest_5x5 = {
         slotpos = {},
         animbank = "ui_chest_3x3",
         animbuild = "ui_kochosei_chest_5x5",
-        pos = Vector3(-850, 200, 0), -- Căn giữa màn hình
+        pos = Vector3(0, 200, 0),
+        side_align_tip = 160,
     },
-    issidewidget = true,
+   -- issidewidget = true,
     type = "chest",
 }
 -- 5 hàng x 5 cột
@@ -76,9 +78,10 @@ params.kochosei_fridge_5x5 = {
         slotpos = {},
         animbank = "ui_chest_3x3",
         animbuild = "ui_kochosei_fridge_5x5",
-        pos = Vector3(-850, 200, 0), -- Căn giữa màn hình
+        pos = Vector3(0, 200, 0),
+        side_align_tip = 160,
     },
-    issidewidget = true,
+   -- issidewidget = true,
     type = "chest",
 }
 -- 6 hàng x 6 cột
@@ -110,6 +113,50 @@ function params.kochosei_fridge_5x5.itemtestfn(container, item, slot)
     return false
 end
 
+
+--====================================================================--
+-- Kochosei Cookpot (1x4) - Nồi nấu ăn
+--====================================================================--
+local cooking = require "cooking"
+
+params.kochosei_cookpot = {
+    widget = {
+        slotpos =
+        {
+            Vector3(0, 64 + 32 + 8 + 4, 0),
+            Vector3(0, 32 + 4, 0),
+            Vector3(0, -(32 + 4), 0),
+            Vector3(0, -(64 + 32 + 8 + 4), 0),
+        },
+        animbank = "ui_cookpot_1x4",
+        animbuild = "ui_cookpot_1x4",
+        pos = Vector3(200, 0, 0),
+        side_align_tip = 100,
+        buttoninfo = {
+            text = STRINGS.ACTIONS.COOK,
+            position = Vector3(0, -165, 0),
+            fn = function(inst)
+                if inst.components.container ~= nil then
+                    for k, _ in pairs(inst.components.container.openlist) do
+                        BufferedAction(k, inst, ACTIONS.COOK):Do()
+                        break
+                    end
+                elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+                    SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.COOK.code, inst, ACTIONS.COOK.mod_name)
+                end
+            end,
+            validfn = function(inst)
+                return inst.replica.container ~= nil and inst.replica.container:IsFull()
+            end,
+        },
+    },
+    acceptsstacks = false,
+    type = "cooker",
+}
+
+function params.kochosei_cookpot.itemtestfn(container, item, slot)
+    return cooking.IsCookingIngredient(item.prefab) and not container.inst:HasTag("burnt")
+end
 
 --====================================================================--
 -- Cập nhật MAXITEMSLOTS cho toàn bộ container
