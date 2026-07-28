@@ -371,7 +371,7 @@ local function fn()
     inst:AddComponent("planardamage")
 
     inst:AddComponent("tool")
-    inst.components.tool:SetAction(ACTIONS.MINE, 3) 
+    inst.components.tool:SetAction(ACTIONS.MINE, 1.2)
     inst.components.tool:SetAction(ACTIONS.HAMMER, 1.2)
 
     if type(TUNING.MIOHM_DURABILITY) == "number" then -- Giá trị của TUNING.KOCHOSEI_CHECKMOD là một số

@@ -16,7 +16,7 @@ local function onequip(inst, owner)
 	if inst.magicfx then
 		inst.magicfx.entity:AddFollower()
 		inst.magicfx.entity:SetParent(owner.entity)
-		inst.magicfx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, -350, 0)
+		inst.magicfx.Follower:FollowSymbol(owner.GUID, "swap_object", 0, -350, 1)
 	end
 end
 

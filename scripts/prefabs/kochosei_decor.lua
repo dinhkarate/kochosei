@@ -216,9 +216,6 @@ local function OnPhaseChanged(inst, phase)
     end
 end
 
-local function CustomOnHauntkochosei(inst, haunter)
-    haunter:PushEvent("respawnfromghost", {source = inst})
-end
 
 local function DropLightningItems(inst, items)
     local x, _, z = inst.Transform:GetWorldPosition()
@@ -263,6 +260,233 @@ end
 local function on_find_fire(inst, firePos)
     inst.components.wateryprotection:SpreadProtectionAtPoint(firePos:Get())
 end
+
+-- Tạo proxy entity giả làm pocketwatch_revive
+-- để trick DoMoveToRezPosition chạy đúng flow
+local function MakeFakeReviveSource(display_name)
+    local proxy = CreateEntity()
+    proxy.entity:AddTransform()
+ --   proxy.entity:AddNetwork()
+   -- proxy.entity:SetPristine()
+
+    if not TheWorld.ismastersim then return proxy end
+
+    proxy.persists = false
+
+    -- Trick OnRespawnFromGhost nghĩ đây là pocketwatch_revive
+    proxy.prefab = "pocketwatch_revive"
+
+    -- Gom các câu thoại vào mảng để dễ quản lý
+    local death_announcements = {
+        "Hồi sinh kiểu gì thế? Hack à?",
+        "V~, chơi vậy cũng được luôn",
+        "Bớ người ta...",
+        "V~, cây đ gì thần kỳ V~",
+        "Sống lại đi bạn ơi... ",
+        "Tròn tròn trơn láng"
+    }
+
+    -- Chọn ngẫu nhiên 1 câu trong mảng, nếu không có thì dùng display_name mặc định
+    local final_name = death_announcements[math.random(1, #death_announcements)] or display_name
+    
+    -- Gán hàm trả về tên ngẫu nhiên đã chọn cho proxy
+    proxy.GetBasicDisplayName = function() return final_name end
+
+    -- Dọn dẹp sau khi flow xong (DoMoveToRezPosition mất ~75 frames)
+    proxy:DoTaskInTime(5, function(p)
+        if p ~= nil and p:IsValid() then p:Remove() end
+    end)
+
+    return proxy
+end
+
+--------------------------------------------------------------------------
+-- Bloom + trail khi ghost hồi sinh
+--------------------------------------------------------------------------
+
+local MAX_TRAIL_VARIATIONS = 7
+local MAX_RECENT_TRAILS = 4
+local TRAIL_MIN_SCALE = 1
+local TRAIL_MAX_SCALE = 1.6
+
+local function PickTrail(inst)
+    local rand = table.remove(inst.availabletrails, math.random(#inst.availabletrails))
+    table.insert(inst.usedtrails, rand)
+    if #inst.usedtrails > MAX_RECENT_TRAILS then
+        table.insert(inst.availabletrails, table.remove(inst.usedtrails, 1))
+    end
+    return rand
+end
+
+local function RefreshTrail(inst, fx)
+    if fx:IsValid() then
+        fx:Refresh()
+    else
+        inst._trailtask:Cancel()
+        inst._trailtask = nil
+    end
+end
+
+local function DoTrail(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    if inst.sg:HasStateTag("moving") then
+        local theta = -inst.Transform:GetRotation() * DEGREES
+        x = x + math.cos(theta)
+        z = z + math.sin(theta)
+    end
+    local fx = SpawnPrefab("damp_trail")
+    fx.Transform:SetPosition(x, 0, z)
+    fx:SetVariation(PickTrail(inst), GetRandomMinMax(TRAIL_MIN_SCALE, TRAIL_MAX_SCALE), TUNING.STALKER_BLOOM_DECAY)
+    if inst._trailtask ~= nil then
+        inst._trailtask:Cancel()
+    end
+    inst._trailtask = inst:DoPeriodicTask(TUNING.STALKER_BLOOM_DECAY * 0.5, RefreshTrail, nil, fx)
+end
+
+local BLOOM_CHOICES = {
+    ["stalker_bulb"] = 1,
+    ["stalker_bulb_double"] = 1,
+    ["stalker_berry"] = 2,
+    ["stalker_fern"] = 6,
+}
+
+local STALKERBLOOM_TAGS = { "stalkerbloom" }
+local function DoPlantBloom(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local map = TheWorld.Map
+    local offset = FindValidPositionByFan(math.random() * 2 * PI, math.random() * 3, 8, function(offset)
+        local x1 = x + offset.x
+        local z1 = z + offset.z
+        return map:IsPassableAtPoint(x1, 0, z1)
+            and map:IsDeployPointClear(Vector3(x1, 0, z1), nil, 1)
+            and #TheSim:FindEntities(x1, 0, z1, 2.5, STALKERBLOOM_TAGS) < 4
+    end)
+
+    if offset ~= nil then
+        SpawnPrefab(weighted_random_choice(BLOOM_CHOICES)).Transform:SetPosition(x + offset.x, 0, z + offset.z)
+    end
+end
+
+local function OnStartBlooming(inst)
+    DoTrail(inst)
+    inst._bloomtask = inst:DoPeriodicTask(3 * FRAMES, DoPlantBloom, 2 * FRAMES)
+end
+
+local function _StartBlooming(inst)
+    if inst._bloomtask == nil then
+        inst._bloomtask = inst:DoTaskInTime(0, OnStartBlooming)
+    end
+end
+
+local function ForestOnEntitySleep(inst)
+    if inst._bloomtask ~= nil then
+        inst._bloomtask:Cancel()
+        inst._bloomtask = nil
+    end
+    if inst._trailtask ~= nil then
+        inst._trailtask:Cancel()
+        inst._trailtask = nil
+    end
+end
+
+local function StartBlooming(inst)
+    if not inst._blooming then
+        inst._blooming = true
+        if not inst:IsAsleep() then
+            _StartBlooming(inst)
+        end
+    end
+end
+
+local function StopBlooming(inst)
+    if inst._blooming then
+        inst._blooming = false
+        ForestOnEntitySleep(inst)
+    end
+end
+
+-- Đợi đến khi player thật sự hồi sinh xong (hết tag playerghost)
+-- rồi mới bắt đầu bloom, tránh nở hoa ở vị trí ghost cũ
+local BLOOM_DURATION = 5
+local ON_PROTECT_DURATION = 5
+
+-- Chạy đúng 1 lần khi player thật sự hồi sinh xong
+local function StartRevivalProtection(inst)
+    if inst._protecttask ~= nil then
+        inst._protecttask:Cancel()
+        inst._protecttask = nil
+    end
+
+    inst.components.health.invincible = true
+
+    inst._protecttask = inst:DoTaskInTime(ON_PROTECT_DURATION, function(inst)
+        inst._protecttask = nil
+        inst.components.health.invincible = false
+    end)
+end
+
+local function WaitForRevive(inst)
+    if not inst:IsValid() then
+        return
+    end
+    if not inst:HasTag("playerghost") then
+        inst._revivewaittask = nil
+        StartBlooming(inst)
+
+        if inst._bloomstoptask ~= nil then
+            inst._bloomstoptask:Cancel()
+        end
+        inst._bloomstoptask = inst:DoTaskInTime(BLOOM_DURATION, function(inst)
+            inst._bloomstoptask = nil
+            StopBlooming(inst)
+        end)
+
+        StartRevivalProtection(inst) -- chỉ gọi đúng 1 lần ở đây, không nằm trong nhánh lặp
+    else
+        inst._revivewaittask = inst:DoTaskInTime(FRAMES, WaitForRevive)
+    end
+end
+
+--------------------------------------------------------------------------
+-- Hàm xử lý khi ghost ám vào item
+--------------------------------------------------------------------------
+local function CustomOnHaunt(inst, haunter)
+    inst.components.hauntable.hauntvalue = TUNING.HAUNT_SMALL
+
+    if not haunter:HasTag("playerghost") then return end
+
+    local display_name = inst:GetBasicDisplayName()
+    local fake_source = MakeFakeReviveSource(display_name)
+
+    haunter:PushEvent("respawnfromghost",
+                      {source = fake_source, from_haunt = true})
+
+    haunter.usedtrails = {}
+    haunter.availabletrails = {}
+    for i = 1, MAX_TRAIL_VARIATIONS do
+        table.insert(haunter.availabletrails, i)
+    end
+    haunter._blooming = false
+    haunter.DoTrail = DoTrail
+    haunter.StartBlooming = StartBlooming
+    haunter.StopBlooming = StopBlooming
+
+    -- Hủy task chờ cũ nếu có (phòng trường hợp bị ám liên tiếp)
+    if haunter._revivewaittask ~= nil then
+        haunter._revivewaittask:Cancel()
+    end
+    if haunter._revivewaittask ~= nil then
+        haunter._revivewaittask:Cancel()
+    end
+    if haunter._bloomstoptask ~= nil then
+        haunter._bloomstoptask:Cancel()
+        haunter._bloomstoptask = nil
+    end
+    WaitForRevive(haunter)
+end
+
+-- Gắn vào hauntable của item trong prefabfn
+-- inst.components.hauntable:SetOnHauntFn(CustomOnHaunt)
 
 local function cay_kocho()
     local inst = CreateEntity()
@@ -316,7 +540,7 @@ local function cay_kocho()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("hauntable")
-    inst.components.hauntable:SetOnHauntFn(CustomOnHauntkochosei)
+    inst.components.hauntable:SetOnHauntFn(CustomOnHaunt)
 
     inst:AddComponent("lightningblocker")
     inst.components.lightningblocker:SetBlockRange(TUNING.SHADE_CANOPY_RANGE)
@@ -503,7 +727,8 @@ end
 local function iswinter(inst)
     local season = TheWorld.state.season
     if season == "winter" then
-        local gethandslot = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+        local gethandslot = inst.components.inventory:GetEquippedItem(
+                                EQUIPSLOTS.HANDS)
         if not gethandslot then
             local spawnum = SpawnPrefab("kochosei_umbrella")
             if spawnum then
@@ -514,9 +739,10 @@ local function iswinter(inst)
                     end
                 end)
             end
-        end 
+        end
     else
-        local gethandslot = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+        local gethandslot = inst.components.inventory:GetEquippedItem(
+                                EQUIPSLOTS.HANDS)
         if gethandslot and gethandslot.prefab == "kochosei_umbrella" then
             gethandslot:Remove()
         end

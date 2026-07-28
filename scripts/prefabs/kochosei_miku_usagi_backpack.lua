@@ -16,36 +16,9 @@ local function onequip(inst, owner)
 	if inst.components.container then
 		inst.components.container:Open(owner)
 	end
-
-	local fastpickerAdded = false
-	local expertchefAdded = false
-
-	if not owner:HasTag("fastpicker") and not owner:HasTag("fastpick") then
-		owner:AddTag("fastpicker")
-		owner:AddTag("fastpick")
-		fastpickerAdded = true
-	end
-
-	if not owner:HasTag("expertchef") then
-		owner:AddTag("expertchef")
-		expertchefAdded = true
-	end
-	owner.fastpickerAdded = fastpickerAdded
-	owner.expertchefAdded = expertchefAdded
 end
 
 local function onunequip(inst, owner)
-	local fastpickerAdded = owner.fastpickerAdded
-	local expertchefAdded = owner.expertchefAdded
-
-	if fastpickerAdded and not owner:HasTag("kochosei") then
-		owner:RemoveTag("fastpick")
-		owner:RemoveTag("fastpicker")
-	end
-	if expertchefAdded and not owner:HasTag("kochosei") then
-		owner:RemoveTag("expertchef")
-	end
-
 	owner.AnimState:ClearOverrideSymbol("swap_body")
 	owner.AnimState:ClearOverrideSymbol("miku_usagi_backpack")
 

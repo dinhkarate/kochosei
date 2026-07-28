@@ -46,19 +46,29 @@ Chậc chậc... Đúng là một bãi rác thật sự.
                 ÅllÅ‡gÞÞÞÞÞÞÞÞÇÅglllGlÞÞÞÞÞÞÞÅ``‹¯¯``Å‡`````‹g‹Å‡g`````6‹Ållllllll                  
                  ÅÅÅÅÅÅgÅÅggÅÅÅÅÅllÞ*ÅÞÞÞÞÞÞÞÅ‹````¯`¯¯¯GÅgÅÅÇlÅgü33ü6ÞÅglllllll                    
                                 ÅÅÞgÅÅÅÅÅÅÅÅgÅgÅÅÅÅÅÅ6llllllllllllllllllll                         
-]] GLOBAL.setmetatable(env, {
-    __index = function(t, k)
-        return GLOBAL.rawget(GLOBAL, k)
-    end
+]]
+GLOBAL.setmetatable(env, {
+	__index = function(t, k)
+		return GLOBAL.rawget(GLOBAL, k)
+	end,
 })
 
 GLOBAL.Kochoseiapi = env
 local cooking = require("cooking")
 local ingredients = cooking.ingredients
-local cookpot = {"cookpot"}
-local spicer = {"portablespicer"}
-local listmodneedcheck = {"2578692071", "1638724235", "1645013096", "2066838067", "2736985627", "2477561322",
-                          "2958351483", "2526778484", "3152056502", "2979177306" -- ** Nó, tôi cần phải mạnh hơn nữa
+local cookpot = { "cookpot" }
+local spicer = { "portablespicer" }
+local listmodneedcheck = {
+	"2578692071",
+	"1638724235",
+	"1645013096",
+	"2066838067",
+	"2736985627",
+	"2477561322",
+	"2958351483",
+	"2526778484",
+	"3152056502",
+	"2979177306", -- ** Nó, tôi cần phải mạnh hơn nữa
 }
 TUNING.KOCHOSEI_CHECKMOD = nil
 TUNING.KOCHOSEI_CHECKMOD_KYOUKA = nil
@@ -66,34 +76,34 @@ TUNING.KOCHOSEI_CHECKWIFI = 0 -- Wifi mà, không phải waifu, nó là 0 vì n�
 
 local modsToLoad = KnownModIndex:GetModsToLoad()
 for _, v in ipairs(modsToLoad) do
-    local Mod = KnownModIndex:GetModInfo(v)
-    if Mod and Mod.name then -- Bằng 1 cách thần kỳ nào đó mà nó gây ra lỗi
-        if Mod.name:find("%[API%] Modded Skins") then
-            TUNING.KOCHOSEI_CHECKMOD = 1
-            print("Mod found:", v, Mod.name)
-        end
-        if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
-            TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
-            print("Mod found:", v, Mod.name)
-        end
-    end
+	local Mod = KnownModIndex:GetModInfo(v)
+	if Mod and Mod.name then -- Bằng 1 cách thần kỳ nào đó mà nó gây ra lỗi
+		if Mod.name:find("%[API%] Modded Skins") then
+			TUNING.KOCHOSEI_CHECKMOD = 1
+			print("Mod found:", v, Mod.name)
+		end
+		if Mod.name:find("冰川镜华") or Mod.name:find("Hikawa Kyouka") then
+			TUNING.KOCHOSEI_CHECKMOD_KYOUKA = 1
+			print("Mod found:", v, Mod.name)
+		end
+	end
 end
 for _, v in ipairs(listmodneedcheck) do
-    for _, listmod in ipairs(modsToLoad) do
-        if listmod == "workshop-" .. v then
-            TUNING.KOCHOSEI_CHECKWIFI = TUNING.KOCHOSEI_CHECKWIFI + 50
-            break
-        end
-    end
+	for _, listmod in ipairs(modsToLoad) do
+		if listmod == "workshop-" .. v then
+			TUNING.KOCHOSEI_CHECKWIFI = TUNING.KOCHOSEI_CHECKWIFI + 50
+			break
+		end
+	end
 end
 
 print("Tổng điểm wifi trong host:", TUNING.KOCHOSEI_CHECKWIFI)
 function themgiap(inst)
-    if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
-        GLOBAL.dobenvohan = false
-    end
+	if type(TUNING.KOCHO_HAT1_DURABILITY) == "number" then
+		GLOBAL.dobenvohan = false
+	end
 
-    print(TUNING.KOCHO_HAT1_DURABILITY)
+	print(TUNING.KOCHO_HAT1_DURABILITY)
 end
 modimport("scripts/value_dhkg_a") -- TUNING- Value đ hiểu kiểu gì ạ
 
@@ -107,32 +117,35 @@ local SKIN_AFFINITY_INFO = require("skin_affinity_info")
 modimport("scripts/kochoas")
 
 local function Dangkyatcmnlat(atlas_list)
-    for _, path in ipairs(atlas_list) do
-        -- Tự thêm đuôi .xml nếu thiếu
-        local atlas_path = path:find("%.xml$") and path or (path .. ".xml")
-        local full_path = resolvefilepath(atlas_path)
+	for _, path in ipairs(atlas_list) do
+		-- Tự thêm đuôi .xml nếu thiếu
+		local atlas_path = path:find("%.xml$") and path or (path .. ".xml")
+		local full_path = resolvefilepath(atlas_path)
 
-        local file = io.open(full_path, "r")
-        if file then
-            local content = file:read("*a")
-            file:close()
+		local file = io.open(full_path, "r")
+		if file then
+			local content = file:read("*a")
+			file:close()
 
-            local count = 0
-            -- Quét tất cả item trong XML này
-            for image_name in content:gmatch('name="([^"]+%.tex)"') do
-                RegisterInventoryItemAtlas(atlas_path, image_name)
-                RegisterInventoryItemAtlas(atlas_path, hash(image_name))
-                count = count + 1
-            end
-            print(" [Success] Đã đăng ký " .. count .. " items từ: " .. atlas_path)
-        else
-            print(" [Error] Không tìm thấy file: " .. atlas_path)
-        end
-    end
+			local count = 0
+			-- Quét tất cả item trong XML này
+			for image_name in content:gmatch('name="([^"]+%.tex)"') do
+				RegisterInventoryItemAtlas(atlas_path, image_name)
+				RegisterInventoryItemAtlas(atlas_path, hash(image_name))
+				count = count + 1
+			end
+			print(" [Success] Đã đăng ký " .. count .. " items từ: " .. atlas_path)
+		else
+			print(" [Error] Không tìm thấy file: " .. atlas_path)
+		end
+	end
 end
 
 -- BẠN CHỈ CẦN LIỆT KÊ TÊN FILE Ở ĐÂY (Vẫn nhanh hơn là liệt kê từng item)
-local my_atlases = {"images/inventoryimages/kochofood.xml", "images/inventoryimages/kochosei_inv.xml"}
+local my_atlases = {
+	"images/inventoryimages/kochofood.xml",
+	"images/inventoryimages/kochosei_inv.xml",
+}
 
 Dangkyatcmnlat(my_atlases)
 -------------------Assets--------------
@@ -181,25 +194,69 @@ Dangkyatcmnlat(my_atlases)
 --     RegisterInventoryItemAtlas(resolvefilepath(atlas), tex)
 -- end
 
-PrefabFiles = {"kochosei_apple_tree", "kochosei_apple_planted_tree", "kochosei_apple", "kochosei_apple_plantables",
-               "kochosei", "kochosei_none", "kochosei_miohm", "kochosei_bearger", "kochosei_tambourin", "kochosei_hat",
-               "kochosei_armor", "kochosei_lantern", "kochosei_streetlight", "kochosei_streetlight1_musicbox",
-               "kochosei_enemy", "kochosei_enemyb", "kochosei_lavaarena_blooms_kocho", "kochosei_house",
-               "kochosei_purplemagic", "kochosei_magicbubble", "kochosei_miku_usagi_backpack", "kochosei_purplesword",
-               "kochosei_lotus_flower", "kochosei_lotus", "kochosei_lotus2", "kochosei_decor", "kochosei_food",
-               "kochosei_stalk", "kochosei_wishlamp", "kochosei_torigate", "kochosei_dragonfly", "kochosei_deerclops",
-               "kochosei_umbrella", "kochosei_demonlord", "kochosei_lucky_hammer", "kochosei_ancient_books",
-               "kochosei_bienbao", -- "kochosei_enemy_d" Mio k cho dung nua
-"kochosei_christmast_torch1", "kochosei_moonstorm_ground_lightning_fx", "kochosei_buff", "kochosei_f_cmn_x",
-               "kochosei_cay_hoa_sang", "kochosei_gift", "kochosei_may_gacha", --
-"kochosei_harvest_book", --
-"kochosei_altar", "kochosei_duke", "kochosei_tornado", "catcoon_build_projectile", "kochosei_enemy_d", -- T dùng )
-"kochosei_tigershark_duke_shadow", "kochosei_card", "kochosei_boss", "kochosei_thien_su_ban_phuc", "kochosei_chest_5x5", -- Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
-               "kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
-"kochosei_coffin", -- Cursed coffin - sleep anytime, super regen, die when crafting
-"triple_kocho", -- Rương lớn 10x5 slots
-"kochosei_noi", "snow_winter_custom", -- Snow effect for Winter's Feast, custom để tránh xung đột với snow_winter của mùa đông thường
-               "kochosei_heal"}
+PrefabFiles = {
+	"kochosei_apple_tree",
+	"kochosei_apple_planted_tree",
+	"kochosei_apple",
+	"kochosei_apple_plantables",
+	"kochosei",
+	"kochosei_none",
+	"kochosei_miohm",
+	"kochosei_bearger",
+	"kochosei_tambourin",
+	"kochosei_hat",
+	"kochosei_armor",
+	"kochosei_lantern",
+	"kochosei_streetlight",
+	"kochosei_streetlight1_musicbox",
+	"kochosei_enemy",
+	"kochosei_enemyb",
+	"kochosei_lavaarena_blooms_kocho",
+	"kochosei_house",
+	"kochosei_purplemagic",
+	"kochosei_magicbubble",
+	"kochosei_miku_usagi_backpack",
+	"kochosei_purplesword",
+	"kochosei_lotus_flower",
+	"kochosei_lotus",
+	"kochosei_lotus2",
+	"kochosei_decor",
+	"kochosei_food",
+	"kochosei_stalk",
+	"kochosei_wishlamp",
+	"kochosei_torigate",
+	"kochosei_dragonfly",
+	"kochosei_deerclops",
+	"kochosei_umbrella",
+	"kochosei_demonlord",
+	"kochosei_lucky_hammer",
+	"kochosei_ancient_books",
+	"kochosei_bienbao", -- "kochosei_enemy_d" Mio k cho dung nua
+	"kochosei_christmast_torch1",
+	"kochosei_moonstorm_ground_lightning_fx",
+	"kochosei_buff",
+	"kochosei_f_cmn_x",
+	"kochosei_cay_hoa_sang",
+	"kochosei_gift",
+	"kochosei_may_gacha", --
+	"kochosei_harvest_book", --
+	"kochosei_altar",
+	"kochosei_duke",
+	"kochosei_tornado",
+	"catcoon_build_projectile",
+	"kochosei_enemy_d", -- T dùng )
+	"kochosei_tigershark_duke_shadow",
+	"kochosei_card",
+	"kochosei_boss",
+	"kochosei_thien_su_ban_phuc",
+	"kochosei_chest_5x5", -- Phải xóa tủ đi trong cay đắng, chỉ vì đồng đội không thích nó
+	"kochosei_elysia_gift", -- Elysia Gift structure with light, warmth and sanity aura
+	"kochosei_coffin", -- Cursed coffin - sleep anytime, super regen, die when crafting
+	"triple_kocho", -- Rương lớn 10x5 slots
+	"kochosei_noi",
+	"snow_winter_custom", -- Snow effect for Winter's Feast, custom để tránh xung đột với snow_winter của mùa đông thường
+	"kochosei_heal",
+}
 
 -- Cái éo gì sao cái dòng này lại ở đây? --
 AddModCharacter("kochosei", "FEMALE")
@@ -208,93 +265,91 @@ AddModCharacter("kochosei", "FEMALE")
 modimport("scripts/keybind")
 
 local function namngua(inst)
-    if inst.prefab ~= "kochosei" then
-        if inst.components.talker then
-            inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
-        end
-        return
-    end
-    inst:PushEvent("namngua")
+	if inst.prefab ~= "kochosei" then
+		if inst.components.talker then
+			inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
+		end
+		return
+	end
+	inst:PushEvent("namngua")
 end
 
 local function getmiohmback(inst)
-    if inst.prefab ~= "kochosei" then
-        if inst.components.talker then
-            inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
-        end
-        return
-    end
-    inst:PushEvent("getmiohmback")
+	if inst.prefab ~= "kochosei" then
+		if inst.components.talker then
+			inst.components.talker:Say("Không phải con lông tím bấm phím đó vô ích hoi")
+		end
+		return
+	end
+	inst:PushEvent("getmiohmback")
 end
 
 AddModRPCHandler("namnguaRPC", "namngua", namngua)
 AddModRPCHandler("getmiohmbackRPC", "getmiohmback", getmiohmback)
 local function SendnamnguaRPC()
-    SendModRPCToServer(GetModRPC("namnguaRPC", "namngua"))
+	SendModRPCToServer(GetModRPC("namnguaRPC", "namngua"))
 end
 local function Sendgetmiohmbackrpc()
-    SendModRPCToServer(GetModRPC("getmiohmbackRPC", "getmiohmback"))
+	SendModRPCToServer(GetModRPC("getmiohmbackRPC", "getmiohmback"))
 end
 
 local key_handlers = {}
 local handler_fns = {
-    key_namngua = SendnamnguaRPC,
-    key_kochoweapon = Sendgetmiohmbackrpc
+	key_namngua = SendnamnguaRPC,
+	key_kochoweapon = Sendgetmiohmbackrpc,
 }
 
 function KeyBind(name, key)
-    if key_handlers[name] then
-        key_handlers[name]:Remove()
-        key_handlers[name] = nil
-    end
-    if key and handler_fns[name] then
-        key_handlers[name] = GLOBAL.TheInput:AddKeyDownHandler(key, handler_fns[name])
-    end
+	if key_handlers[name] then
+		key_handlers[name]:Remove()
+		key_handlers[name] = nil
+	end
+	if key and handler_fns[name] then
+		key_handlers[name] = GLOBAL.TheInput:AddKeyDownHandler(key, handler_fns[name])
+	end
 end
 
 if AddCookingPot then
-    AddCookingPot("kochosei_cookpot")
+	AddCookingPot("kochosei_cookpot")
 end
 
 local cookware_morphs = {
-    cookpot = {
-        kochosei_cookpot = true
-    },
-    portablecookpot = { -- What morph is it (one of [cookpot, portablecookpot, portablespicer])
-        kochosei_cookpot = true -- Your cookware name
-    }
+	cookpot = { kochosei_cookpot = true },
+	portablecookpot = { -- What morph is it (one of [cookpot, portablecookpot, portablespicer])
+		kochosei_cookpot = true, -- Your cookware name
+	},
 }
 local AUTO_COOKING_COOKWARES = rawget(_G, "AUTO_COOKING_COOKWARES") or {}
 _G.AUTO_COOKING_COOKWARES = AUTO_COOKING_COOKWARES
 for base, morphs in pairs(cookware_morphs) do
-    AUTO_COOKING_COOKWARES[base] = shallowcopy(morphs, AUTO_COOKING_COOKWARES[base])
+	AUTO_COOKING_COOKWARES[base] = shallowcopy(morphs, AUTO_COOKING_COOKWARES[base])
 end
 
 -- 1. Đăng ký toàn bộ món ăn ĐANG CÓ (Vanilla + Các mod đã load trước đó)
 -- Chúng ta thường lấy từ 'cookpot' vì nó chứa hầu hết công thức chuẩn.
 for cooker, recipes in pairs(cooking.recipes) do
-    -- Kiểm tra nếu là nồi nấu thông thường (để tránh lấy nhầm các công thức đặc biệt như trạm gia vị)
-    if cooker == "cookpot" or cooker == "portablecookpot" or cooker == "archive_cookpot" then
-        for name, recipe in pairs(recipes) do
-            -- Đăng ký món ăn đó cho nồi của bạn
-            -- Lưu ý: Dùng chính hàm AddCookerRecipe của game để đảm bảo cookbook hoạt động đúng
-            AddCookerRecipe("kochosei_cookpot", recipe)
-        end
-    end
+	-- Kiểm tra nếu là nồi nấu thông thường (để tránh lấy nhầm các công thức đặc biệt như trạm gia vị)
+	if cooker == "cookpot" or cooker == "portablecookpot" or cooker == "archive_cookpot" then
+		for name, recipe in pairs(recipes) do
+			-- Đăng ký món ăn đó cho nồi của bạn
+			-- Lưu ý: Dùng chính hàm AddCookerRecipe của game để đảm bảo cookbook hoạt động đúng
+			AddCookerRecipe("kochosei_cookpot", recipe)
+		end
+	end
 end
 
 -- 2. Hook (đánh chặn) hàm AddCookerRecipe để hỗ trợ các Mod load sau
 -- Nếu một mod khác thêm món vào 'cookpot', nó cũng sẽ tự động được thêm vào 'kochosei_cookpot'
 local oldAddCookerRecipe = _G.AddCookerRecipe
 _G.AddCookerRecipe = function(cooker, recipe, is_mod_food)
-    -- Gọi hàm gốc để không làm hỏng game
-    oldAddCookerRecipe(cooker, recipe, is_mod_food)
+	-- Gọi hàm gốc để không làm hỏng game
+	oldAddCookerRecipe(cooker, recipe, is_mod_food)
 
-    -- Nếu món ăn được thêm vào các nồi chuẩn, tự động "sao chép" sang nồi của mình
-    if cooker == "cookpot" or cooker == "portablecookpot" or cooker == "archive_cookpot" then
-        -- Tránh lặp vô hạn bằng cách kiểm tra tên nồi
-        oldAddCookerRecipe("kochosei_cookpot", recipe, is_mod_food)
-    end
+	-- Nếu món ăn được thêm vào các nồi chuẩn, tự động "sao chép" sang nồi của mình
+	if cooker == "cookpot" or cooker == "portablecookpot" or cooker == "archive_cookpot" then
+		-- Tránh lặp vô hạn bằng cách kiểm tra tên nồi
+		oldAddCookerRecipe("kochosei_cookpot", recipe, is_mod_food)
+	end
 end
 -- ]]
 modimport("scripts/widgets/balovali") -- balovali
@@ -324,247 +379,257 @@ end
 --]]
 modimport("scripts/cong_thuc")
 modimport("scripts/accmntion")
-
+modimport("scripts/nohoadi")
 if TUNING.KOCHOSEI_CHECKMOD ~= 1 then
-    modimport("scripts/api_skins_soraaaaa") -- Không thấy modded nên dùng api đáng lẽ api cũ cơ
+	modimport("scripts/api_skins_soraaaaa") -- Không thấy modded nên dùng api đáng lẽ api cũ cơ
 end
 
 local function OnHitOther_BuffDamage(inst, data)
-    local target = data.target
-    if target ~= nil and target:IsValid() and target.components.combat and target.components.health and inst.tangst then
-        target.sohit = (target.sohit or 1) + 0.02
-        target.components.combat.externaldamagetakenmultipliers:SetModifier(target, target.sohit, "sidanay") -- Tăng dần st mỗi hit
-    end
+	local target = data.target
+	if target ~= nil and target:IsValid() and target.components.combat and target.components.health and inst.tangst then
+		target.sohit = (target.sohit or 1) + 0.02
+		target.components.combat.externaldamagetakenmultipliers:SetModifier(target, target.sohit, "sidanay") -- Tăng dần st mỗi hit
+	end
 end
 -- Tăng dần sát thương khi buff tangst
 local function tat_buff_tangst(inst, data)
-    if data.name == "Gacha cooldown" then
-        inst.tangst = false
-    end
+	if data.name == "Gacha cooldown" then
+		inst.tangst = false
+	end
 end
 local function tele(inst)
-    local statue = TheSim:FindFirstEntityWithTag("kochosei_statue")
-    if statue ~= nil then
-        inst.components.talker:Say("Đang dịch chuyển đến tượng Kochosei...")
-        local x, y, z = statue.Transform:GetWorldPosition()
-        statue:PushEvent("teleport")
-        inst:DoTaskInTime(3, function()
-            inst.Transform:SetPosition(x, y, z)
-            inst.sg:GoToState("gravestone_rebirth")
-        end)
-    end
+	local statue = TheSim:FindFirstEntityWithTag("kochosei_statue")
+	if statue ~= nil then
+		inst.components.talker:Say("Đang dịch chuyển đến tượng Kochosei...")
+		local x, y, z = statue.Transform:GetWorldPosition()
+		statue:PushEvent("teleport")
+		inst:DoTaskInTime(3, function()
+			inst.Transform:SetPosition(x, y, z)
+			inst.sg:GoToState("gravestone_rebirth")
+		end)
+	end
 end
 local function kochosei_heal(inst)
-    if inst.components.health then
-        inst.components.health:DoDelta(50, nil, "kochosei_heal")
-        local heal_fx = SpawnPrefab("kochosei_heal")
-        heal_fx.AnimState:PlayAnimation("heal_doc")
-        -- heal_fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
-        heal_fx.entity:SetParent(inst.entity)
-        heal_fx:ListenForEvent("animover", function()
-            heal_fx:Remove()
-        end)
-    end
+	if inst.components.health then
+		inst.components.health:DoDelta(50, nil, "kochosei_heal")
+		local heal_fx = SpawnPrefab("kochosei_heal")
+		heal_fx.AnimState:PlayAnimation("heal_doc")
+		-- heal_fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+		heal_fx.entity:SetParent(inst.entity)
+		heal_fx:ListenForEvent("animover", function()
+			heal_fx:Remove()
+		end)
+	end
 end
 AddPlayerPostInit(function(inst)
-    if not TheWorld.ismastersim then
-        return inst
-    end
-    inst.tangst = false
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	inst.tangst = false
 
-    inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
-    if not inst.components.timer then
-        inst:AddComponent("timer")
-    end
-    inst:ListenForEvent("timerdone", tat_buff_tangst)
-    inst:ListenForEvent("kochoseiteleport", tele)
-    inst:ListenForEvent("kochoseiheal", kochosei_heal)
-
+	inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
+	if not inst.components.timer then
+		inst:AddComponent("timer")
+	end
+	inst:ListenForEvent("timerdone", tat_buff_tangst)
+	inst:ListenForEvent("kochoseiteleport", tele)
+	inst:ListenForEvent("kochoseiheal", kochosei_heal)
 end)
 
 --- Hồi sinh từ bướm ---
 local function CustomOnHauntkochosei(inst, haunter)
-    if haunter and haunter:HasTag("kochosei") then
-        if inst.components.health then
-            inst.components.health:Kill()
-        end -- Tôi năm nay 80 tuổi nhưng chưa thấy ai độc ác như này, hồi sinh bằng bứm ạ
-        haunter:PushEvent("respawnfromghost", {
-            source = inst
-        })
-    end
+	if haunter and haunter:HasTag("kochosei") then
+		if inst.components.health then
+			inst.components.health:Kill()
+		end -- Tôi năm nay 80 tuổi nhưng chưa thấy ai độc ác như này, hồi sinh bằng bứm ạ
+		haunter:PushEvent("respawnfromghost", { source = inst })
+	end
 end
 
 AddPrefabPostInit("butterfly", function(inst)
-    if not TheWorld.ismastersim then
-        return inst
-    end
-    AddHauntableCustomReaction(inst, CustomOnHauntkochosei, true, false, true)
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	AddHauntableCustomReaction(inst, CustomOnHauntkochosei, true, false, true)
 end)
 ---- Tweak fish box cho kochosei --
 local function spawntom(inst, data)
-    if inst.components.container then
-        local findtem = inst.components.container:HasItemWithTag("hoasen", 1)
+	if inst.components.container then
+		local findtem = inst.components.container:HasItemWithTag("hoasen", 1)
 
-        if findtem and not inst.components.container:IsFull() then
-            inst.components.container:ConsumeByName("kocho_lotus_flower_cooked", 1)
-            local wobster_sheller = SpawnPrefab("wobster_sheller_land")
-            inst.components.container:GiveItem(wobster_sheller)
-        end
-    end
+		if findtem and not inst.components.container:IsFull() then
+			inst.components.container:ConsumeByName("kocho_lotus_flower_cooked", 1)
+			local wobster_sheller = SpawnPrefab("wobster_sheller_land")
+			inst.components.container:GiveItem(wobster_sheller)
+		end
+	end
 end
 
 AddPrefabPostInit("fish_box", function(inst)
-    if not TheWorld.ismastersim then
-        return inst
-    end
-    inst:DoPeriodicTask(10, spawntom) -- cmn dùng timmer quá phèn đi
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	inst:DoPeriodicTask(10, spawntom) -- cmn dùng timmer quá phèn đi
 end)
 
 -- Boss Drop nơ siêu cấp--
 
 AddPrefabPostInit("alterguardian_phase3", function(inst)
-    if not TheWorld.ismastersim then
-        return inst
-    end
-    inst.components.lootdropper:AddChanceLoot("kochosei_hatfl", 1)
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	inst.components.lootdropper:AddChanceLoot("kochosei_hatfl", 1)
 end)
 
 AddPrefabPostInit("deerclops", function(inst)
-    if not TheWorld.ismastersim then
-        return inst
-    end
-    inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
+	if not TheWorld.ismastersim then
+		return inst
+	end
+	inst.components.lootdropper:AddChanceLoot("kochosei_christmast_torch1", 1)
 end)
 
 AddPrefabPostInit("sharkboi_ice_hazard", function(inst)
-    inst:AddTag("ice_kochosei")
+	inst:AddTag("ice_kochosei")
 end)
 
 -- Sửa AI bướm không chạy khi có kochosei--
 AddBrainPostInit("butterflybrain", function(brain) -- print(brain) if u need to debug
-    local runaway
-    for i, node in ipairs(brain.bt.root.children) do
-        if node.name == "RunAway" then
-            runaway = node
-            break
-        end
-    end
-    if not runaway then
-        print("[butterflybrain] Couldn't find the 'RunAway' behaviour in this brain!")
-        return
-    else
-        runaway.hunternotags = runaway.hunternotags or {}
-        table.insert(runaway.hunternotags, "kochosei")
-    end
+	local runaway
+	for i, node in ipairs(brain.bt.root.children) do
+		if node.name == "RunAway" then
+			runaway = node
+			break
+		end
+	end
+	if not runaway then
+		print("[butterflybrain] Couldn't find the 'RunAway' behaviour in this brain!")
+		return
+	else
+		runaway.hunternotags = runaway.hunternotags or {}
+		table.insert(runaway.hunternotags, "kochosei")
+	end
 end)
 
 --- Tweak farmtiller cho doro xâm chiếm đất --
 AddComponentPostInit("farmtiller", function(self)
-    local _oldtill = self.Till
-    self.Till = function(self, pt, doer, ...)
-        if self.inst.prefab == "doro_xamchiemtraidat" then
-            if TheWorld.Map:CanTillSoilAtPoint(pt.x, 0, pt.z, false) then
-                TheWorld.Map:CollapseSoilAtPoint(pt.x, 0, pt.z)
-                SpawnPrefab("farm_soil").Transform:SetPosition(pt:Get())
-                local spacing = 1.3 -- Khoảng cách giữa các farm_soil
+	local _oldtill = self.Till
+	self.Till = function(self, pt, doer, ...)
+		if self.inst.prefab == "doro_xamchiemtraidat" then
+			if TheWorld.Map:CanTillSoilAtPoint(pt.x, 0, pt.z, false) then
+				TheWorld.Map:CollapseSoilAtPoint(pt.x, 0, pt.z)
+				SpawnPrefab("farm_soil").Transform:SetPosition(pt:Get())
+				local spacing = 1.3 -- Khoảng cách giữa các farm_soil
 
-                for i = -1, 1 do
-                    for j = -1, 1 do
-                        local x = pt.x + i * spacing
-                        local z = pt.z + j * spacing
+				for i = -1, 1 do
+					for j = -1, 1 do
+						local x = pt.x + i * spacing
+						local z = pt.z + j * spacing
 
-                        -- Dọn sạch đất cũ nếu có
-                        TheWorld.Map:CollapseSoilAtPoint(x, 0, z)
-                        -- Tạo farm_soil mới tại vị trí
-                        SpawnPrefab("farm_soil").Transform:SetPosition(x, 0, z)
-                    end
-                end
-                if doer ~= nil then
-                    doer:PushEvent("tilling")
-                end
-                return true
-            end
-            return false
-        else
-            return _oldtill(self, pt, doer, ...)
-        end
-    end
+						-- Dọn sạch đất cũ nếu có
+						TheWorld.Map:CollapseSoilAtPoint(x, 0, z)
+						-- Tạo farm_soil mới tại vị trí
+						SpawnPrefab("farm_soil").Transform:SetPosition(x, 0, z)
+					end
+				end
+				if doer ~= nil then
+					doer:PushEvent("tilling")
+				end
+				return true
+			end
+			return false
+		else
+			return _oldtill(self, pt, doer, ...)
+		end
+	end
 end)
 --- Tweak cần câu cho kochosei --
 AddComponentPostInit("fishingrod", function(self)
-    local oldWaitForFish = self.WaitForFish
+	local oldWaitForFish = self.WaitForFish
 
-    function self:WaitForFish(...)
-        if self.target and self.target.components.fishable and self.fisherman and self.fisherman:HasTag("kochosei") then
-            -- Tạm tính lại nibbletime riêng
-            local fishleft = self.target.components.fishable:GetFishPercent()
-            if fishleft > 0 then
-                local nibbletime = (self.minwaittime + (1.0 - fishleft) * (self.maxwaittime - self.minwaittime)) * 0.5
+	function self:WaitForFish(...)
+		if self.target and self.target.components.fishable and self.fisherman and self.fisherman:HasTag("kochosei") then
+			-- Tạm tính lại nibbletime riêng
+			local fishleft = self.target.components.fishable:GetFishPercent()
+			if fishleft > 0 then
+				local nibbletime = (self.minwaittime + (1.0 - fishleft) * (self.maxwaittime - self.minwaittime)) * 0.5
 
-                self:CancelFishTask()
-                self.fishtask = self.inst:DoTaskInTime(nibbletime, function(inst)
-                    inst:PushEvent("fishingnibble")
-                    self.fisherman:PushEvent("fishingnibble")
-                    self.fishtask = nil
-                end)
-                return
-            end
-        end
+				self:CancelFishTask()
+				self.fishtask = self.inst:DoTaskInTime(nibbletime, function(inst)
+					inst:PushEvent("fishingnibble")
+					self.fisherman:PushEvent("fishingnibble")
+					self.fishtask = nil
+				end)
+				return
+			end
+		end
 
-        -- Nếu không thuộc điều kiện thì gọi gốc
-        oldWaitForFish(self, ...)
-    end
+		-- Nếu không thuộc điều kiện thì gọi gốc
+		oldWaitForFish(self, ...)
+	end
 end)
 -- Buff damage cho clone
-local allclone = {"kochosei_enemy", "kochodragonfly", "dinhcutenhathematroi", "kochodeerclops", "kocho_bearger"}
+local allclone = {
+	"kochosei_enemy",
+	"kochodragonfly",
+	"dinhcutenhathematroi",
+	"kochodeerclops",
+	"kocho_bearger",
+}
 if TUNING.KOCHOSEI_VANILLA_MODE == 1 then
-    for _, v in ipairs(allclone) do
-        AddPrefabPostInit(v, function(inst)
-            if not TheWorld.ismastersim then
-                return inst
-            end
-            inst.needtostop = 0
-            inst.tangst = true
-            inst:AddComponent("sttptmau")
+	for _, v in ipairs(allclone) do
+		AddPrefabPostInit(v, function(inst)
+			if not TheWorld.ismastersim then
+				return inst
+			end
+			inst.needtostop = 0
+			inst.tangst = true
+			inst:AddComponent("sttptmau")
 
-            inst.components.health:StartRegen(TUNING.SHADOWWAXWELL_HEALTH_REGEN,
-                TUNING.SHADOWWAXWELL_HEALTH_REGEN_PERIOD)
-            inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
-        end)
-    end
-    TUNING.KOCHOSEI_CHECKWIFI = 0
+			inst.components.health:StartRegen(
+				TUNING.SHADOWWAXWELL_HEALTH_REGEN,
+				TUNING.SHADOWWAXWELL_HEALTH_REGEN_PERIOD
+			)
+			inst:ListenForEvent("onhitother", OnHitOther_BuffDamage)
+		end)
+	end
+	TUNING.KOCHOSEI_CHECKWIFI = 0
 end
 -- Idle anim khi đứng yên quá lâu--
 AddStategraphPostInit("wilson", function(sg)
-    local _old_funnyidle_onenter = sg.states.funnyidle.onenter
-    sg.states.funnyidle.onenter = function(inst)
-        _old_funnyidle_onenter(inst)
-        if inst:HasTag("kochosei") and (inst.kochostop or 0) >= 120 and inst.sg.currentstate.name ~= "emote" then -- Thêm or 0 vì ai đó có thể dùng tag kochosei
-            inst.sg:GoToState("emote", {
-                anim = {{"emote_pre_sit2", "emote_loop_sit2"}},
-                loop = true,
-                fx = false,
-                mounted = true,
-                mountsound = "walk",
-                mountsounddelay = 6 * FRAMES
-            })
-        end
-    end
+	local _old_funnyidle_onenter = sg.states.funnyidle.onenter
+	sg.states.funnyidle.onenter = function(inst)
+		_old_funnyidle_onenter(inst)
+		if inst:HasTag("kochosei") and (inst.kochostop or 0) >= 120 and inst.sg.currentstate.name ~= "emote" then -- Thêm or 0 vì ai đó có thể dùng tag kochosei
+			inst.sg:GoToState("emote", {
+				anim = { { "emote_pre_sit2", "emote_loop_sit2" } },
+				loop = true,
+				fx = false,
+				mounted = true,
+				mountsound = "walk",
+				mountsounddelay = 6 * FRAMES,
+			})
+		end
+	end
 end)
 -- Thêm tag fooddrink cho các món nước --
-local tagdrinkfood = {"kochofood_tyrant_juice", "kochofood_cafe", "kochofood_grape_juice", "kochofood_kiwi_juice"}
-local spices = {"_spice_chili", "_spice_sugar", "_spice_salt", "_spice_garlic"}
+local tagdrinkfood = {
+	"kochofood_tyrant_juice",
+	"kochofood_cafe",
+	"kochofood_grape_juice",
+	"kochofood_kiwi_juice",
+}
+local spices = { "_spice_chili", "_spice_sugar", "_spice_salt", "_spice_garlic" }
 local base_count = #tagdrinkfood
 
 for i = 1, base_count do
-    for _, spice in ipairs(spices) do
-        table.insert(tagdrinkfood, tagdrinkfood[i] .. spice)
-    end
+	for _, spice in ipairs(spices) do
+		table.insert(tagdrinkfood, tagdrinkfood[i] .. spice)
+	end
 end
 for _, v in pairs(tagdrinkfood) do
-    AddPrefabPostInit(v, function(inst)
-        inst:AddTag("fooddrink")
-    end)
+	AddPrefabPostInit(v, function(inst)
+		inst:AddTag("fooddrink")
+	end)
 end
 
 -------- T đã muốn xử lý cái này từ lâu nhưng đủ trình----------
@@ -572,80 +637,66 @@ end
 -- https://forums.kleientertainment.com/forums/topic/69732-dont-use-addingredientvalues-in-mods/#comment-806510
 -- Hàm phụ gán 1 tag duy nhất cho 1 item (Kiểm tra điều kiện ghi đè)
 local function SetTag(prefab, tag, val, keepold)
-    ingredients[prefab] = ingredients[prefab] or {
-        tags = {}
-    }
+	ingredients[prefab] = ingredients[prefab] or { tags = {} }
 
-    if not keepold or ingredients[prefab].tags[tag] == nil then
-        ingredients[prefab].tags[tag] = val
-    end
+	if not keepold or ingredients[prefab].tags[tag] == nil then
+		ingredients[prefab].tags[tag] = val
+	end
 end
 
 -- Hàm phụ duyệt qua table tag để gán hàng loạt
 local function ApplyTags(prefab, tags, keepold)
-    for tag_name, tag_val in pairs(tags) do
-        SetTag(prefab, tag_name, tag_val, keepold)
-    end
+	for tag_name, tag_val in pairs(tags) do
+		SetTag(prefab, tag_name, tag_val, keepold)
+	end
 end
 
 function InsertIngredientValues(names, tags, cancook, candry, keepoldvalues)
-    for _, name in pairs(names) do
-        -- 1. Áp dụng tags cho nguyên liệu gốc
-        ApplyTags(name, tags, keepoldvalues)
+	for _, name in pairs(names) do
+		-- 1. Áp dụng tags cho nguyên liệu gốc
+		ApplyTags(name, tags, keepoldvalues)
 
-        -- 2. Áp dụng tags cho đồ chín (_cooked)
-        if cancook then
-            local cooked_name = name .. "_cooked"
-            SetTag(cooked_name, "precook", 1, keepoldvalues)
-            ApplyTags(cooked_name, tags, keepoldvalues)
-        end
+		-- 2. Áp dụng tags cho đồ chín (_cooked)
+		if cancook then
+			local cooked_name = name .. "_cooked"
+			SetTag(cooked_name, "precook", 1, keepoldvalues)
+			ApplyTags(cooked_name, tags, keepoldvalues)
+		end
 
-        -- 3. Áp dụng tags cho đồ khô (_dried)
-        if candry then
-            local dried_name = name .. "_dried"
-            SetTag(dried_name, "dried", 1, keepoldvalues)
-            ApplyTags(dried_name, tags, keepoldvalues)
-        end
-    end
+		-- 3. Áp dụng tags cho đồ khô (_dried)
+		if candry then
+			local dried_name = name .. "_dried"
+			SetTag(dried_name, "dried", 1, keepoldvalues)
+			ApplyTags(dried_name, tags, keepoldvalues)
+		end
+	end
 end
 
 -- Thêm giá trị cho các món---
--- Với hoa sen: 
+-- Với hoa sen:
 -- Khai báo đồ sống, và cho phép tự động tạo bản chín (_cooked) với đầy đủ tag precook
-InsertIngredientValues({"kocho_lotus_flower"}, {
-    veggie = 0.5,
-    rau = 1
-}, true)
+InsertIngredientValues({ "kocho_lotus_flower" }, { veggie = 0.5, rau = 1 }, true)
 
 -- Với Táo:
 -- Tương tự, dùng true ở tham số cancook để game tự hiểu apple_cooked cũng là fruit=1 và có precook=1
-InsertIngredientValues({"kochosei_apple"}, {
-    fruit = 1,
-    apple = 1
-}, true)
-InsertIngredientValues({"wobster_sheller_land"}, {
-    tom = 1
-}, false, false, true)
+InsertIngredientValues({ "kochosei_apple" }, { fruit = 1, apple = 1 }, true)
+InsertIngredientValues({ "wobster_sheller_land" }, { tom = 1 }, false, false, true)
 
 -- Với các món bạn chỉ muốn thêm tag bổ trợ (như "bo", "tom", "rau"):
 -- Hãy dùng tham số keepoldvalues (tham số thứ 5) là true để không ghi đè mất tag gốc của Klei
-InsertIngredientValues({"onion"}, {
-    onion = 1
-}, false, false, true)
-InsertIngredientValues({"goatmilk", "butter"}, {
-    bo = 1
-}, false, false, true)
+InsertIngredientValues({ "onion" }, { onion = 1 }, false, false, true)
+InsertIngredientValues({ "goatmilk", "butter" }, { bo = 1 }, false, false, true)
 -----------------------------------------------------------------------------------------------
 
 for _, v in pairs(cookpot) do
-    for _, recipe in pairs(require("prkochofood")) do
-        AddCookerRecipe(v, recipe)
-    end
+	for _, recipe in pairs(require("prkochofood")) do
+		AddCookerRecipe(v, recipe)
+	end
 end
 for _, v in pairs(spicer) do
-    for _, recipe in pairs(require("kocho_spicedfoods")) do
-        AddCookerRecipe(v, recipe)
-    end
+	for _, recipe in pairs(require("kocho_spicedfoods")) do
+		AddCookerRecipe(v, recipe)
+	end
 end
 -----------------------------------------------------------------------------------------------
 
@@ -682,7 +733,7 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_ENEMY_C = "may cut khoi dia ban cua
 STRINGS.CHARACTER_TITLES.kochosei = "Kochou no Sei"
 STRINGS.CHARACTER_NAMES.kochosei = "Kochousei"
 STRINGS.CHARACTER_DESCRIPTIONS.kochosei =
-    "*Love Singing & friendly\n*Regen sanity + health herself and friends around after full sanity when she is singing\n*The plant on the field will be happy if she is singing near them"
+	"*Love Singing & friendly\n*Regen sanity + health herself and friends around after full sanity when she is singing\n*The plant on the field will be happy if she is singing near them"
 STRINGS.CHARACTER_QUOTES.kochosei = "<3 Hora hora"
 STRINGS.CHARACTER_SURVIVABILITY.kochosei = "CUTEEE!"
 
@@ -701,9 +752,9 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.CAY_HOA_SANG = "Đừng sợ, nó không c�
 STRINGS.NAMES.CAY_HOA_SANG = "Cây hóa sáng"
 STRINGS.RECIPE_DESC.CAY_HOA_SANG = "Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_MAY_GACHA =
-    "Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
+	"Một thứ tà đạo và op như này, lẽ ra nó không nên tồn tại"
 STRINGS.SKIN_QUOTES.kochosei_snowmiku_skin1 =
-    "Ai đó đã phải làm việc như trâu để có skin này. Congratulation"
+	"Ai đó đã phải làm việc như trâu để có skin này. Congratulation"
 STRINGS.SKIN_DESCRIPTIONS.kochosei_snowmiku_skin1 = "o((>ω< ))o"
 
 STRINGS.SPELLS.KOCHOSEI_ELYSIA_1 = "Why"
@@ -714,9 +765,9 @@ STRINGS.SPELLS.KOCHOSEI_ELYSIA_4 = "Cute"
 -- Kochosei Coffin - Cursed sleeping coffin
 STRINGS.NAMES.KOCHOSEI_COFFIN = "Cursed Coffin"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.KOCHOSEI_COFFIN =
-    "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+	"Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
 STRINGS.RECIPE_DESC.KOCHOSEI_COFFIN =
-    "Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
+	"Hình ảnh quan tài báo hiệu Kochosei đã chết\nThe coffin image signifies Kochosei's death\n棺材图像标志着Kochosei已死\n棺の画像はKochoseiの死を示す"
 
 local TRIGGER_RADIUS = 10 -- khoảng cách để trigger (units)
 local SNOW_RATE = 20 -- particles_per_tick khi full snow (weather.lua dùng 20)
@@ -727,63 +778,166 @@ local _fullscreen_snow = nil
 local _fullscreen_snow_target = 0 -- 0 hoặc SNOW_RATE
 local _fullscreen_snow_current = 0
 local function UpdateFullscreenSnow(dt)
-    if _fullscreen_snow == nil or not _fullscreen_snow:IsValid() then
-        return
-    end
-    -- Fade in / fade out mượt
-    if _fullscreen_snow_current < _fullscreen_snow_target then
-        _fullscreen_snow_current = math.min(_fullscreen_snow_current + FADE_STEP, _fullscreen_snow_target)
-    elseif _fullscreen_snow_current > _fullscreen_snow_target then
-        _fullscreen_snow_current = math.max(_fullscreen_snow_current - FADE_STEP, _fullscreen_snow_target)
-    end
-    _fullscreen_snow.particles_per_tick = _fullscreen_snow_current
+	if _fullscreen_snow == nil or not _fullscreen_snow:IsValid() then
+		return
+	end
+	-- Fade in / fade out mượt
+	if _fullscreen_snow_current < _fullscreen_snow_target then
+		_fullscreen_snow_current = math.min(_fullscreen_snow_current + FADE_STEP, _fullscreen_snow_target)
+	elseif _fullscreen_snow_current > _fullscreen_snow_target then
+		_fullscreen_snow_current = math.max(_fullscreen_snow_current - FADE_STEP, _fullscreen_snow_target)
+	end
+	_fullscreen_snow.particles_per_tick = _fullscreen_snow_current
 end
 local function OnPlayerActivated(world, player)
-    if TheNet:IsDedicated() then
-        return
-    end
+	if TheNet:IsDedicated() then
+		return
+	end
 
-    _fullscreen_snow = SpawnPrefab("kochosei_snow_winter_custom")
+	_fullscreen_snow = SpawnPrefab("kochosei_snow_winter_custom")
 
-    -- Guard: nếu spawn thất bại thì log ra và dừng
-    if _fullscreen_snow == nil then
-        print("[KochoseiMod] ERROR: SpawnPrefab('kochosei_snow_winter_custom') returned nil")
-        print("[KochoseiMod] Prefabs loaded:", table.concat(PrefabFiles or {}, ", "))
-        return
-    end
+	-- Guard: nếu spawn thất bại thì log ra và dừng
+	if _fullscreen_snow == nil then
+		print("[KochoseiMod] ERROR: SpawnPrefab('kochosei_snow_winter_custom') returned nil")
+		print("[KochoseiMod] Prefabs loaded:", table.concat(PrefabFiles or {}, ", "))
+		return
+	end
 
-    print("[KochoseiMod] Snow FX spawned OK:", _fullscreen_snow)
+	print("[KochoseiMod] Snow FX spawned OK:", _fullscreen_snow)
 
-    _fullscreen_snow.entity:SetParent(player.entity)
-    _fullscreen_snow.particles_per_tick = 0
-    _fullscreen_snow_current = 0
-    _fullscreen_snow_target = 0
+	_fullscreen_snow.entity:SetParent(player.entity)
+	_fullscreen_snow.particles_per_tick = 0
+	_fullscreen_snow_current = 0
+	_fullscreen_snow_target = 0
 
-    TheWorld:DoPeriodicTask(TUNING.FRAMES_PER_TICK or (1 / 30), UpdateFullscreenSnow)
+	TheWorld:DoPeriodicTask(TUNING.FRAMES_PER_TICK or (1 / 30), UpdateFullscreenSnow)
 
-    TheWorld:DoPeriodicTask(CHECK_INTERVAL, function()
-        if player == nil or not player:IsValid() then
-            return
-        end
-        local px, _, pz = player.Transform:GetWorldPosition()
-        local nearby = TheSim:FindEntities(px, 0, pz, TRIGGER_RADIUS, {"idle_snow_aura"})
-        if #nearby > 0 then
-            _fullscreen_snow_target = SNOW_RATE
-        else
-            _fullscreen_snow_target = 0
-        end
-    end)
+	TheWorld:DoPeriodicTask(CHECK_INTERVAL, function()
+		if player == nil or not player:IsValid() then
+			return
+		end
+		local px, _, pz = player.Transform:GetWorldPosition()
+		local nearby = TheSim:FindEntities(px, 0, pz, TRIGGER_RADIUS, { "idle_snow_aura" })
+		if #nearby > 0 then
+			_fullscreen_snow_target = SNOW_RATE
+		else
+			_fullscreen_snow_target = 0
+		end
+	end)
 
-    player:ListenForEvent("onremove", function()
-        if _fullscreen_snow and _fullscreen_snow:IsValid() then
-            _fullscreen_snow:Remove()
-        end
-        _fullscreen_snow = nil
-    end)
+	player:ListenForEvent("onremove", function()
+		if _fullscreen_snow and _fullscreen_snow:IsValid() then
+			_fullscreen_snow:Remove()
+		end
+		_fullscreen_snow = nil
+	end)
 end
 AddPrefabPostInit("world", function(inst)
-    inst:ListenForEvent("playeractivated", OnPlayerActivated)
+	inst:ListenForEvent("playeractivated", OnPlayerActivated)
 end)
+
+AddComponentAction("USEITEM", "edible", function(inst, doer, target, actions, right)
+	-- inst = món ăn, doer = người đút, target = người được đút
+	if doer == nil or not doer:HasTag("kochosei") then
+		return
+	end
+	if not right then
+		return
+	end
+	if target == nil or not target:HasTag("player") then
+		return
+	end
+
+	-- Chỉ xử lý khi món ăn KHÔNG an toàn theo luật gốc,
+	-- để tránh insert trùng ACTIONS.FEEDPLAYER với hàm gốc (nó đã tự lo case food an toàn rồi)
+	local wouldbesafe = TheNet:GetPVPEnabled()
+		or (target:HasTag("strongstomach") and inst:HasTag("monstermeat"))
+		or (inst:HasTag("spoiled") and target:HasTag("ignoresspoilage") and not inst:HasAnyTag("badfood", "unsafefood"))
+		or not inst:HasAnyTag("badfood", "unsafefood", "spoiled")
+	if wouldbesafe then
+		return -- hàm gốc engine đã tự thêm action rồi, không cần làm lại
+	end
+
+	-- Các điều kiện chặn chung (giữ nguyên như hàm gốc, không liên quan tới an toàn thực phẩm)
+	if
+		(target.replica.rider ~= nil and target.replica.rider:IsRiding())
+		or (doer.replica.rider ~= nil and doer.replica.rider:IsRiding() and not (target.replica.inventoryitem ~= nil and target.replica.inventoryitem:IsGrandOwner(
+			doer
+		)))
+		or target:HasTag("wereplayer")
+	then
+		return
+	end
+
+	for k, v in pairs(FOODGROUP) do
+		if target:HasTag(v.name .. "_eater") then
+			for i, v2 in ipairs(v.types) do
+				if inst:HasTag("edible_" .. v2) then
+					table.insert(actions, ACTIONS.FEEDPLAYER)
+					return
+				end
+			end
+		end
+	end
+	for k, v in pairs(FOODTYPE) do
+		if inst:HasTag("edible_" .. v) and target:HasTag(v .. "_eater") then
+			table.insert(actions, ACTIONS.FEEDPLAYER)
+			return
+		end
+	end
+end)
+
+local _old_FEEDPLAYER_fn = ACTIONS.FEEDPLAYER.fn
+
+ACTIONS.FEEDPLAYER.fn = function(act)
+	-- Người đút ăn (act.doer) là Kochosei -> bỏ qua kiểm tra an toàn thức ăn (badfood/unsafefood/spoiled)
+	if act.doer ~= nil and act.doer:HasTag("kochosei") then
+		if
+			act.target ~= nil
+			and act.target:IsValid()
+			and act.target.sg:HasStateTag("idle")
+			and not (act.target.sg:HasAnyStateTag("busy", "attacking", "sleeping") or act.target:HasAnyTag(
+				"playerghost",
+				"wereplayer"
+			))
+			and act.target.components.eater ~= nil
+			and act.invobject.components.edible ~= nil
+			and act.target.components.eater:CanEat(act.invobject)
+		then
+			-- Không gọi IsFoodSafeToEat ở đây -> cho phép feed mọi loại food
+
+			if act.target.components.eater:PrefersToEat(act.invobject) then
+				local isactive = act.doer.components.inventory ~= nil
+					and act.doer.components.inventory:GetActiveItem() == act.invobject
+				local food = act.invobject.components.inventoryitem:RemoveFromOwner()
+				if food ~= nil then
+					act.target:AddChild(food)
+					food:RemoveFromScene()
+					food.components.inventoryitem:HibernateLivingItem()
+					food.persists = false
+					if food.prefab == "kochofood_cafe" or food.prefab == "kochofood_kiwi_juice" or food.prefab == "kochofood_grape_juice" then
+						act.target.components.freezable:AddColdness(2)
+					end
+						act.target.sg:GoToState(
+						(food:HasTag("quickeat") and "quickeat")
+							or (food:HasTag("sloweat") and "eat")
+							or (food.components.edible.foodtype == FOODTYPE.MEAT and not food:HasTag("fooddrink") and "eat")
+							or "quickeat",
+						{ feed = food, feeder = act.doer, active = isactive }
+					)
+					return true
+				end
+			else
+				act.target:PushEvent("wonteatfood", { food = act.invobject })
+				return true
+			end
+		end
+		return false
+	end
+
+	-- Không phải Kochosei -> giữ nguyên hành vi gốc (kể cả nếu mod khác đã patch trước đó)
+	return _old_FEEDPLAYER_fn(act)
+end
 
 -- ]]
 --[[local oldHAUNTT = ACTIONS.HAUNT.fn
@@ -871,4 +1025,3 @@ AddPrefabPostInit("kochosei_fuji_tree", function(inst)
         inst.components.playerprox:SetOnPlayerFar(on_player_far)
 end)
 --]]
-

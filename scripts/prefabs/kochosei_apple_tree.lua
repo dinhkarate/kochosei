@@ -18,10 +18,6 @@ TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME = {
 	{ base = 7 * day_time, random = 0 * day_time }, -- normal
 	{ base = 15 * day_time, random = 0 * day_time }, -- tall
 }
-TUNING.KOCHOSEI_APPLE_TREE_GROWTIME = {
-	base = 0 * day_time,
-	random = 0 * day_time,
-}
 
 local assets = {
 	Asset("ANIM", "anim/kochosei_apple_tree.zip"),
@@ -245,37 +241,39 @@ local function OnChopTreeBurntDown(inst, chopper)
 	inst.components.lootdropper:SpawnLootPrefab("charcoal")
 end
 
-local function BurntChanges(inst)
-	if inst.components.burnable ~= nil then
-		inst.components.burnable:Extinguish()
-	end
+-- Gộp chung 1 hàm xử lý "cháy thành than" cho cả 2 trường hợp:
+--   - immediate = true  : spawn/OnLoad với trạng thái đã cháy sẵn (áp dụng thay đổi ngay lập tức)
+--   - immediate = false : cây cháy thật qua component "burnable" (chờ 0.5s cho animation cháy chạy xong rồi mới áp thay đổi)
+-- Trước đây có 2 bản gần giống nhau (BurntChanges/MakeBurnt và OnBurnt) bị lệch nhau:
+-- bản dùng cho lửa cháy thật (OnBurnt) thiếu RemoveComponent("growable"), khiến cây vẫn tiếp tục lớn
+-- (SetShort/SetNormal/SetTall vẫn chạy) dù đã bị gắn tag "burnt", gây animation đè lên nhau và trông như lỗi.
+local function OnBurnt(inst, immediate)
+	local function changes()
+		if inst.components.burnable ~= nil then
+			inst.components.burnable:Extinguish()
+		end
 
-	inst:RemoveComponent("burnable")
-	inst:RemoveComponent("propagator")
-	inst:RemoveComponent("growable")
-	inst:RemoveComponent("hauntable")
-	MakeHauntableWork(inst)
-
-	inst:RemoveTag("shelter")
-
-	inst.components.lootdropper:SetChanceLootTable("kochosei_apple_tree_burnt")
-
-	if inst.components.workable then
-		inst.components.workable:SetWorkLeft(1)
-		inst.components.workable:SetOnWorkCallback(nil)
-		inst.components.workable:SetOnFinishCallback(OnChopTreeBurntDown)
-	end
-end
-
-local function MakeBurnt(inst, immediate)
-	if immediate then
-		BurntChanges(inst)
-	else
-		inst:DoTaskInTime(0.5, BurntChanges)
-	end
-
-	if inst.components.growable ~= nil then
+		inst:RemoveComponent("burnable")
+		inst:RemoveComponent("propagator")
 		inst:RemoveComponent("growable")
+		inst:RemoveComponent("hauntable")
+		MakeHauntableWork(inst)
+
+		inst:RemoveTag("shelter")
+
+		inst.components.lootdropper:SetChanceLootTable("kochosei_apple_tree_burnt")
+
+		if inst.components.workable then
+			inst.components.workable:SetWorkLeft(1)
+			inst.components.workable:SetOnWorkCallback(nil)
+			inst.components.workable:SetOnFinishCallback(OnChopTreeBurntDown)
+		end
+	end
+
+	if immediate then
+		changes()
+	else
+		inst:DoTaskInTime(0.5, changes)
 	end
 
 	inst.AnimState:PlayAnimation(kochosei_apple_tree_anims[inst.size].burnt, true)
@@ -283,33 +281,8 @@ local function MakeBurnt(inst, immediate)
 
 	inst.AnimState:SetRayTestOnBB(true)
 	inst:AddTag("burnt")
-
-	if inst.components.timer ~= nil and not inst.components.timer:TimerExists("decay") then
-		inst.components.timer:StartTimer(
-			"decay",
-			GetRandomWithVariance(
-				TUNING.KOCHOSEI_APPLE_TREE_REGROWTH.DEAD_DECAY_TIME,
-				TUNING.KOCHOSEI_APPLE_TREE_REGROWTH.DEAD_DECAY_TIME * 0.5
-			)
-		)
-	end
-end
-
-local function OnBurnt(inst)
-	inst:RemoveComponent("burnable")
-	inst:RemoveComponent("propagator")
-	inst:RemoveComponent("hauntable")
-	MakeHauntableWork(inst)
-
-	inst.components.lootdropper:SetLoot({ "charcoal" })
-
-	inst.components.workable:SetWorkLeft(1)
-	inst.components.workable:SetOnWorkCallback(nil)
-	inst.components.workable:SetOnFinishCallback(OnChopTreeBurntDown)
-	inst.AnimState:PlayAnimation(kochosei_apple_tree_anims[inst.size].burnt)
-	inst:AddTag("burnt")
-	inst.MiniMapEntity:SetIcon("kochosei_apple_tree_burnt.tex")
 	inst.DynamicShadow:Enable(false)
+
 	if inst.components.timer ~= nil and not inst.components.timer:TimerExists("decay") then
 		inst.components.timer:StartTimer(
 			"decay",
@@ -396,7 +369,10 @@ local GROWTH_STAGES = {
 	{
 		name = SHORT,
 		time = function(inst)
-			return 60 * 8 * 3 -- 3 days
+			return GetRandomWithVariance(
+				TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME[1].base,
+				TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME[1].random
+			)
 		end,
 		fn = SetShort,
 		growfn = GrowShort,
@@ -404,15 +380,24 @@ local GROWTH_STAGES = {
 	{
 		name = NORMAL,
 		time = function(inst)
-			return 60 * 8 * 7 -- 7 days
+			return GetRandomWithVariance(
+				TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME[2].base,
+				TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME[2].random
+			)
 		end,
 		fn = SetNormal,
 		growfn = GrowNormal,
 	},
 	{
 		name = TALL,
+		-- KHÔNG trả về nil ở đây: SetTall đã tự Pause() growable nên bình thường sẽ không bao giờ
+		-- dùng tới giá trị này, nhưng nếu growable lỡ bị Resume() bởi code khác (mod khác, patch sau này...)
+		-- mà chưa kịp Pause lại, trả về nil sẽ khiến growable crash khi tính lịch cho stage kế tiếp.
 		time = function(inst)
-			return
+			return GetRandomWithVariance(
+				TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME[3].base,
+				TUNING.KOCHOSEI_APPLE_TREE_GROWTH_TIME[3].random
+			)
 		end,
 		fn = SetTall,
 		growfn = GrowTall,
@@ -426,10 +411,14 @@ local function GrowFromSeed(inst)
 	PushAway(inst)
 end
 
+-- Chỉ lọc đúng item rớt trên đất (giống evergreen), tránh gom nhầm entity khác trùng
+-- prefab "log"/"charcoal" (ví dụ vật phẩm đang cháy dở, hoặc entity đang ở trạng thái limbo)
+local DECAYREMOVE_MUST_TAGS = { "_inventoryitem" }
+local DECAYREMOVE_CANT_TAGS = { "INLIMBO", "fire" }
 local function OnTimerDone(inst, data)
 	if data.name == "decay" then
 		local x, y, z = inst.Transform:GetWorldPosition()
-		local entities = TheSim:FindEntities(x, y, z, 6)
+		local entities = TheSim:FindEntities(x, y, z, 6, DECAYREMOVE_MUST_TAGS, DECAYREMOVE_CANT_TAGS)
 		local leftone = false
 		for k, entity in pairs(entities) do
 			if entity.prefab == "log" or entity.prefab == "charcoal" then
@@ -474,7 +463,7 @@ local function OnLoad(inst, data)
 		MakeStump(inst)
 		inst.AnimState:PlayAnimation(kochosei_apple_tree_anims[inst.size].stump)
 	elseif is_burnt then
-		MakeBurnt(inst, true)
+		OnBurnt(inst, true)
 	end
 end
 
@@ -550,7 +539,7 @@ local function kochosei_apple_tree(name, stage, data)
 			MakeStump(inst)
 			inst.AnimState:PlayAnimation(kochosei_apple_tree_anims[inst.size].stump)
 		elseif data == "burnt" then
-			MakeBurnt(inst, true)
+			OnBurnt(inst, true)
 		end
 
 		if POPULATING then

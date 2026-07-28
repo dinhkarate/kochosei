@@ -30,18 +30,9 @@ for k, v in pairs(TUNING.GAMEMODE_STARTING_ITEMS) do
 end
 local prefabs = FlattenTree(start_inv, true)
 
-local function spawnfcmnx(inst)
-    local dist = 0.5 * math.random()
-    local theta = 2 * PI * math.random()
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local fx = SpawnPrefab("crab_king_icefx")
-    if fx then
-        fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
-    end
-end
 
 local function HandleIceSpawn(inst)
-    if inst.kochostop > 300 then
+    if inst.kochostop > 240 then
         -- Kiểm tra đã có băng gần chưa
         local x, y, z = inst.Transform:GetWorldPosition()
         local near_ice = TheSim:FindEntities(x, y, z, 16, {"ice_kochosei"})
@@ -173,7 +164,19 @@ local emotesoundlist = {
 }
 local HEAL_MUST_TAGS = {"player"}
 local HEAL_CANT_TAGS = {"DECOR", "eyeofterror", "FX", "INLIMBO", "NOCLICK", "notarget", "playerghost", "wall"}
+
+local function spawnfcmnx(inst)
+    local dist = 0.5 * math.random()
+    local theta = 2 * PI * math.random()
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local fx = SpawnPrefab("crab_king_icefx")
+    if fx then
+        fx.Transform:SetPosition(x + dist * math.cos(theta), 0, z + dist * math.sin(theta))
+    end
+end
+
 local function OnTaskTick(inst)
+    -- Chết hoặc là ma: reset và thoát
     if inst.components.health:IsDead() or inst:HasTag("playerghost") then
         inst.kochostop = 0
         if inst:HasTag("idle_snow_aura") then
@@ -181,6 +184,8 @@ local function OnTaskTick(inst)
         end
         return
     end
+
+    -- Đếm số tick đứng yên
     if not inst.components.locomotor.wantstomoveforward or not inst.sg:HasStateTag("moving") then
         inst.kochostop = inst.kochostop + 1
     else
@@ -190,20 +195,29 @@ local function OnTaskTick(inst)
         end
     end
 
-    if inst.kochostop >= 120 then
+    local season = TheWorld.state.season
+
+    if inst.kochostop >= 300 then
         -- Nếu đang trong trạng thái chết mà đổi state sẽ gây crash
         spawnfcmnx(inst)
-        if not inst:HasTag("idle_snow_aura") then
+
+        -- FIX: "not season == 'winter'" bị lỗi ưu tiên toán tử, luôn = false
+        -- => tag idle_snow_aura không bao giờ được add. Sửa lại thành season ~= "winter".
+        if not inst:HasTag("idle_snow_aura") and season ~= "winter" then
             inst:AddTag("idle_snow_aura")
         end
     end
+
     if inst.components.sanity:GetPercent() < 1 then
         return
     end
+
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, 8, HEAL_MUST_TAGS, HEAL_CANT_TAGS)
     for i, v in ipairs(ents) do
-        if v.components.health ~= nil and v.components.health:GetPercent() < 1 and not v.components.health:IsDead() then
+        if v.components.health ~= nil
+            and v.components.health:GetPercent() < 1
+            and not v.components.health:IsDead() then
             v.components.health:DoDelta(1.2)
             v.components.health:DeltaPenalty(-0.01) -- con cò, số gì bé V~
         end

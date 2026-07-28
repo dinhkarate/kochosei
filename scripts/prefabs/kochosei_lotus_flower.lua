@@ -20,6 +20,8 @@ local function fn()
 
 	inst.entity:SetPristine()
 	inst:AddTag("hoasen")
+
+    
 	if not TheWorld.ismastersim then
 		return inst
 	end
@@ -27,8 +29,6 @@ local function fn()
 	-----------------
 	inst:AddComponent("stackable")
 	inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
-
-	---------------------
 
 	inst:AddComponent("edible")
 	inst.components.edible.healthvalue = TUNING.HEALING_TINY
