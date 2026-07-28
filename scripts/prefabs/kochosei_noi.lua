@@ -170,7 +170,6 @@ end
 
 local function donecookfn(inst)
     if not inst:HasTag("burnt") then
-        inst.AnimState:PlayAnimation("cooking_pst")
         inst.AnimState:PushAnimation("idle_full", false)
         ShowProduct(inst)
         inst.SoundEmitter:KillSound("snd")

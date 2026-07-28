@@ -127,6 +127,9 @@ local function fn()
     MakeInventoryFloatable(inst, "small", 0.1, 1.12)
 
     inst:AddTag("sharp")
+	inst:AddTag("tool")
+	inst:AddTag("replantable") -- Cần để đào bụi cây (Dig)
+	inst:AddTag("antlion_sinkhole_blocker") -- Tag phụ giúp đào các hố sụt (tùy chọn)
 
     -- Glow in the Dark!
     inst.entity:AddLight()
@@ -170,6 +173,13 @@ local function fn()
     inst.components.equippable:SetOnUnequip(OnUnequip)
     inst.components.equippable.walkspeedmult = 1.25
     inst.components.equippable.dapperness = 0.033
+	
+	inst:AddComponent("tool")
+    inst.components.tool:SetAction(ACTIONS.CHOP, 5)   -- Chức năng Rìu (Chặt) -càng lớn càng nhanh
+	inst.components.tool:SetAction(ACTIONS.MINE, 3)	  -- ĐẬP ĐÁ
+    inst.components.tool:SetAction(ACTIONS.DIG)       -- Chức năng Xẻng (Đào)
+    inst.components.tool:SetAction(ACTIONS.HAMMER)    -- Chức năng Búa (Đập)
+    inst.components.tool:SetAction(ACTIONS.NET)   	  -- Chức năng Vợt (Bắt bướm/ong)
 
     inst:AddComponent("inventoryitem")
 

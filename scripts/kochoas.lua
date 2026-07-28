@@ -59,7 +59,6 @@ Assets = { -- Kochosei Altar --
 	Asset("SOUNDPACKAGE", "sound/kochosei_streetlight1_musicbox.fev"),
 	Asset("SOUND", "sound/kochosei_streetlight1_musicbox.fsb"),
 	Asset("ANIM", "anim/miku_usagi_backpack_2x4.zip"),
-	Asset("ANIM", "anim/kochosei_chest_5x5_ui.zip"),
 	Asset("ANIM", "anim/kochosei_chest_5x5.zip"),
 	Asset("ANIM", "anim/kochosei_card.zip")
 	
